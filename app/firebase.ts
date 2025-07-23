@@ -1,8 +1,4 @@
 import admin from 'firebase-admin';
-import * as dotenv from 'dotenv';
-
-dotenv.config(); // load .env variables
-
 const decoded = Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64 || '', 'base64').toString('utf8');
 try {
   const json = JSON.parse(decoded);

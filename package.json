@@ -2,12 +2,13 @@
   "name": "setupati-school-app",
   "private": true,
   "version": "0.0.0",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "ts-node app/index.ts"
+    "start": "ts-node-esm app/index.ts"
   },
   "dependencies": {
     "@types/dotenv": "^8.2.3",
