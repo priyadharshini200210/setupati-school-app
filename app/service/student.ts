@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { addStudent, getStudent, deleteStudent, searchStudent as searchStudentApi } from '../api/student'; 
 import { Student } from '../models/Student';
+import logger from '../utils/logger.js';
 
 export const createStudent = async (req: Request<{}, {}, Student>, res: Response) => {
   try {
@@ -8,7 +9,7 @@ export const createStudent = async (req: Request<{}, {}, Student>, res: Response
     const id = await addStudent(data);
     res.status(201).json({ id });
   } catch (error) {
-    console.error('Error creating student:', error);
+    logger.error('Error creating student:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
@@ -22,7 +23,7 @@ export const getStudentDetails = async (req: Request<{ student_rollno: string }>
         }
         res.status(200).json(student);
     } catch (error) {
-        console.error('Error fetching student details:', error);
+        logger.error('Error fetching student details:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
@@ -31,13 +32,13 @@ export const deleteStudentDetails = async (req: Request<{ student_rollno: string
     try {
         const studentRollNo = req.params.student_rollno;
         const deleted = await deleteStudent(studentRollNo);
-        console.log('deleted', deleted);
+        logger.info('deleted', deleted);
         if (!deleted) {
             return res.status(404).json({ error: 'Student not found' });
         }
         res.status(204).json({});
     } catch (error) {
-        console.error('Error deleting student details:', error);
+        logger.error('Error deleting student details:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
@@ -51,7 +52,7 @@ export const searchStudent = async (req: Request<{ student_rollno: string }>, re
         const students = await searchStudentApi(studentRollNo);
         res.status(200).json(students);
     } catch (error) {
-        console.error('Error searching for students:', error);
+        logger.error('Error searching for students:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
