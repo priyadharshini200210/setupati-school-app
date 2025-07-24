@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { addStudent, getStudent, deleteStudent, searchStudent as searchStudentApi } from '../api/student'; 
 import { Student } from '../models/Student';
-import logger from '.../../../src/logger.js'; 
+import logger from '../utils/logger.js';
 
 export const createStudent = async (req: Request<{}, {}, Student>, res: Response) => {
   try {

@@ -5,7 +5,7 @@ import cors from 'cors';
 import studentRoutes from './routes/student';
 import path from 'path';
 import './firebase';
-import logger from '../src/logger.js';
+import logger from '../app/utils/logger.js';
 
 
 const app = express();
