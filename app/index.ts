@@ -5,6 +5,7 @@ import cors from 'cors';
 import studentRoutes from './routes/student';
 import path from 'path';
 import './firebase';
+import logger from '../src/logger.js';
 
 
 const app = express();
@@ -18,5 +19,5 @@ app.use(express.json());
 app.use('/students', studentRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  logger.info(`Server running at http://localhost:${PORT}`);
 });
