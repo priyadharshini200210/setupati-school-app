@@ -3,7 +3,7 @@ import { addStudent, getStudent, deleteStudent, searchStudent as searchStudentAp
 import { Student } from '../models/Student';
 import logger from '../utils/logger.js';
 
-export const createStudent = async (req: Request<{}, {}, Student>, res: Response) => {
+export const createStudent = async (req: Request<null,null, Student>, res: Response) => {
   try {
     const data = req.body;
     const id = await addStudent(data);
@@ -28,7 +28,7 @@ export const getStudentDetails = async (req: Request<{ student_rollno: string }>
     }
 };
 
-export const deleteStudentDetails = async (req: Request<{ student_rollno: string }, {}, {}>, res: Response): Promise<Response | void> => {
+export const deleteStudentDetails = async (req: Request<{ student_rollno: string }>, res: Response): Promise<Response | void> => {
     try {
         const studentRollNo = req.params.student_rollno;
         const deleted = await deleteStudent(studentRollNo);
