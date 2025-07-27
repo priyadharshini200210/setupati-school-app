@@ -12,7 +12,7 @@ try {
   const decodedJson = Buffer.from(serviceAccountBase64, 'base64').toString('utf8');
   serviceAccountJson = JSON.parse(decodedJson);
   logger.info('Firebase service account JSON parsed successfully.');
-} catch (error: any) {
+} catch (error) {
   logger.error('Failed to decode or parse FIREBASE_SERVICE_ACCOUNT_BASE64:', error.message);
   throw error;
 }
