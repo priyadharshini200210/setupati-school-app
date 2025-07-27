@@ -1,15 +1,24 @@
 import admin from 'firebase-admin';
 import logger from '../app/utils/logger.js';
+import 'dotenv/config'
 
-const decoded = Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64 || '', 'base64').toString('utf8');
-try {
-  const json = JSON.parse(decoded);
-  logger.info('JSON parsed successfully:', json);
-} catch (err) {
-  logger.error('Failed to parse JSON:', err.message);
+const serviceAccountBase64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
+if (!serviceAccountBase64) {
+  throw new Error('FIREBASE_SERVICE_ACCOUNT_BASE64 environment variable is not set.');
 }
+
+let serviceAccountJson: admin.ServiceAccount;
+try {
+  const decodedJson = Buffer.from(serviceAccountBase64, 'base64').toString('utf8');
+  serviceAccountJson = JSON.parse(decodedJson);
+  logger.info('Firebase service account JSON parsed successfully.');
+} catch (error) {
+  logger.error('Failed to decode or parse FIREBASE_SERVICE_ACCOUNT_BASE64:', error.message);
+  throw error;
+}
+
 admin.initializeApp({
-  credential: admin.credential.cert(JSON.parse(decoded) as admin.ServiceAccount),
+  credential: admin.credential.cert(serviceAccountJson),
 });
 
 const db = admin.firestore();
