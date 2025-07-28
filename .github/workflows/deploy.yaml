@@ -26,9 +26,9 @@ jobs:
       - name: Run Lint
         run: npm run lint
          
-      - name: Deploy to Netlify
-        run: |
-             npm install -g netlify-cli
-             netlify deploy --dir=build --auth=$NETLIFY_AUTH_TOKEN --site=https://app.netlify.com/projects/setupati-app
-        env:
-             NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      - name: Deploy to Firebase Hosting
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SETUPATI_SCHOOL_APP }}
+          projectId: setupati-school-app
