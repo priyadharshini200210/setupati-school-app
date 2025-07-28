@@ -1,15 +1,19 @@
-import { db } from "../firebase";
-import { Student } from "../models/Student";
+import { db } from '../firebase';
+import { Student } from '../models/Student';
 
 const studentCollection = db.collection('Student');
 
-export const addStudent = async (data: Student) : Promise<string> => {
+export const addStudent = async (data: Student): Promise<string> => {
   const docRef = await studentCollection.add(data);
   return docRef.id;
 };
 
-export const getStudent = async (studentRollNo: string) : Promise<{ id: string, student: Student | null }> => {
-  const studentDoc = await studentCollection.where('student_rollno', '==', studentRollNo).get();
+export const getStudent = async (
+  studentRollNo: string
+): Promise<{ id: string; student: Student | null }> => {
+  const studentDoc = await studentCollection
+    .where('student_rollno', '==', studentRollNo)
+    .get();
   if (studentDoc.empty) {
     return { id: '', student: null };
   }
@@ -17,7 +21,9 @@ export const getStudent = async (studentRollNo: string) : Promise<{ id: string, 
   return { id: doc.id, student: doc.data() as Student };
 };
 
-export const deleteStudent = async (studentRollNo: string) : Promise<boolean> => {
+export const deleteStudent = async (
+  studentRollNo: string
+): Promise<boolean> => {
   const studentData = await getStudent(studentRollNo);
   if (!studentData) {
     return false;
@@ -27,10 +33,17 @@ export const deleteStudent = async (studentRollNo: string) : Promise<boolean> =>
   return true;
 };
 
-export const searchStudent = async (studentRollNo: string) : Promise<{ id: string, student: Student }[]> => {
-  const snapshot = await studentCollection.where('student_rollno', '==', studentRollNo).get();
+export const searchStudent = async (
+  studentRollNo: string
+): Promise<{ id: string; student: Student }[]> => {
+  const snapshot = await studentCollection
+    .where('student_rollno', '==', studentRollNo)
+    .get();
   if (snapshot.empty) {
     return [];
   }
-  return snapshot.docs.map(doc => ({ id: doc.id, student: doc.data() as Student }));
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    student: doc.data() as Student
+  }));
 };
