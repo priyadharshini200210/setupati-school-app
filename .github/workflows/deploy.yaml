@@ -1,9 +1,11 @@
-name: Deploy Application
+name: Deploy Firebase Hosting
 
 on:
   push:
     branches:
       - main
+      - releases/release*
+  pull_request:
 
 jobs:
   deploy:
@@ -24,12 +26,22 @@ jobs:
 
       - name: Run Lint
         run: npm run lint
-         
-      - name: Deploy to Firebase Hosting
+
+      # Deploy preview for PRs
+      - name: Deploy Preview (PR)
+        if: github.event_name == 'pull_request'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SETUPATI_SCHOOL_APP }}
           projectId: setupati-school-app
-          channelId: ${{ github.event.pull_request.number }}
-        if: github.event_name == 'pull_request'
+          channelId: pr-${{ github.event.pull_request.number }}
+
+      # Deploy live for pushes to main/release
+      - name: Deploy Live
+        if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SETUPATI_SCHOOL_APP }}
+          projectId: setupati-school-app
