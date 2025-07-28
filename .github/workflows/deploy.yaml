@@ -29,6 +29,6 @@ jobs:
       - name: Deploy to Netlify
         run: |
              npm install -g netlify-cli
-             netlify deploy --dir=build --auth=$NETLIFY_AUTH_TOKEN --site=https://setupati-app.netlify.app
+             netlify deploy --dir=build --auth=$NETLIFY_AUTH_TOKEN --site=https://app.netlify.com/projects/setupati-app
         env:
              NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
