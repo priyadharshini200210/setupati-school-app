@@ -20,6 +20,10 @@ app.use(express.json());
 
 app.use('/students', studentRoutes);
 
+app.get('/alive', (req, res) => {
+  res.status(200).send('OK');
+});
+
 app.listen(PORT, () => {
   logger.info(`Server running at http://localhost:${PORT}`);
 });
