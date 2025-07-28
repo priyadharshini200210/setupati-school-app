@@ -3,7 +3,8 @@ name: Deploy Application
 on:
   push:
     branches:
-      - main 
+      - main
+      - releases/release*
 
 jobs:
   deploy:
@@ -24,6 +25,10 @@ jobs:
 
       - name: Run Lint
         run: npm run lint
-
-      - name: start Server
-        run: npm run start 
+         
+      - name: Deploy to Netlify
+        run: |
+             npm install -g netlify-cli
+             netlify deploy --dir=build --auth=$NETLIFY_AUTH_TOKEN --site=https://setupati-app.netlify.app
+        env:
+             NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
