@@ -45,3 +45,4 @@ jobs:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SETUPATI_SCHOOL_APP }}
           projectId: setupati-school-app
+          channelId: live
