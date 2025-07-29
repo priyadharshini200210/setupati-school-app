@@ -1,22 +1,26 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useSchoolStore } from "@/store/schoolStore";
-import { Bell, LogOut, User, Settings } from "lucide-react";
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { useSchoolStore } from '@/store/schoolStore';
+import { Bell, LogOut, User, Settings } from 'lucide-react';
 
 export const Header = () => {
   const { currentUser } = useSchoolStore();
 
   const getInitials = (name: string) => {
-    return name.split(' ').map(word => word[0]).join('').toUpperCase();
+    return name
+      .split(' ')
+      .map((word) => word[0])
+      .join('')
+      .toUpperCase();
   };
 
   return (
@@ -30,23 +34,26 @@ export const Header = () => {
             Here's what's happening at your school today
           </p>
         </div>
-        
+
         <div className="flex items-center space-x-4">
           {/* Notifications */}
           <Button variant="ghost" size="icon" className="relative">
             <Bell className="h-5 w-5" />
-            <Badge 
-              variant="destructive" 
+            <Badge
+              variant="destructive"
               className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center text-xs p-0"
             >
               3
             </Badge>
           </Button>
-          
+
           {/* User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+              <Button
+                variant="ghost"
+                className="relative h-10 w-10 rounded-full"
+              >
                 <Avatar className="h-10 w-10">
                   <AvatarFallback className="bg-gradient-primary text-primary-foreground">
                     {currentUser ? getInitials(currentUser.name) : 'U'}

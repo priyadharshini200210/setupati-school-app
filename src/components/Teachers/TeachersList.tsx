@@ -1,28 +1,29 @@
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { useSchoolStore } from "@/store/schoolStore";
-import { Search, Plus, Edit, Eye, Filter } from "lucide-react";
+  TableRow
+} from '@/components/ui/table';
+import { useSchoolStore } from '@/store/schoolStore';
+import { Search, Plus, Edit, Eye, Filter } from 'lucide-react';
 
 export const TeachersList = () => {
   const { teachers } = useSchoolStore();
-  const [searchTerm, setSearchTerm] = useState("");
-  
-  const filteredTeachers = teachers.filter(teacher =>
-    teacher.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    teacher.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    teacher.designation.toLowerCase().includes(searchTerm.toLowerCase())
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredTeachers = teachers.filter(
+    (teacher) =>
+      teacher.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      teacher.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      teacher.designation.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const getInitials = (firstName: string, lastName: string) => {
@@ -30,9 +31,9 @@ export const TeachersList = () => {
   };
 
   const getExperienceColor = (years: number) => {
-    if (years >= 10) return "bg-success text-success-foreground";
-    if (years >= 5) return "bg-warning text-warning-foreground";
-    return "bg-primary-soft text-primary";
+    if (years >= 10) return 'bg-success text-success-foreground';
+    if (years >= 5) return 'bg-warning text-warning-foreground';
+    return 'bg-primary-soft text-primary';
   };
 
   return (
@@ -130,8 +131,10 @@ export const TeachersList = () => {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge 
-                        className={getExperienceColor(teacher.experienced_years)}
+                      <Badge
+                        className={getExperienceColor(
+                          teacher.experienced_years
+                        )}
                       >
                         {teacher.experienced_years} years
                       </Badge>
@@ -139,7 +142,11 @@ export const TeachersList = () => {
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {teacher.section_ids.map((sectionId, index) => (
-                          <Badge key={index} variant="outline" className="text-xs">
+                          <Badge
+                            key={index}
+                            variant="outline"
+                            className="text-xs"
+                          >
                             {sectionId}
                           </Badge>
                         ))}
@@ -168,11 +175,13 @@ export const TeachersList = () => {
               </TableBody>
             </Table>
           </div>
-          
+
           {filteredTeachers.length === 0 && (
             <div className="text-center py-8">
               <p className="text-muted-foreground">
-                {searchTerm ? 'No teachers found matching your search.' : 'No teachers added yet.'}
+                {searchTerm
+                  ? 'No teachers found matching your search.'
+                  : 'No teachers added yet.'}
               </p>
             </div>
           )}

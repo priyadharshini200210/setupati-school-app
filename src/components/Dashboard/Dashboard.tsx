@@ -1,22 +1,22 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { StatsCard } from "./StatsCard";
-import { useSchoolStore } from "@/store/schoolStore"
-import { 
-  Users, 
-  GraduationCap, 
-  ClipboardCheck, 
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { StatsCard } from './StatsCard';
+import { useSchoolStore } from '@/store/schoolStore';
+import {
+  Users,
+  GraduationCap,
+  ClipboardCheck,
   Bell,
   Calendar,
   BookOpen
-} from "lucide-react";
+} from 'lucide-react';
 
 export const Dashboard = () => {
-  const { 
-    getStudentCount, 
-    getTeacherCount, 
+  const {
+    getStudentCount,
+    getTeacherCount,
     getPresentStudentsToday,
-    getRecentCirculars 
+    getRecentCirculars
   } = useSchoolStore();
 
   const studentCount = getStudentCount();
@@ -24,7 +24,8 @@ export const Dashboard = () => {
   const presentToday = getPresentStudentsToday();
   const recentCirculars = getRecentCirculars();
 
-  const attendanceRate = studentCount > 0 ? Math.round((presentToday / studentCount) * 100) : 0;
+  const attendanceRate =
+    studentCount > 0 ? Math.round((presentToday / studentCount) * 100) : 0;
 
   return (
     <div className="space-y-6">
@@ -72,7 +73,10 @@ export const Dashboard = () => {
           <CardContent className="space-y-3">
             {recentCirculars.length > 0 ? (
               recentCirculars.map((circular) => (
-                <div key={circular.id} className="border-l-2 border-primary pl-3 py-2">
+                <div
+                  key={circular.id}
+                  className="border-l-2 border-primary pl-3 py-2"
+                >
                   <h4 className="font-medium text-sm text-foreground">
                     {circular.title}
                   </h4>
@@ -124,7 +128,9 @@ export const Dashboard = () => {
               <div className="flex items-center justify-between p-3 bg-warning-soft rounded-lg">
                 <div>
                   <p className="font-medium text-sm">Parent Meeting</p>
-                  <p className="text-xs text-muted-foreground">Conference Room</p>
+                  <p className="text-xs text-muted-foreground">
+                    Conference Room
+                  </p>
                 </div>
                 <Badge variant="outline">2:00 PM</Badge>
               </div>
@@ -140,16 +146,28 @@ export const Dashboard = () => {
           <CardContent className="space-y-3">
             <div className="grid gap-2">
               <button className="p-3 text-left bg-primary-soft hover:bg-primary-soft/80 rounded-lg transition-colors">
-                <p className="font-medium text-sm text-primary">Mark Attendance</p>
-                <p className="text-xs text-muted-foreground">Record today's attendance</p>
+                <p className="font-medium text-sm text-primary">
+                  Mark Attendance
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Record today's attendance
+                </p>
               </button>
               <button className="p-3 text-left bg-accent hover:bg-accent/80 rounded-lg transition-colors">
-                <p className="font-medium text-sm text-accent-foreground">Add Student</p>
-                <p className="text-xs text-muted-foreground">Register new student</p>
+                <p className="font-medium text-sm text-accent-foreground">
+                  Add Student
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Register new student
+                </p>
               </button>
               <button className="p-3 text-left bg-success-soft hover:bg-success-soft/80 rounded-lg transition-colors">
-                <p className="font-medium text-sm text-success">Create Circular</p>
-                <p className="text-xs text-muted-foreground">Send announcement</p>
+                <p className="font-medium text-sm text-success">
+                  Create Circular
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Send announcement
+                </p>
               </button>
             </div>
           </CardContent>

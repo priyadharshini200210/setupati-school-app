@@ -1,28 +1,29 @@
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { useSchoolStore } from "@/store/schoolStore";
-import { Search, Plus, Edit, Eye, Filter } from "lucide-react";
+  TableRow
+} from '@/components/ui/table';
+import { useSchoolStore } from '@/store/schoolStore';
+import { Search, Plus, Edit, Eye, Filter } from 'lucide-react';
 
 export const StudentsList = () => {
   const { students } = useSchoolStore();
-  const [searchTerm, setSearchTerm] = useState("");
-  
-  const filteredStudents = students.filter(student =>
-    student.f_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    student.l_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    student.roll_no.includes(searchTerm)
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredStudents = students.filter(
+    (student) =>
+      student.f_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.l_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.roll_no.includes(searchTerm)
   );
 
   const getInitials = (firstName: string, lastName: string) => {
@@ -128,7 +129,7 @@ export const StudentsList = () => {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge 
+                      <Badge
                         variant="outline"
                         className="bg-success-soft text-success"
                       >
@@ -150,11 +151,13 @@ export const StudentsList = () => {
               </TableBody>
             </Table>
           </div>
-          
+
           {filteredStudents.length === 0 && (
             <div className="text-center py-8">
               <p className="text-muted-foreground">
-                {searchTerm ? 'No students found matching your search.' : 'No students added yet.'}
+                {searchTerm
+                  ? 'No students found matching your search.'
+                  : 'No students added yet.'}
               </p>
             </div>
           )}

@@ -1,6 +1,6 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import type { LucideIcon } from "lucide-react";
+import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+import type { LucideIcon } from 'lucide-react';
 
 interface StatsCardProps {
   title: string;
@@ -14,16 +14,21 @@ interface StatsCardProps {
   className?: string;
 }
 
-export const StatsCard = ({ 
-  title, 
-  value, 
-  icon: Icon, 
-  description, 
+export const StatsCard = ({
+  title,
+  value,
+  icon: Icon,
+  description,
   trend,
-  className 
+  className
 }: StatsCardProps) => {
   return (
-    <Card className={cn("shadow-soft hover:shadow-elevation transition-all duration-200", className)}>
+    <Card
+      className={cn(
+        'shadow-soft hover:shadow-elevation transition-all duration-200',
+        className
+      )}
+    >
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div>
@@ -31,15 +36,16 @@ export const StatsCard = ({
               {title}
             </p>
             <div className="flex items-baseline space-x-2">
-              <h3 className="text-2xl font-bold text-foreground">
-                {value}
-              </h3>
+              <h3 className="text-2xl font-bold text-foreground">{value}</h3>
               {trend && (
-                <span className={cn(
-                  "text-xs font-medium",
-                  trend.isPositive ? "text-success" : "text-destructive"
-                )}>
-                  {trend.isPositive ? '+' : ''}{trend.value}%
+                <span
+                  className={cn(
+                    'text-xs font-medium',
+                    trend.isPositive ? 'text-success' : 'text-destructive'
+                  )}
+                >
+                  {trend.isPositive ? '+' : ''}
+                  {trend.value}%
                 </span>
               )}
             </div>

@@ -120,7 +120,7 @@ export interface Homework {
 interface SchoolStore {
   // Current user
   currentUser: User | null;
-  
+
   // Data
   teachers: Teacher[];
   students: Student[];
@@ -130,18 +130,18 @@ interface SchoolStore {
   attendance: Attendance[];
   circulars: Circular[];
   homework: Homework[];
-  
+
   // UI State
   activeView: string;
   sidebarCollapsed: boolean;
   loading: boolean;
-  
+
   // Actions
   setCurrentUser: (user: User | null) => void;
   setActiveView: (view: string) => void;
   setSidebarCollapsed: (collapsed: boolean) => void;
   setLoading: (loading: boolean) => void;
-  
+
   // Data actions
   setTeachers: (teachers: Teacher[]) => void;
   setStudents: (students: Student[]) => void;
@@ -151,7 +151,7 @@ interface SchoolStore {
   setAttendance: (attendance: Attendance[]) => void;
   setCirculars: (circulars: Circular[]) => void;
   setHomework: (homework: Homework[]) => void;
-  
+
   // Statistics
   getStudentCount: () => number;
   getTeacherCount: () => number;
@@ -176,13 +176,13 @@ export const useSchoolStore = create<SchoolStore>()(
       activeView: 'dashboard',
       sidebarCollapsed: false,
       loading: false,
-      
+
       // Actions
       setCurrentUser: (user) => set({ currentUser: user }),
       setActiveView: (view) => set({ activeView: view }),
       setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
       setLoading: (loading) => set({ loading: loading }),
-      
+
       // Data actions
       setTeachers: (teachers) => set({ teachers }),
       setStudents: (students) => set({ students }),
@@ -192,24 +192,28 @@ export const useSchoolStore = create<SchoolStore>()(
       setAttendance: (attendance) => set({ attendance }),
       setCirculars: (circulars) => set({ circulars }),
       setHomework: (homework) => set({ homework }),
-      
+
       // Computed values
       getStudentCount: () => get().students.length,
       getTeacherCount: () => get().teachers.length,
       getPresentStudentsToday: () => {
         const today = new Date().toISOString().split('T')[0];
-        return get().attendance.filter(a => 
-          a.date === today && a.status === 'present'
+        return get().attendance.filter(
+          (a) => a.date === today && a.status === 'present'
         ).length;
       },
       getRecentCirculars: () => {
-        return get().circulars
-          .sort((a, b) => new Date(b.issued_date).getTime() - new Date(a.issued_date).getTime())
+        return get()
+          .circulars.sort(
+            (a, b) =>
+              new Date(b.issued_date).getTime() -
+              new Date(a.issued_date).getTime()
+          )
           .slice(0, 5);
       }
     }),
     {
-      name: 'school-store',
+      name: 'school-store'
     }
   )
 );
@@ -217,7 +221,7 @@ export const useSchoolStore = create<SchoolStore>()(
 // Initialize with sample data
 export const initializeSampleData = () => {
   const store = useSchoolStore.getState();
-  
+
   // Sample admin user
   store.setCurrentUser({
     id: 'user_001',
@@ -228,7 +232,7 @@ export const initializeSampleData = () => {
     created_at: '2025-07-19T13:26:00Z',
     updated_at: '2025-07-19T13:26:00Z'
   });
-  
+
   // Sample data
   store.setStudents([
     {
@@ -272,7 +276,7 @@ export const initializeSampleData = () => {
       updated_at: '2025-07-19T13:26:00Z'
     }
   ]);
-  
+
   store.setTeachers([
     {
       id: 'teacher_001',
@@ -290,7 +294,7 @@ export const initializeSampleData = () => {
       updated_at: '2025-07-19T13:26:00Z'
     }
   ]);
-  
+
   store.setCirculars([
     {
       id: 'circular_001',
@@ -304,7 +308,7 @@ export const initializeSampleData = () => {
       updated_at: '2025-07-19T13:26:00Z'
     }
   ]);
-  
+
   store.setAttendance([
     {
       id: 'attendance_001',
