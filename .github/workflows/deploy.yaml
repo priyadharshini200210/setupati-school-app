@@ -1,9 +1,11 @@
-name: Deploy Application
+name: Deployment
 
 on:
   push:
     branches:
       - main
+      - releases/release*
+  pull_request:
 
 jobs:
   deploy:
@@ -24,12 +26,46 @@ jobs:
 
       - name: Run Lint
         run: npm run lint
-         
-      - name: Deploy to Firebase Hosting
+
+      # Deploy preview for PRs
+      - name: Deploy Preview (PR)
+        if: github.event_name == 'pull_request'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SETUPATI_SCHOOL_APP }}
           projectId: setupati-school-app
-          channelId: ${{ github.event.pull_request.number }}
-        if: github.event_name == 'pull_request'
+          channelId: pr-${{ github.event.pull_request.number }}
+
+      # Deploy live for pushes to main/release
+      - name: Deploy Live
+        if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SETUPATI_SCHOOL_APP }}
+          projectId: setupati-school-app
+          channelId: live
+
+      - name: Check for changes in app folder
+        id: changes
+        run: |
+          # Check if any files changed in 'app/' compared to previous commit
+          echo "Checking changes in app/ folder..."
+          # Fetch the previous commit SHA to compare to
+          echo "CHANGED=$(git diff --name-only ${{ github.sha }} ${{ github.sha }}^ | grep '^app/' || true)" >> $GITHUB_ENV
+          if [ -n "$CHANGED" ]; then
+            echo "Changes found in app/: $CHANGED"
+            echo "deploy" > deploy_flag.txt
+          else
+            echo "No changes found in app/"
+          fi
+
+      - name: Deploy Backend to Render
+        if: (env.CHANGED != '') || (steps.changes.outputs.deploy_flag == 'deploy') && github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          echo "Deploying backend to Render due to changes in app/"
+          curl "$RENDER_DEPLOY_HOOK_URL"
+

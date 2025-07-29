@@ -2,9 +2,9 @@ import {
   createStudent,
   searchStudent,
   deleteStudentDetails
-} from '../service/student';
+} from '../service/student.js';
 import { Router, Request, Response } from 'express';
-import { Student } from '../models/Student';
+import { Student } from '../models/Student.js';
 
 const router = Router();
 

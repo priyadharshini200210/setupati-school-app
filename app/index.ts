@@ -1,11 +1,11 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import studentRoutes from './routes/student';
+import studentRoutes from './routes/student.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import './firebase';
-import logger from '../app/utils/logger.js';
+import './firebase.js';
+import logger from './utils/logger.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,7 +21,7 @@ app.use(express.json());
 app.use('/students', studentRoutes);
 
 app.get('/alive', (req, res) => {
-  res.status(200).send('OK');
+  res.status(200).send('OK Backend alive');
 });
 
 app.listen(PORT, () => {

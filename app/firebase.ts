@@ -1,5 +1,5 @@
 import admin from 'firebase-admin';
-import logger from '../app/utils/logger.js';
+import logger from './utils/logger.js';
 import 'dotenv/config';
 
 const serviceAccountBase64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
@@ -16,10 +16,10 @@ try {
   );
   serviceAccountJson = JSON.parse(decodedJson);
   logger.info('Firebase service account JSON parsed successfully.');
-} catch (error) {
+} catch (error: unknown) {
   logger.error(
     'Failed to decode or parse FIREBASE_SERVICE_ACCOUNT_BASE64:',
-    error.message
+    (error as Error).message
   );
   throw error;
 }
