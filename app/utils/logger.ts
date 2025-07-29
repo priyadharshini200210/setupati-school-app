@@ -8,9 +8,7 @@ const logger: winston.Logger = createLogger({
     format.colorize(),
     format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
   ),
-  transports: [
-    new transports.Console(), 
-  ],
+  transports: [new transports.Console()]
 });
 
 export default logger;

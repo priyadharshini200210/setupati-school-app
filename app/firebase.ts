@@ -16,10 +16,10 @@ try {
   );
   serviceAccountJson = JSON.parse(decodedJson);
   logger.info('Firebase service account JSON parsed successfully.');
-} catch (error: any) {
+} catch (error: unknown) {
   logger.error(
     'Failed to decode or parse FIREBASE_SERVICE_ACCOUNT_BASE64:',
-    error.message
+    (error as Error).message
   );
   throw error;
 }
