@@ -1,22 +1,19 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
- "compilerOptions": {
+  "compilerOptions": {
     "target": "ES2020",
     "module": "esnext",
-    "rootDir": "./server",
+    "rootDir": "./app",
     "outDir": "./dist",
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "moduleResolution": "Node",     
+    "moduleResolution": "node",
+    "strict": true,
+    "noEmit": false
   },
   "ts-node": {
     "experimentalSpecifierResolution": "node",
     "transpileOnly": true,
-    "esm": true,
+    "esm": true
   },
-  "include": ["server"]
+  "include": ["app/**/*", "server/**/*"]
 }

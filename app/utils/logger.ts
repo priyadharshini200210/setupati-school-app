@@ -1,7 +1,7 @@
 import winston from 'winston';
 const { createLogger, format, transports } = winston;
 
-const logger = createLogger({
+const logger: winston.Logger = createLogger({
   level: 'info',
   format: format.combine(
     format.timestamp(),

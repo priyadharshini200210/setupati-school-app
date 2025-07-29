@@ -4,8 +4,8 @@ import {
   getStudent,
   deleteStudent,
   searchStudent as searchStudentApi
-} from '../api/student';
-import { Student } from '../models/Student';
+} from '../api/student.js';
+import { Student } from '../models/Student.js';
 import logger from '../utils/logger.js';
 
 export const createStudent = async (
