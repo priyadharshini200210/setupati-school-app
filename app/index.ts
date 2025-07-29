@@ -21,7 +21,7 @@ app.use(express.json());
 app.use('/students', studentRoutes);
 
 app.get('/alive', (req, res) => {
-  res.status(200).send('OK');
+  res.status(200).send('OK Backend alive');
 });
 
 app.listen(PORT, () => {

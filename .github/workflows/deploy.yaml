@@ -46,3 +46,27 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SETUPATI_SCHOOL_APP }}
           projectId: setupati-school-app
           channelId: live
+
+      - name: Check for changes in app folder
+        id: changes
+        run: |
+          # Check if any files changed in 'app/' compared to previous commit
+          echo "Checking changes in app/ folder..."
+          # Fetch the previous commit SHA to compare to
+          echo "CHANGED=$(git diff --name-only ${{ github.sha }} ${{ github.sha }}^ | grep '^app/' || true)" >> $GITHUB_ENV
+          if [ -n "$CHANGED" ]; then
+            echo "Changes found in app/: $CHANGED"
+            echo "deploy" > deploy_flag.txt
+          else
+            echo "No changes found in app/"
+          fi
+
+      - name: Deploy Backend to Render
+        if: env.CHANGED != '' || (steps.changes.outputs.deploy_flag == 'deploy')
+        if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          echo "Deploying backend to Render due to changes in app/"
+          curl "$RENDER_DEPLOY_HOOK_URL"
+
