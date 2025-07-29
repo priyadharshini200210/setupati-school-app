@@ -25,14 +25,15 @@ export default tseslint.config([
       globals: globals.browser,
     },
     plugins: {
-      "react-hooks": reactHooks,
-      "react-refresh": reactRefresh,
+      reactHooks,
+      reactRefresh,
     },
     rules: {
       "require-jsdoc": "off",
       "valid-jsdoc": "off",
       "new-cap": "off",
-      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "no-unused-vars": "warn",
     },
     ignores: [".node_modules/*"]
   },
