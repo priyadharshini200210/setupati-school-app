@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: node:20
+    permissions:
+      checks: write          # allow Firebase action to create check-runs
+      contents: read         # read repo contents
+      pull-requests: write   # comment on PR with preview URL
 
     steps:
       - name: Checkout Code

@@ -24,10 +24,16 @@ export default tseslint.config([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    plugins: {
+      reactHooks,
+      reactRefresh,
+    },
     rules: {
       "require-jsdoc": "off",
       "valid-jsdoc": "off",
       "new-cap": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "no-unused-vars": "warn",
     },
     ignores: [".node_modules/*"]
   },
