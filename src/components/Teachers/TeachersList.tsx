@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { Edit, Eye} from 'lucide-react';
+import { Edit, Eye } from 'lucide-react';
 
 type Teacher = {
   id: string;
