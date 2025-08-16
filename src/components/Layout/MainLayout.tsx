@@ -3,7 +3,7 @@ import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { Dashboard } from '../Dashboard/Dashboard';
 import { StudentsList } from '../Students/StudentsList';
-import { TeachersList } from '../Teachers/TeachersList';
+import { TeachersPage } from '../Teachers/TeachersPage';
 import { useSchoolStore } from '@/store/schoolStore';
 import { initializeSampleData } from '@/store/schoolStore';
 
@@ -22,7 +22,7 @@ export const MainLayout = () => {
       case 'students':
         return <StudentsList />;
       case 'teachers':
-        return <TeachersList />;
+        return <TeachersPage />;
       case 'subjects':
         return (
           <div className="text-center py-12">
