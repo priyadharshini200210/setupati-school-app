@@ -18,9 +18,11 @@ import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import api from '@/lib/axiosConfig';
+import { useAuthStore } from '@/store/AuthStore';
 
 export const Header = () => {
   const { currentUser, setCurrentUser, resetStore } = useSchoolStore();
+  const { resetAuthStore } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -63,6 +65,7 @@ export const Header = () => {
 
     try {
       await signOut(auth);
+      resetAuthStore();
       resetStore();
       navigate('/');
     } catch (error: unknown) {

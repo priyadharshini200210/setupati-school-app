@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { LoginForm } from './LoginForm';
 import { ForgotPasswordForm } from './ForgotPasswordForm';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/store/authStore';
 
 export const AuthLayout: React.FC = () => {
   const [currentView, setCurrentView] = useState<'login' | 'forgot'>('login');
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthStore();
 
   const handleShowForgotPassword = () => {
     setCurrentView('forgot');

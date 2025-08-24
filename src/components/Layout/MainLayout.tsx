@@ -5,7 +5,7 @@ import { StudentsList } from '../Students/StudentsList';
 import { TeachersList } from '../Teachers/TeachersList';
 import { useSchoolStore } from '@/store/schoolStore';
 import { initializeSampleData } from '@/store/schoolStore';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/store/authStore';
 import { StudentDashboard } from '@/components/students/StudentDashboard';
 import { TeacherDashboard } from '@/components/teachers/TeacherDashboard';
 import { AdminDashboard } from '@/components/admin/AdminDashboard';
@@ -13,7 +13,7 @@ import { RoleRoute } from '../Authentication/RoleRoute';
 
 export const MainLayout = () => {
   const { activeView } = useSchoolStore();
-  const { role } = useAuth();
+  const { role } = useAuthStore();
 
   useEffect(() => {
     // Initialize sample data on mount

@@ -1,6 +1,6 @@
 // routes/RoleRoute.tsx
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/store/authStore';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 interface RoleRouteProps {
@@ -9,7 +9,7 @@ interface RoleRouteProps {
 }
 
 export function RoleRoute({ children, allowedRoles }: RoleRouteProps) {
-  const { role, user, loading } = useAuth();
+  const { role, user, loading } = useAuthStore();
   const location = useLocation();
 
   if (loading) return <LoadingSpinner />;
