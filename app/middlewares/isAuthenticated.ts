@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { auth } from '../firebase.js';
+import logger from '../utils/logger.js';
 
 export async function isAuthenticated(
   req: Request,
@@ -21,7 +22,7 @@ export async function isAuthenticated(
 
   try {
     const decodedToken: auth.DecodedIdToken = await auth.verifyIdToken(token);
-    console.log('decodedToken', JSON.stringify(decodedToken));
+    logger.info('decodedToken', JSON.stringify(decodedToken));
     res.locals = {
       ...res.locals,
       uid: decodedToken.uid,
@@ -30,7 +31,7 @@ export async function isAuthenticated(
     };
     return next();
   } catch (err) {
-    console.error(`${err.code} -  ${err.message}`);
+    logger.error(`${err.code} -  ${err.message}`);
     return res.status(401).send({ message: 'Unauthorized' });
   }
 }

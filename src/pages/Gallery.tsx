@@ -157,7 +157,7 @@ export const Gallery: React.FC = () => {
       <footer className="py-8 px-4 bg-primary text-primary-foreground">
         <div className="container mx-auto text-center">
           <p className="text-sm">
-            © 2024 Setupadi School. All rights reserved. Empowering Education
+            © 2024 Setupati School. All rights reserved. Empowering Education
             Through Technology.
           </p>
         </div>

@@ -14,7 +14,7 @@ export const LandingPage: React.FC = () => {
       <section className="py-20 px-4">
         <div className="container mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-primary mb-6">
-            Welcome to Setupadi School
+            Welcome to Setupati School
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
             Empowering minds, shaping futures. Excellence in education for over
@@ -41,7 +41,7 @@ export const LandingPage: React.FC = () => {
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-primary mb-4">
-              About Setupadi School
+              About Setupati School
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Founded with a vision to provide quality education, we have been
@@ -170,7 +170,7 @@ export const LandingPage: React.FC = () => {
       <footer className="py-8 px-4 bg-primary text-primary-foreground">
         <div className="container mx-auto text-center">
           <p className="text-sm">
-            © 2024 Setupadi School. All rights reserved. Empowering Education
+            © 2025 Setupati School. All rights reserved. Empowering Education
             Through Technology.
           </p>
         </div>

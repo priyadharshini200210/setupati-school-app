@@ -34,10 +34,12 @@ export const Header = () => {
 
           setCurrentUser(userData);
         } catch (error) {
-          console.error('Failed to fetch user from backend:', error);
           toast({
             title: 'Error',
-            description: 'Failed to load user details. Please try again.',
+            description:
+              error instanceof Error
+                ? error.messsage
+                : 'Failed to load user details. Please try again.',
             variant: 'destructive'
           });
         }
@@ -64,7 +66,6 @@ export const Header = () => {
       resetStore();
       navigate('/');
     } catch (error: unknown) {
-      console.error('Logout error:', error);
       toast({
         title: 'Error',
         description:

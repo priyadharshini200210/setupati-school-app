@@ -13,7 +13,7 @@ export const LandingPageNavigation: React.FC = () => {
           <Link to="/" className="flex items-center space-x-2">
             <GraduationCap className="h-8 w-8 text-primary" />
             <span className="text-xl font-bold text-primary">
-              Setupadi School
+              Setupati School
             </span>
           </Link>
 

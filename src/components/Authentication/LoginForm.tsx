@@ -75,8 +75,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onForgotPassword }) => {
 
       navigate('/dashboard');
     } catch (error: unknown) {
-      console.error('Login error:', error);
-
       let errorMessage = '';
       if ((error as { code: string }).code === 'auth/invalid-credential') {
         errorMessage = 'Incorrect password or email address.';

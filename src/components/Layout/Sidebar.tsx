@@ -78,7 +78,7 @@ export const Sidebar = () => {
                 <School className="h-6 w-6 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="font-bold text-lg text-foreground">Setupadi</h1>
+                <h1 className="font-bold text-lg text-foreground">Setupati</h1>
                 <p className="text-xs text-muted-foreground">
                   School Management
                 </p>
