@@ -6,6 +6,8 @@ import NotFound from './pages/NotFound';
 import { Toaster } from './components/ui/toaster';
 import { SonnerToaster } from './components/ui/sonner';
 import { TooltipProvider } from './components/ui/tooltip';
+import { StudentsList } from './components/Students/StudentsList';
+import { Student } from './components/Students/Student';
 
 const queryClient = new QueryClient();
 
@@ -17,8 +19,10 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
+          <Route path="/students/:gradeName" element={<Student grade_name='grade_001' onBack={function (): void {
+            throw new Error('Function not implemented.');
+          } } />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

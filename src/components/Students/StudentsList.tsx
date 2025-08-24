@@ -1,168 +1,62 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table';
+import { StatsCard } from '../StatsCard';
 import { useSchoolStore } from '@/store/schoolStore';
-import { Search, Plus, Edit, Eye, Filter } from 'lucide-react';
+import { Users } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 export const StudentsList = () => {
-  const { students } = useSchoolStore();
-  const [searchTerm, setSearchTerm] = useState('');
+  const { grades, teachers, students } = useSchoolStore();
+  const navigate = useNavigate();
 
-  const filteredStudents = students.filter(
-    (student) =>
-      student.f_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.l_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.roll_no.includes(searchTerm)
-  );
+  const teachersByGradeId = useMemo(() => {
+    return grades.reduce((acc, grade) => {
+      const teacher = teachers.find(t => t.id === grade.teacher_id);
+      acc[grade.grade_name] = teacher 
+        ? `${teacher.first_name} ${teacher.last_name}`
+        : 'Unknown';
+      return acc;
+    }, {} as Record<string, string>);
+  }, [grades, teachers]);
 
-  const getInitials = (firstName: string, lastName: string) => {
-    return `${firstName[0]}${lastName[0]}`.toUpperCase();
+  const studentCountByGrade = useMemo(() => {
+    return students.reduce((acc, student) => {
+      if (student?.grade_name) {
+        acc[student.grade_name] = (acc[student.grade_name] || 0) + 1;
+      }
+      return acc;
+    }, {} as Record<string, number>);
+  }, [students]);
+
+
+
+  const handleGradeClick = (gradeName: string) => {
+    navigate(`/students/${gradeName}`);
   };
 
+  const defaultGrades = ['Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5'];
+
+  console.log("grade?.section_ids.length", grades?.[0].grade_name , (grades?.[0].section_ids).length);
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Students</h1>
-          <p className="text-muted-foreground">
-            Manage student information and records
-          </p>
-        </div>
-        <Button className="bg-gradient-primary text-primary-foreground shadow-soft">
-          <Plus className="h-4 w-4 mr-2" />
-          Add Student
-        </Button>
-      </div>
-
-      {/* Filters and Search */}
-      <Card className="shadow-soft">
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search students by name or roll number..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <Button variant="outline" className="w-full sm:w-auto">
-              <Filter className="h-4 w-4 mr-2" />
-              Filters
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Students Table */}
-      <Card className="shadow-soft">
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span>Student Records</span>
-            <Badge variant="outline" className="text-xs">
-              {filteredStudents.length} students
-            </Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Student</TableHead>
-                  <TableHead>Roll No.</TableHead>
-                  <TableHead>Section</TableHead>
-                  <TableHead>Gender</TableHead>
-                  <TableHead>Contact</TableHead>
-                  <TableHead>Blood Group</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredStudents.map((student) => (
-                  <TableRow key={student.id}>
-                    <TableCell>
-                      <div className="flex items-center space-x-3">
-                        <Avatar className="h-10 w-10">
-                          <AvatarFallback className="bg-primary-soft text-primary">
-                            {getInitials(student.f_name, student.l_name)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-medium">
-                            {student.f_name} {student.l_name}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            DOB: {new Date(student.dob).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{student.roll_no}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className="bg-accent text-accent-foreground">
-                        {student.section_id}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{student.gender}</TableCell>
-                    <TableCell>
-                      <div className="text-sm">
-                        <p>{student.phone_num1}</p>
-                        <p className="text-muted-foreground text-xs">
-                          {student.city}, {student.state}
-                        </p>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant="outline"
-                        className="bg-success-soft text-success"
-                      >
-                        {student.blood_group}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end space-x-2">
-                        <Button variant="ghost" size="icon">
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-
-          {filteredStudents.length === 0 && (
-            <div className="text-center py-8">
-              <p className="text-muted-foreground">
-                {searchTerm
-                  ? 'No students found matching your search.'
-                  : 'No students added yet.'}
-              </p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {defaultGrades.map((defaultGrade, index) => {
+        const grade = grades[index];
+        const gradeName = grade?.grade_name || defaultGrade;
+        
+        return (
+          <StatsCard
+            key={gradeName}
+            title={gradeName}
+            sectionCount={(grade?.section_ids).length || 0}
+            value={`Student Strength: ${studentCountByGrade[gradeName] || 0}`}
+            icon={Users}
+            description={`Incharge staff: ${teachersByGradeId[gradeName] || 'Unknown'}`}
+            onClick={() => handleGradeClick(gradeName)}
+            className="cursor-pointer hover:shadow-lg transition-shadow"
+          />
+        );
+      })}
     </div>
   );
 };

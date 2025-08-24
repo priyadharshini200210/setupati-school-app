@@ -51,6 +51,7 @@ export interface Student {
   pincode: string;
   created_at: string;
   updated_at: string;
+  grade_name: string;
 }
 
 export interface Subject {
@@ -74,6 +75,7 @@ export interface Section {
 export interface Grade {
   id: string;
   grade_name: string;
+  teacher_id: string;
   section_ids: string[];
   ahm_staff_id: string;
   created_at: string;
@@ -253,7 +255,8 @@ export const initializeSampleData = () => {
       country: 'India',
       pincode: '400001',
       created_at: '2025-07-19T13:26:00Z',
-      updated_at: '2025-07-19T13:26:00Z'
+      updated_at: '2025-07-19T13:26:00Z',
+      grade_name: 'grade_001'
     },
     {
       id: 'student_002',
@@ -273,7 +276,8 @@ export const initializeSampleData = () => {
       country: 'India',
       pincode: '400002',
       created_at: '2025-07-19T13:26:00Z',
-      updated_at: '2025-07-19T13:26:00Z'
+      updated_at: '2025-07-19T13:26:00Z',
+      grade_name: 'grade_002'
     }
   ]);
 
@@ -327,6 +331,54 @@ export const initializeSampleData = () => {
       status: 'present',
       created_at: '2025-07-19T13:26:00Z',
       updated_at: '2025-07-19T13:26:00Z'
+    }
+  ]);
+
+  store.setGrades([
+    {
+      id: 'grade_001',
+      grade_name: 'grade_001',
+      teacher_id: 'teacher_001',
+      section_ids: ["1","2"],
+      ahm_staff_id: '',
+      created_at: '',
+      updated_at: ''
+    },
+    {
+      id: 'grade_002',
+      grade_name: 'grade_002',
+      teacher_id: 'teacher_001',
+      section_ids: ["1","2","3","4"],
+      ahm_staff_id: '',
+      created_at: '',
+      updated_at: ''
+    },
+    {
+      id: 'grade_003',
+      grade_name: 'grade_003',
+      teacher_id: 'teacher_001',
+      section_ids: ["1","2","3"],
+      ahm_staff_id: '',
+      created_at: '',
+      updated_at: ''
+    },
+    {
+      id: 'grade_004',
+      grade_name: 'grade_004',
+      teacher_id: 'teacher_001',
+      section_ids: ["1","2"],
+      ahm_staff_id: '',
+      created_at: '',
+      updated_at: ''
+    },
+    {
+      id: 'grade_005',
+      grade_name: 'grade_005',
+      teacher_id: 'teacher_001',
+      section_ids: ["1","2"],
+      ahm_staff_id: '',
+      created_at: '',
+      updated_at: ''
     }
   ]);
 };

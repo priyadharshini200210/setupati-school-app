@@ -1,7 +1,8 @@
 import {
   createStudent,
   searchStudent,
-  deleteStudentDetails
+  deleteStudentDetails,
+  getAllStudents
 } from '../service/student.js';
 import { Router, Request, Response } from 'express';
 import { Student } from '../models/Student.js';
@@ -25,5 +26,10 @@ router.delete(
     deleteStudentDetails(req, res);
   }
 );
+
+router.get('/all', (req: Request, res: Response) => {
+  console.log('Fetching all students');
+  return getAllStudents(req, res);
+});
 
 export default router;

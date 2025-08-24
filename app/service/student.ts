@@ -3,7 +3,8 @@ import {
   addStudent,
   getStudent,
   deleteStudent,
-  searchStudent as searchStudentApi
+  searchStudent as searchStudentApi,
+  getAllStudentDetails
 } from '../api/student.js';
 import { Student } from '../models/Student.js';
 import logger from '../utils/logger.js';
@@ -12,8 +13,9 @@ export const createStudent = async (
   req: Request<{ Student: Student }>,
   res: Response
 ) => {
+  console.log('req.body', req.body);
   try {
-    const data = req.body.Student;
+    const data = req.body;
     const id = await addStudent(data);
     res.status(201).json({ id });
   } catch (error) {
@@ -70,6 +72,20 @@ export const searchStudent = async (
     res.status(200).json(students);
   } catch (error) {
     logger.error('Error searching for students:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+export const getAllStudents = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const students = await getAllStudentDetails();
+    console.log('Fetched all students:', students);
+    res.status(200).json(students);
+  } catch (error) {
+    logger.error('Error fetching all students:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };

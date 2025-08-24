@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { StatsCard } from './StatsCard';
+import { StatsCard } from '../StatsCard';
 import { useSchoolStore } from '@/store/schoolStore';
 import {
   Users,

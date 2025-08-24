@@ -4,7 +4,9 @@ import { Student } from '../models/Student.js';
 const studentCollection = db.collection('Student');
 
 export const addStudent = async (data: Student): Promise<string> => {
-  const docRef = await studentCollection.add(data);
+  console.log('data', data);
+  const plainData = { ...data };
+  const docRef = await studentCollection.add(plainData);
   return docRef.id;
 };
 
@@ -43,7 +45,19 @@ export const searchStudent = async (
     return [];
   }
   return snapshot.docs.map((doc) => ({
-    id: doc.id,
+     id: doc.id,
     student: doc.data() as Student
   }));
 };
+
+export const getAllStudentDetails = async (): Promise<{ id: string; student: Student }[]> => {
+  const snapshot = await studentCollection.get();
+  if (snapshot.empty) {
+    return [];
+  }
+  console.log('Fetched all students:', snapshot.docs);
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    student: doc.data() as Student
+  }));
+}
