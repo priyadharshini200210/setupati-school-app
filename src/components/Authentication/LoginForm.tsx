@@ -57,6 +57,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onForgotPassword }) => {
 
       const user = userRecord.user;
 
+      if (!user) {
+        throw new Error('User not found.');
+      }
+
       const response = await api.get(`/api/v1/auth/users/${user.uid}`);
 
       const userData: User = response.data.user;
