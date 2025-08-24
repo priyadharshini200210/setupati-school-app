@@ -1,5 +1,5 @@
-import { db } from '../firebase.js';
-import { Student } from '../models/Student.js';
+import { db } from '../../firebase.js';
+import { Student } from '../../models/Student.js';
 
 const studentCollection = db.collection('Student');
 
