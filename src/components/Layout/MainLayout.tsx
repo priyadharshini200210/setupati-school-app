@@ -1,14 +1,19 @@
 import { useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
-import { Dashboard } from '../Dashboard/Dashboard';
 import { StudentsList } from '../Students/StudentsList';
 import { TeachersList } from '../Teachers/TeachersList';
 import { useSchoolStore } from '@/store/schoolStore';
 import { initializeSampleData } from '@/store/schoolStore';
+import { useAuth } from '@/hooks/useAuth';
+import { StudentDashboard } from '@/components/students/StudentDashboard';
+import { TeacherDashboard } from '@/components/teachers/TeacherDashboard';
+import { AdminDashboard } from '@/components/admin/AdminDashboard';
+import { RoleRoute } from '../Authentication/RoleRoute';
 
 export const MainLayout = () => {
   const { activeView } = useSchoolStore();
+  const { role } = useAuth();
 
   useEffect(() => {
     // Initialize sample data on mount
@@ -16,13 +21,25 @@ export const MainLayout = () => {
   }, []);
 
   const renderContent = () => {
-    switch (activeView) {
-      case 'dashboard':
-        return <Dashboard />;
-      case 'students':
-        return <StudentsList />;
-      case 'teachers':
-        return <TeachersList />;
+    switch (role) {
+      case 'student':
+        return (
+          <RoleRoute allowedRoles={['student']}>
+            <StudentDashboard />
+          </RoleRoute>
+        );
+      case 'teacher':
+        return (
+          <RoleRoute allowedRoles={['teacher']}>
+            <TeacherDashboard />
+          </RoleRoute>
+        );
+      case 'admin':
+        return (
+          <RoleRoute allowedRoles={['admin']}>
+            <AdminDashboard />
+          </RoleRoute>
+        );
       case 'subjects':
         return (
           <div className="text-center py-12">
@@ -78,8 +95,6 @@ export const MainLayout = () => {
             </p>
           </div>
         );
-      default:
-        return <Dashboard />;
     }
   };
 

@@ -11,7 +11,7 @@ import {
   BookOpen
 } from 'lucide-react';
 
-export const Dashboard = () => {
+export const TeacherDashboard = () => {
   const {
     getStudentCount,
     getTeacherCount,

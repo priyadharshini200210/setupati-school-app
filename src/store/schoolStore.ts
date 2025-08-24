@@ -1,13 +1,12 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 
-// Types based on the backend schema
 export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'teacher' | 'parent' | 'student';
-  password?: string;
+  role: 'admin' | 'teacher' | 'student';
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -162,76 +161,84 @@ interface SchoolStore {
 // Create the store
 export const useSchoolStore = create<SchoolStore>()(
   devtools(
-    (set, get) => ({
-      // Initial state
-      currentUser: null,
-      teachers: [],
-      students: [],
-      subjects: [],
-      sections: [],
-      grades: [],
-      attendance: [],
-      circulars: [],
-      homework: [],
-      activeView: 'dashboard',
-      sidebarCollapsed: false,
-      loading: false,
+    persist(
+      (set, get) => ({
+        // Initial state
+        currentUser: null,
+        teachers: [],
+        students: [],
+        subjects: [],
+        sections: [],
+        grades: [],
+        attendance: [],
+        circulars: [],
+        homework: [],
+        activeView: 'dashboard',
+        sidebarCollapsed: false,
+        loading: false,
 
-      // Actions
-      setCurrentUser: (user) => set({ currentUser: user }),
-      setActiveView: (view) => set({ activeView: view }),
-      setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
-      setLoading: (loading) => set({ loading: loading }),
+        // Actions
+        setCurrentUser: (user) => set({ currentUser: user }),
+        setActiveView: (view) => set({ activeView: view }),
+        setSidebarCollapsed: (collapsed) =>
+          set({ sidebarCollapsed: collapsed }),
+        setLoading: (loading) => set({ loading }),
 
-      // Data actions
-      setTeachers: (teachers) => set({ teachers }),
-      setStudents: (students) => set({ students }),
-      setSubjects: (subjects) => set({ subjects }),
-      setSections: (sections) => set({ sections }),
-      setGrades: (grades) => set({ grades }),
-      setAttendance: (attendance) => set({ attendance }),
-      setCirculars: (circulars) => set({ circulars }),
-      setHomework: (homework) => set({ homework }),
+        // Data actions
+        setTeachers: (teachers) => set({ teachers }),
+        setStudents: (students) => set({ students }),
+        setSubjects: (subjects) => set({ subjects }),
+        setSections: (sections) => set({ sections }),
+        setGrades: (grades) => set({ grades }),
+        setAttendance: (attendance) => set({ attendance }),
+        setCirculars: (circulars) => set({ circulars }),
+        setHomework: (homework) => set({ homework }),
 
-      // Computed values
-      getStudentCount: () => get().students.length,
-      getTeacherCount: () => get().teachers.length,
-      getPresentStudentsToday: () => {
-        const today = new Date().toISOString().split('T')[0];
-        return get().attendance.filter(
-          (a) => a.date === today && a.status === 'present'
-        ).length;
-      },
-      getRecentCirculars: () => {
-        return get()
-          .circulars.sort(
-            (a, b) =>
-              new Date(b.issued_date).getTime() -
-              new Date(a.issued_date).getTime()
-          )
-          .slice(0, 5);
+        resetStore: () =>
+          set({
+            currentUser: null,
+            teachers: [],
+            students: [],
+            subjects: [],
+            sections: [],
+            grades: [],
+            attendance: [],
+            circulars: [],
+            homework: [],
+            activeView: 'dashboard',
+            sidebarCollapsed: false,
+            loading: false,
+          }),
+
+        // Computed values
+        getStudentCount: () => get().students.length,
+        getTeacherCount: () => get().teachers.length,
+        getPresentStudentsToday: () => {
+          const today = new Date().toISOString().split('T')[0];
+          return get().attendance.filter(
+            (a) => a.date === today && a.status === 'present'
+          ).length;
+        },
+        getRecentCirculars: () => {
+          return get()
+            .circulars.sort(
+              (a, b) =>
+                new Date(b.issued_date).getTime() -
+                new Date(a.issued_date).getTime()
+            )
+            .slice(0, 5);
+        }
+      }),
+      {
+        name: 'school-store'
       }
-    }),
-    {
-      name: 'school-store'
-    }
+    )
   )
 );
 
 // Initialize with sample data
 export const initializeSampleData = () => {
   const store = useSchoolStore.getState();
-
-  // Sample admin user
-  store.setCurrentUser({
-    id: 'user_001',
-    name: 'Admin User',
-    email: 'admin@school.com',
-    role: 'admin',
-    is_active: true,
-    created_at: '2025-07-19T13:26:00Z',
-    updated_at: '2025-07-19T13:26:00Z'
-  });
 
   // Sample data
   store.setStudents([
