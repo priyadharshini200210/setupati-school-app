@@ -12,6 +12,7 @@ api.interceptors.request.use(async (config) => {
 
   if (user) {
     const token = await user.getIdToken();
+    // for dev use only
     console.log('userToken', token);
     config.headers.Authorization = `Bearer ${token}`;
   }
