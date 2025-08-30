@@ -1,162 +1,10 @@
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
-import { persist } from 'zustand/middleware';
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: 'admin' | 'teacher' | 'student';
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Teacher {
-  id: string;
-  subject_ids: string[];
-  section_ids: string[];
-  first_name: string;
-  last_name: string;
-  dob: string;
-  gender: string;
-  designation: string;
-  qualification: string;
-  doj: string;
-  experienced_years: number;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Student {
-  id: string;
-  section_id: string;
-  subject_ids: string[];
-  roll_no: string;
-  dob: string;
-  f_name: string;
-  l_name: string;
-  gender: string;
-  blood_group: string;
-  aadhar_no: string;
-  phone_num1: string;
-  phone_num2?: string;
-  address_line1: string;
-  address_line2?: string;
-  landmark?: string;
-  city: string;
-  state: string;
-  country: string;
-  pincode: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Subject {
-  id: string;
-  subject_name: string;
-  grade_id: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Section {
-  id: string;
-  section_name: string;
-  grade_id: string;
-  class_teacher_id: string;
-  group_name: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Grade {
-  id: string;
-  grade_name: string;
-  section_ids: string[];
-  ahm_staff_id: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Attendance {
-  id: string;
-  student_id: string;
-  section_id: string;
-  date: string;
-  status: 'present' | 'absent' | 'late';
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Circular {
-  id: string;
-  title: string;
-  description: string;
-  issued_by: string;
-  targeted_group: string;
-  issued_date: string;
-  valid_until: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Homework {
-  id: string;
-  section_id: string;
-  subject_id: string;
-  teacher_id: string;
-  title: string;
-  description: string;
-  due_date: string;
-  created_date: string;
-  remarks?: string;
-  created_at: string;
-  updated_at: string;
-}
-
-// Store interface
-interface SchoolStore {
-  // Current user
-  currentUser: User | null;
-
-  // Data
-  teachers: Teacher[];
-  students: Student[];
-  subjects: Subject[];
-  sections: Section[];
-  grades: Grade[];
-  attendance: Attendance[];
-  circulars: Circular[];
-  homework: Homework[];
-
-  // UI State
-  activeView: string;
-  sidebarCollapsed: boolean;
-  loading: boolean;
-
-  // Actions
-  setCurrentUser: (user: User | null) => void;
-  setActiveView: (view: string) => void;
-  setSidebarCollapsed: (collapsed: boolean) => void;
-  setLoading: (loading: boolean) => void;
-
-  // Data actions
-  setTeachers: (teachers: Teacher[]) => void;
-  setStudents: (students: Student[]) => void;
-  setSubjects: (subjects: Subject[]) => void;
-  setSections: (sections: Section[]) => void;
-  setGrades: (grades: Grade[]) => void;
-  setAttendance: (attendance: Attendance[]) => void;
-  setCirculars: (circulars: Circular[]) => void;
-  setHomework: (homework: Homework[]) => void;
-
-  // Statistics
-  getStudentCount: () => number;
-  getTeacherCount: () => number;
-  getPresentStudentsToday: () => number;
-  getRecentCirculars: () => Circular[];
-}
+import { persist, devtools } from 'zustand/middleware';
+import { SchoolStore, User } from '@/types/schoolStoreType';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import api from '@/lib/axiosConfig';
+import { toast } from '@/hooks/use-toast';
 
 // Create the store
 export const useSchoolStore = create<SchoolStore>()(
@@ -194,6 +42,34 @@ export const useSchoolStore = create<SchoolStore>()(
         setCirculars: (circulars) => set({ circulars }),
         setHomework: (homework) => set({ homework }),
 
+        initCurrentUser: () => {
+          try {
+            onAuthStateChanged(auth, async (user) => {
+              if (user) {
+                const response = await api.get(
+                  `/api/v1/auth/users/${user.uid}`
+                );
+                const userData: User = response.data.user;
+                set({
+                  currentUser: userData
+                });
+              } else {
+                set({
+                  currentUser: null
+                });
+              }
+            });
+          } catch (error) {
+            const errorMessage =
+              error instanceof Error ? error.message : 'User not found!.';
+            toast({
+              title: 'Error',
+              description: errorMessage,
+              variant: 'destructive'
+            });
+          }
+        },
+
         resetStore: () =>
           set({
             currentUser: null,
@@ -207,7 +83,7 @@ export const useSchoolStore = create<SchoolStore>()(
             homework: [],
             activeView: 'dashboard',
             sidebarCollapsed: false,
-            loading: false,
+            loading: false
           }),
 
         // Computed values

@@ -14,6 +14,7 @@ import { Forbidden } from '@/pages/Forbidden';
 import { LandingPage } from '@/pages/LandingPage';
 import { Gallery } from '@/pages/Gallery';
 import { useAuthStore } from '@/store/authStore';
+import { useSchoolStore } from '@/store/schoolStore';
 
 const queryClient = new QueryClient();
 
@@ -50,10 +51,16 @@ export const router = createBrowserRouter([
 
 const App = () => {
   const { initAuthListener } = useAuthStore();
+  const { initCurrentUser } = useSchoolStore();
 
   useEffect(() => {
-    initAuthListener();
-  }, [initAuthListener]);
+    const initializeApp = async () => {
+      await initAuthListener();
+      await initCurrentUser();
+    };
+
+    initializeApp();
+  }, [initAuthListener, initCurrentUser]);
 
   return (
     <QueryClientProvider client={queryClient}>

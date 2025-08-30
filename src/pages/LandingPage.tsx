@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import { Award, Users, BookOpen, Star, Calendar, Target } from 'lucide-react';
+import { Footer } from '@/components/Layout/Footer';
 
 export const LandingPage: React.FC = () => {
   return (
@@ -167,14 +168,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-4 bg-primary text-primary-foreground">
-        <div className="container mx-auto text-center">
-          <p className="text-sm">
-            © 2025 Setupati School. All rights reserved. Empowering Education
-            Through Technology.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

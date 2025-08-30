@@ -1,22 +1,9 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
-import { onAuthStateChanged, getIdTokenResult, User } from 'firebase/auth';
+import { onAuthStateChanged, getIdTokenResult } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-
-type Role = 'admin' | 'teacher' | 'student' | null;
-
-interface AuthState {
-  user: User | null;
-  role: Role;
-  loading: boolean;
-  isAuthenticated: boolean;
-  setUser: (user: User | null) => void;
-  setRole: (role: Role) => void;
-  setLoading: (loading: boolean) => void;
-  hasRole: (roles: string[]) => boolean;
-  resetAuthStore: () => void;
-  initAuthListener: () => void;
-}
+import { AuthState, UserRole } from '@/types/authType';
+import { toast } from '@/hooks/use-toast';
 
 export const useAuthStore = create<AuthState>()(
   devtools(
@@ -47,26 +34,38 @@ export const useAuthStore = create<AuthState>()(
           }),
 
         initAuthListener: () => {
-          onAuthStateChanged(auth, async (firebaseUser) => {
-            if (firebaseUser) {
-              const tokenResult = await getIdTokenResult(firebaseUser);
-              const claims = tokenResult.claims;
+          try {
+            onAuthStateChanged(auth, async (firebaseUser) => {
+              if (firebaseUser) {
+                const tokenResult = await getIdTokenResult(firebaseUser);
+                const claims = tokenResult.claims;
 
-              set({
-                user: firebaseUser,
-                role: claims.role as Role,
-                isAuthenticated: true,
-                loading: false
-              });
-            } else {
-              set({
-                user: null,
-                role: null,
-                isAuthenticated: false,
-                loading: false
-              });
-            }
-          });
+                set({
+                  user: firebaseUser,
+                  role: claims.role as UserRole,
+                  isAuthenticated: true,
+                  loading: false
+                });
+              } else {
+                set({
+                  user: null,
+                  role: null,
+                  isAuthenticated: false,
+                  loading: false
+                });
+              }
+            });
+          } catch (error) {
+            const errorMessage =
+              error instanceof Error
+                ? error.message
+                : 'Unable to Authenticate User';
+            toast({
+              title: 'Error',
+              description: errorMessage,
+              variant: 'destructive'
+            });
+          }
         }
       }),
       {

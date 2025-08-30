@@ -18,10 +18,10 @@ import {
   browserLocalPersistence,
   browserSessionPersistence,
   signInWithEmailAndPassword,
-  User
 } from 'firebase/auth';
 import { useSchoolStore } from '@/store/schoolStore';
 import api from '@/lib/axiosConfig';
+import { User as UserData } from '@/types/schoolStore';
 
 interface LoginFormProps {
   onForgotPassword: () => void;
@@ -63,7 +63,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onForgotPassword }) => {
 
       const response = await api.get(`/api/v1/auth/users/${user.uid}`);
 
-      const userData: User = response.data.user;
+      const userData: UserData = response.data.user;
 
       if (!userData) {
         throw new Error('User not found.');

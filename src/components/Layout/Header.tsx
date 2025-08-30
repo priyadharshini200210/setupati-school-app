@@ -19,6 +19,7 @@ import { auth } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import api from '@/lib/axiosConfig';
 import { useAuthStore } from '@/store/AuthStore';
+import { User as UserData } from '@/types/schoolStore';
 
 export const Header = () => {
   const { currentUser, setCurrentUser, resetStore } = useSchoolStore();
@@ -26,31 +27,6 @@ export const Header = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        try {
-          const response = await api.get(`/api/v1/auth/users/${user.uid}`);
-          const userData = response.data.user;
-
-          setCurrentUser(userData);
-        } catch (error) {
-          toast({
-            title: 'Error',
-            description:
-              error instanceof Error
-                ? error.messsage
-                : 'Failed to load user details. Please try again.',
-            variant: 'destructive'
-          });
-        }
-      } else {
-        setCurrentUser(null);
-      }
-    });
-    return () => unsubscribe();
-  }, [setCurrentUser, toast]);
 
   const getInitials = (name: string) => {
     return name
@@ -69,12 +45,13 @@ export const Header = () => {
       resetStore();
       navigate('/');
     } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to logout User. Please try again.';
       toast({
         title: 'Error',
-        description:
-          error instanceof Error
-            ? error.message
-            : 'Failed to logout User. Please try again.',
+        description: errorMessage,
         variant: 'destructive'
       });
     } finally {
