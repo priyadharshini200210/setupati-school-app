@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -22,7 +22,7 @@ import { useAuthStore } from '@/store/AuthStore';
 import { User as UserData } from '@/types/schoolStore';
 
 export const Header = () => {
-  const { currentUser, setCurrentUser, resetStore } = useSchoolStore();
+  const { currentUser, resetStore } = useSchoolStore();
   const { resetAuthStore } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
