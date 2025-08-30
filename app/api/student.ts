@@ -1,7 +1,7 @@
 import { db } from '../firebase.js';
 import { Student } from '../models/Student.js';
 
-const studentCollection = db.collection('Student');
+const studentCollection = db.collection('students');
 
 export const addStudent = async (data: Student): Promise<string> => {
   console.log('data', data);
@@ -39,7 +39,7 @@ export const searchStudent = async (
   studentRollNo: string
 ): Promise<{ id: string; student: Student }[]> => {
   const snapshot = await studentCollection
-    .where('student_rollno', '==', studentRollNo)
+    .where('roll_no', '==', studentRollNo)
     .get();
   if (snapshot.empty) {
     return [];

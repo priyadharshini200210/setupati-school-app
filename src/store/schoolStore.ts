@@ -31,7 +31,7 @@ export interface Teacher {
 
 export interface Student {
   id: string;
-  section_id: string;
+  section_name: string;
   subject_ids: string[];
   roll_no: string;
   dob: string;
@@ -239,7 +239,7 @@ export const initializeSampleData = () => {
   store.setStudents([
     {
       id: 'student_001',
-      section_id: 'section_A',
+      section_name: 'Section_A',
       subject_ids: ['math_001', 'english_001'],
       roll_no: '001',
       dob: '2010-03-20',
@@ -260,7 +260,7 @@ export const initializeSampleData = () => {
     },
     {
       id: 'student_002',
-      section_id: 'section_A',
+      section_name: 'Section_A',
       subject_ids: ['math_001', 'science_001'],
       roll_no: '002',
       dob: '2010-05-15',
@@ -277,7 +277,7 @@ export const initializeSampleData = () => {
       pincode: '400002',
       created_at: '2025-07-19T13:26:00Z',
       updated_at: '2025-07-19T13:26:00Z',
-      grade_name: 'grade_002'
+      grade_name: 'grade_001'
     }
   ]);
 

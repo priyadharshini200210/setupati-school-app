@@ -3,84 +3,73 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useSchoolStore } from '@/store/schoolStore';
 import { Search, Plus, Edit, Eye, Filter } from 'lucide-react';
 
 interface StudentsProps {
-  grade_name: string;
-  onBack: () => void;
+  name?: 'grade' | 'section';
+  value?: string;
+  onBack?: () => void;
 }
 
-export const Student = ({ grade_name, onBack }: StudentsProps) => {
+export const Student = ({ name, value, onBack }: StudentsProps) => {
   const { students, setStudents } = useSchoolStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
-    student_rollno: '',
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
+    section_id: '',
+    subject_ids: [], // or [''] if needed
+    roll_no: '',
     dob: '',
+    f_name: '',
+    l_name: '',
     gender: '',
-    parent_name: '',
-    parent_phone: '',
-    enrollment_date: '',
-    class: '',
-    section: ''
+    blood_group: '',
+    aadhar_no: '',
+    phone_num1: '',
+    address_line1: '',
+    city: '',
+    state: '',
+    country: '',
+    pincode: '',
+    grade_name: ''
   });
 
+
   useEffect(() => {
-    // Fetch students from backend if needed
     const fetchStudents = async () => {
       try {
         const response = await fetch('http://localhost:3000/students/all');
-        console.log('response', response);
         if (!response.ok) throw new Error('Failed to fetch students');
         const data = await response.json();
-        console.log('Fetched students:', data);
         setStudents(data);
       } catch (error) {
         console.error(error);
       }
     };
-
     fetchStudents();
   }, []);
 
-  console.log('students', students, "searchTerm", searchTerm);
+  console.log(students,name,value);
 
-  const filteredStudents = students.filter((student) =>
-  (student?.grade_name === grade_name) &&
-    (student?.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (student?.student_rollno || '').toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredStudents = students.filter((student) => {
+    const matchesFilter =
+      name === 'grade'
+        ? student?.student?.grade_name === value
+        : name === 'section'
+          ? student?.student?.section_name === value
+          : true;
 
+    const matchesSearch =
+      !searchTerm ||
+      student?.student?.f_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student?.student?.roll_no.toLowerCase().includes(searchTerm.toLowerCase());
 
-  const consoleLogFilteredStudents = () => {
-    console.log('Filtered students:', filteredStudents);
-  };
+    return matchesFilter && matchesSearch;
+  });
 
-  consoleLogFilteredStudents();
-
-  // const getInitials = (name?: string) => {
-  //   if (!name || typeof name !== 'string') return '?';
-  //   return name
-  //     .trim()
-  //     .split(' ')
-  //     .map((n) => n[0])
-  //     .join('')
-  //     .toUpperCase();
-  // };
+  console.log(filteredStudents);
 
   const toggleForm = () => setShowForm((prev) => !prev);
 
@@ -104,19 +93,23 @@ export const Student = ({ grade_name, onBack }: StudentsProps) => {
       const result = await response.json();
       alert(`Student created with ID: ${result.id}`);
       setShowForm(false);
-      setFormData({ // reset
-        student_rollno: '',
-        name: '',
-        email: '',
-        phone: '',
-        address: '',
+      setFormData({
+        section_id: '',
+        subject_ids: [], // or [''] if needed
+        roll_no: '',
         dob: '',
+        f_name: '',
+        l_name: '',
         gender: '',
-        parent_name: '',
-        parent_phone: '',
-        enrollment_date: '',
-        class: '',
-        section: ''
+        blood_group: '',
+        aadhar_no: '',
+        phone_num1: '',
+        address_line1: '',
+        city: '',
+        state: '',
+        country: '',
+        pincode: '',
+        grade_name: ''
       });
     } catch (err) {
       console.error(err);
@@ -124,17 +117,18 @@ export const Student = ({ grade_name, onBack }: StudentsProps) => {
     }
   };
 
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Students</h1>
+          <h1 className="text-2xl font-bold text-foreground">{value +' Students'}</h1>
           <p className="text-muted-foreground">
-            Manage student information and records
+            {}
           </p>
         </div>
         <Button
-          onClick={toggleForm}
+          onClick={() => setShowForm(!showForm)}
           className="bg-gradient-primary text-primary-foreground shadow-soft"
         >
           <Plus className="h-4 w-4 mr-2" />
@@ -146,31 +140,35 @@ export const Student = ({ grade_name, onBack }: StudentsProps) => {
             className="bg-white p-4 mt-4 shadow-md rounded grid grid-cols-2 gap-4 max-w-3xl"
           >
             {[
-              'student_rollno',
-              'name',
-              'email',
-              'phone',
-              'address',
+              'roll_no',
+              'f_name',
+              'l_name',
               'dob',
               'gender',
-              'parent_name',
-              'parent_phone',
-              'enrollment_date',
-              'class',
-              'section'
-            ].map((field) => (
-              <div key={field} className="flex flex-col">
-                <label className="text-sm capitalize">{field.replace('_', ' ')}</label>
-                <input
-                  name={field}
-                  value={formData[field]}
-                  onChange={handleChange}
-                  type={field.includes('date') || field === 'dob' ? 'date' : 'text'}
-                  className="border border-gray-300 rounded px-2 py-1"
-                  required
-                />
-              </div>
-            ))}
+              'blood_group',
+              'aadhar_no',
+              'phone_num1',
+              'address_line1',
+              'city',
+              'state',
+              'country',
+              'pincode',
+              'grade_name',
+              'section_name'
+            ]
+              .map((field) => (
+                <div key={field} className="flex flex-col">
+                  <label className="text-sm capitalize">{field.replace('_', ' ')}</label>
+                  <input
+                    name={field}
+                    value={formData[field]}
+                    onChange={handleChange}
+                    type={field.includes('date') || field === 'dob' ? 'date' : 'text'}
+                    className="border border-gray-300 rounded px-2 py-1"
+                    required
+                  />
+                </div>
+              ))}
 
             <div className="col-span-2 flex justify-end">
               <Button
@@ -184,7 +182,7 @@ export const Student = ({ grade_name, onBack }: StudentsProps) => {
         )}
       </div>
 
-      {/* Filters and Search */}
+      {/* Search Bar */}
       <Card className="shadow-soft">
         <CardContent className="p-4">
           <div className="flex flex-col sm:flex-row gap-4">
@@ -216,89 +214,58 @@ export const Student = ({ grade_name, onBack }: StudentsProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border">
+          <div className="rounded-md border overflow-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>SI No.</TableHead>
                   <TableHead>Roll No.</TableHead>
-                  <TableHead>Student Name</TableHead>
-                  <TableHead>Email</TableHead>
+                  <TableHead>First Name</TableHead>
+                  <TableHead>Last Name</TableHead>
                   <TableHead>DOB</TableHead>
-                  <TableHead>Address</TableHead>
-                  <TableHead>Phone</TableHead>
-                  <TableHead>Enrollment Date</TableHead>
-                  <TableHead>Class</TableHead>
-                  <TableHead>Section</TableHead>
                   <TableHead>Gender</TableHead>
-                  <TableHead>Parent Name</TableHead>
-                  <TableHead>Parent Phone Number</TableHead>
+                  <TableHead>Blood Group</TableHead>
+                  <TableHead>Aadhar No.</TableHead>
+                  <TableHead>Phone</TableHead>
+                  <TableHead>Address</TableHead>
+                  <TableHead>City</TableHead>
+                  <TableHead>State</TableHead>
+                  <TableHead>Country</TableHead>
+                  <TableHead>Pincode</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
-
               <TableBody>
-                {filteredStudents.map((student,index) => {
-                  console.log('Rendering student:', student);
-                  return (
-                    <TableRow key={student.student_rollno}>
-                      <TableCell>
-      <p className="font-medium">{index + 1}</p> {/* Serial number */}
-    </TableCell>
-                      <TableCell>
-                        <p className="font-medium">{student?.student?.student_rollno}</p>
-                      </TableCell>
-                      <TableCell>
-                        <p className="font-medium">{student?.student?.name}</p>
-                      </TableCell>
-                      <TableCell>
-                        <p className="font-medium">{student?.student?.email}</p>
-                      </TableCell>
-                      <TableCell>
-                        <p className="font-medium">{student?.student?.dob}</p>
-                      </TableCell>
-                      <TableCell>
-                        <p className="font-medium">{student?.student?.address}</p>
-                      </TableCell>
-                      <TableCell>
-                        <p className="font-medium">{student?.student?.phone}</p>
-                      </TableCell>
-                      <TableCell>
-                        <p className="font-medium">{student?.student?.enrollment_date}</p>
-                      </TableCell>
-                      <TableCell>
-                        <p className="font-medium">{student?.student?.class}</p>
-                      </TableCell>
-                      <TableCell>
-                        <p className="font-medium">{student?.student?.section}</p>
-                      </TableCell>
-                      <TableCell>
-                        <p className="font-medium">{student?.student?.gender}</p>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm">
-                          <p>{student?.student?.phone}</p>
-                          <p className="text-muted-foreground text-xs">{student?.student?.parent_name}</p>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <p className="text-sm text-muted-foreground">{student?.student?.parent_phone}</p>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end space-x-2">
-                          <Button variant="ghost" size="icon">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="icon">
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
+                {filteredStudents.map((student, index) => (
+                  <TableRow key={student.id}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{student.student.roll_no}</TableCell>
+                    <TableCell>{student.student.f_name}</TableCell>
+                    <TableCell>{student.student.l_name}</TableCell>
+                    <TableCell>{student.student.dob}</TableCell>
+                    <TableCell>{student.student.gender}</TableCell>
+                    <TableCell>{student.student.blood_group}</TableCell>
+                    <TableCell>{student.student.aadhar_no}</TableCell>
+                    <TableCell>{student.student.phone_num1}</TableCell>
+                    <TableCell>{student.student.address_line1}</TableCell>
+                    <TableCell>{student.student.city}</TableCell>
+                    <TableCell>{student.student.state}</TableCell>
+                    <TableCell>{student.student.country}</TableCell>
+                    <TableCell>{student.student.pincode}</TableCell>
 
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end space-x-2">
+                        <Button variant="ghost" size="icon">
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
             </Table>
           </div>
 

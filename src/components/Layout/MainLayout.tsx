@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { Dashboard } from '../Dashboard/Dashboard';
-import { StudentsList } from '../Students/StudentsList';
+import { Students } from '../Students/Students';
 import { TeachersList } from '../Teachers/TeachersList';
 import { useSchoolStore } from '@/store/schoolStore';
 import { initializeSampleData } from '@/store/schoolStore';
@@ -20,7 +20,7 @@ export const MainLayout = () => {
       case 'dashboard':
         return <Dashboard />;
       case 'students':
-        return <StudentsList />;
+        return <Students />;
       case 'teachers':
         return <TeachersList />;
       case 'subjects':

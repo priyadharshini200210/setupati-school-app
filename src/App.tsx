@@ -6,8 +6,9 @@ import NotFound from './pages/NotFound';
 import { Toaster } from './components/ui/toaster';
 import { SonnerToaster } from './components/ui/sonner';
 import { TooltipProvider } from './components/ui/tooltip';
-import { StudentsList } from './components/Students/StudentsList';
+import { StudentsList } from './components/Students/Students';
 import { Student } from './components/Students/Student';
+import {StudentWrapper} from './components/Students/StudentWrapper';
 
 const queryClient = new QueryClient();
 
@@ -20,13 +21,21 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="*" element={<NotFound />} />
-          <Route path="/students/:gradeName" element={<Student grade_name='grade_001' onBack={function (): void {
-            throw new Error('Function not implemented.');
-          } } />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+
+<Route
+  path="/students/grade/:name"
+  element={<StudentWrapper paramType="grade" onBack={() => {}} />}
+  />
+
+<Route
+  path="/students/section/:name"
+  element={<StudentWrapper paramType="section" onBack={() => {}} />}
+/>
+
+      </Routes>
+    </BrowserRouter>
+  </TooltipProvider>
+</QueryClientProvider>
 );
 
 export default App;

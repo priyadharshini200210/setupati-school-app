@@ -1,11 +1,11 @@
 import { StatsCard } from '../StatsCard';
 import { useSchoolStore } from '@/store/schoolStore';
 import { Users } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
-export const StudentsList = () => {
+export const Students = () => {
   const { grades, teachers, students } = useSchoolStore();
   const navigate = useNavigate();
 
@@ -31,19 +31,21 @@ export const StudentsList = () => {
 
 
   const handleGradeClick = (gradeName: string) => {
-    navigate(`/students/${gradeName}`);
+    navigate(`/students/grade/${gradeName}`);
+  };
+
+  const handleSectionClick = (sectionName: string) => {
+    navigate(`/students/section/${sectionName}`);
   };
 
   const defaultGrades = ['Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5'];
-
-  console.log("grade?.section_ids.length", grades?.[0].grade_name , (grades?.[0].section_ids).length);
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {defaultGrades.map((defaultGrade, index) => {
         const grade = grades[index];
         const gradeName = grade?.grade_name || defaultGrade;
-        
+      
         return (
           <StatsCard
             key={gradeName}
@@ -53,6 +55,7 @@ export const StudentsList = () => {
             icon={Users}
             description={`Incharge staff: ${teachersByGradeId[gradeName] || 'Unknown'}`}
             onClick={() => handleGradeClick(gradeName)}
+            onSectionClick={handleSectionClick}
             className="cursor-pointer hover:shadow-lg transition-shadow"
           />
         );

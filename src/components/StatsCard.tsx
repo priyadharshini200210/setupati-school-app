@@ -8,27 +8,38 @@ interface StatsCardProps {
   icon: LucideIcon;
   sectionCount?: number;
   description?: string;
-  trend?: {
-    value: number;
-    isPositive: boolean;
-  };
   className?: string;
   onClick?: () => void;
-  onLetterClick?: (letter: string) => void; // Optional click handler for letters
+  onSectionClick?: (section: string) => void;
 }
 
 export const StatsCard = ({
   title,
   value,
-  sectionCount,
   icon: Icon,
+  sectionCount = 0,
   description,
-  trend,
   className,
   onClick,
-  onLetterClick,
+  onSectionClick
 }: StatsCardProps) => {
-console.log("sectionCount", sectionCount);
+  const renderSectionButtons = () =>
+    Array.from({ length: sectionCount }, (_, index) => {
+      const sectionLetter = String.fromCharCode(65 + index); // A, B, C...
+      return (
+        <button
+          key={sectionLetter}
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent card onClick
+            onSectionClick?.("Section_" + sectionLetter);
+          }}
+          className="h-8 w-8 flex items-center justify-center rounded-full bg-muted text-foreground text-sm font-semibold hover:bg-primary hover:text-white transition-colors"
+        >
+          {sectionLetter}
+        </button>
+      );
+    });
+
   return (
     <Card
       className={cn(
@@ -40,16 +51,10 @@ console.log("sectionCount", sectionCount);
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xl font-bold text-foreground mb-1">
-              {title}
-            </p>
-            <div className="flex items-baseline space-x-2">
-              <p className="text-l font-medium text-muted-foreground">{value}</p>
-            </div>
+            <p className="text-xl font-bold text-foreground mb-1">{title}</p>
+            <p className="text-l font-medium text-muted-foreground">{value}</p>
             {description && (
-              <p className="text-xs text-muted-foreground mt-1">
-                {description}
-              </p>
+              <p className="text-xs text-muted-foreground mt-1">{description}</p>
             )}
           </div>
           <div className="p-3 bg-primary-soft rounded-lg">
@@ -57,18 +62,9 @@ console.log("sectionCount", sectionCount);
           </div>
         </div>
 
-        <div className="mt-4 flex space-x-2">
-          {Array.from({ length: sectionCount ?? 0 }, (_, index) => (
-            <button
-              key={index}
-              onClick={onClick}
-              className="h-8 w-8 flex items-center justify-center rounded-full bg-muted text-foreground text-sm font-semibold hover:bg-primary hover:text-white transition-colors"
-            >
-              {String.fromCharCode(65 + index)}
-            </button>
-          ))}
-        </div>
-
+        {sectionCount > 0 && (
+          <div className="mt-4 flex space-x-2">{renderSectionButtons()}</div>
+        )}
       </CardContent>
     </Card>
   );
