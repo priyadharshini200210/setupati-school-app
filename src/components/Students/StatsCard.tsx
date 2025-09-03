@@ -1,18 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import type { LucideIcon } from 'lucide-react';
-
-interface StatsCardProps {
-  title: string;
-  value: string | number;
-  icon: LucideIcon;
-  description?: string;
-  trend?: {
-    value: number;
-    isPositive: boolean;
-  };
-  className?: string;
-}
+import { StatsCardProps } from '@/types/type';
 
 export const StatsCard = ({
   title,

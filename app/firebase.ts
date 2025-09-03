@@ -10,6 +10,7 @@ if (!serviceAccountBase64) {
 }
 
 let serviceAccountJson: admin.ServiceAccount;
+
 try {
   const decodedJson = Buffer.from(serviceAccountBase64, 'base64').toString(
     'utf8'
@@ -29,5 +30,6 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
+const auth = admin.auth();
 
-export { db };
+export { db, auth };
