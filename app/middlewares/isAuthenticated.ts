@@ -1,12 +1,12 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { auth } from '../firebase.js';
 import logger from '../utils/logger.js';
 
 export async function isAuthenticated(
   req: Request,
   res: Response,
-  next: Function
-) {
+  next: NextFunction
+): Promise<Response | void> {
   const { authorization } = req.headers;
 
   if (!authorization) return res.status(401).send({ message: 'Unauthorized' });
