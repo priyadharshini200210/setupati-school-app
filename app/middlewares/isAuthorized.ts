@@ -15,6 +15,6 @@ export function isAuthorized(opts: {
 
     if (opts.hasRole.includes(role)) return next();
 
-    return res.status(403).send();
+    return res.status(403).send({ message: 'Forbidden - No role found' });
   };
 }

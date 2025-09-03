@@ -5,7 +5,6 @@ import {
   resetPassword as resetPasswordApi,
   getUserById as getUserByIdApi,
   validateEmail as validateEmailApi,
-  getToken as getUserTokenApi
 } from '../../api/auth/auth.js';
 import { User } from '../../models/User.js';
 import logger from '../../utils/logger.js';
@@ -15,7 +14,7 @@ export const createUser = async (
   res: Response
 ) => {
   try {
-    const data = req.body;
+    const data = req?.body;
     const id = await addUser(data);
     res.status(201).json({ id, message: 'User created successfully' });
   } catch (err) {
@@ -29,7 +28,7 @@ export const getUserById = async (
   res: Response
 ) => {
   try {
-    const uid = req.params.uid;
+    const uid = req.params?.uid;
     const user: User = await getUserByIdApi(uid);
     res.status(200).json({ user: user });
   } catch (err) {
@@ -56,7 +55,7 @@ export const validateEmail = async (
   res: Response
 ) => {
   try {
-    const email = req.body.email;
+    const email = req.body?.email;
     const isValid = await validateEmailApi(email);
     res.status(200).json({ isValid: isValid });
   } catch (err) {
@@ -70,7 +69,7 @@ export const deleteUser = async (
   res: Response
 ) => {
   try {
-    const uid = req.params.uid;
+    const uid = req.params?.uid;
     await deleteUserApi(uid);
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (err) {

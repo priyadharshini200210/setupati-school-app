@@ -46,13 +46,13 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
 
     try {
       await axios.post(`${BACKEND_URL}/api/v1/auth/validateEmail`, {
-        email: formData.email
+        email: formData?.email
       });
       setIsSubmitted(true);
     } catch (error) {
       const errorMessage =
         error instanceof Error
-          ? error.message
+          ? error?.message
           : 'No User Found in this email ID';
 
       setIsSubmitted(false);
@@ -71,7 +71,7 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
     setIsLoading(true);
 
     try {
-      if (formData.password !== formData.confirmPassword) {
+      if (formData?.password !== formData?.confirmPassword) {
         toast({
           variant: 'destructive',
           title: 'Error',
@@ -80,8 +80,8 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
         });
       } else {
         await axios.post(`${BACKEND_URL}/api/v1/auth/reset-password`, {
-          email: formData.email,
-          password: formData.password
+          email: formData?.email,
+          password: formData?.password
         });
         toast({
           title: 'Success',
@@ -93,7 +93,7 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
     } catch (error) {
       const errorMessage =
         error instanceof Error
-          ? error.message
+          ? error?.message
           : 'Failed to Reset your password.';
       toast({
         variant: 'destructive',
@@ -141,7 +141,7 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
                 id="reset-email"
                 type="email"
                 placeholder="Enter your email address"
-                value={formData.email}
+                value={formData?.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 className="pl-10 border-border focus:ring-accent"
                 disabled={isSubmitted}
@@ -163,9 +163,9 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                   <Input
                     id="password"
-                    type={formData.showPassword ? 'text' : 'password'}
+                    type={formData?.showPassword ? 'text' : 'password'}
                     placeholder="Enter your password"
-                    value={formData.password}
+                    value={formData?.password}
                     onChange={(e) =>
                       handleInputChange('password', e.target.value)
                     }
@@ -177,12 +177,12 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
                     onClick={() =>
                       handleBooleanInputChange(
                         'showPassword',
-                        !formData.showPassword
+                        !formData?.showPassword
                       )
                     }
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    {formData.showPassword ? (
+                    {formData?.showPassword ? (
                       <EyeOff className="w-4 h-4" />
                     ) : (
                       <Eye className="w-4 h-4" />
@@ -201,9 +201,9 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                   <Input
                     id="password"
-                    type={formData.showConfirmPassword ? 'text' : 'password'}
+                    type={formData?.showConfirmPassword ? 'text' : 'password'}
                     placeholder="Enter your password"
-                    value={formData.confirmPassword}
+                    value={formData?.confirmPassword}
                     onChange={(e) =>
                       handleInputChange('confirmPassword', e.target.value)
                     }
@@ -215,12 +215,12 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
                     onClick={() =>
                       handleBooleanInputChange(
                         'showConfirmPassword',
-                        !formData.showConfirmPassword
+                        !formData?.showConfirmPassword
                       )
                     }
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    {formData.showConfirmPassword ? (
+                    {formData?.showConfirmPassword ? (
                       <EyeOff className="w-4 h-4" />
                     ) : (
                       <Eye className="w-4 h-4" />
