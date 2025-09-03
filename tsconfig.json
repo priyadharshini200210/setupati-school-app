@@ -8,7 +8,11 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "strict": true,
-    "noEmit": false
+    "noEmit": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
   },
   "ts-node": {
     "experimentalSpecifierResolution": "node",

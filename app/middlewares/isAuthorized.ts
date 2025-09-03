@@ -1,10 +1,10 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 export function isAuthorized(opts: {
   hasRole: Array<'admin' | 'student' | 'teacher'>;
   allowSameUser?: boolean;
 }) {
-  return (req: Request, res: Response, next: Function) => {
+  return (req: Request, res: Response, next: NextFunction): Response | void => {
     const { role, email, uid } = res.locals;
     const { id } = req.params;
 

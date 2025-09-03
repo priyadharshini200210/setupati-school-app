@@ -1,6 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 
-export interface StatsCardProps{
+export interface StatsCardProps {
   title: string;
   value: string | number;
   icon: LucideIcon;
@@ -11,5 +11,3 @@ export interface StatsCardProps{
   };
   className?: string;
 }
-
-

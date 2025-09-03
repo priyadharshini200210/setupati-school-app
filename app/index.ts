@@ -19,7 +19,6 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use(express.json());
 app.use(cors({ origin: true }));
 
-
 app.use('/students', studentRoutes);
 app.use('/api/v1/auth', authRouters);
 

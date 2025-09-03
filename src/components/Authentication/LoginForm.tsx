@@ -17,7 +17,7 @@ import {
   setPersistence,
   browserLocalPersistence,
   browserSessionPersistence,
-  signInWithEmailAndPassword,
+  signInWithEmailAndPassword
 } from 'firebase/auth';
 import { useSchoolStore } from '@/store/schoolStore';
 import api from '@/lib/axiosConfig';
