@@ -55,26 +55,6 @@ export const validateEmail = async (email: string): Promise<boolean> => {
   return true;
 };
 
-export const resetPassword = async (data: {
-  email: string;
-  password: string;
-}): Promise<void> => {
-  const { email, password } = data;
-  if (!email && !password) {
-    throw new Error(
-      'At least one field (email or password) is required to update'
-    );
-  }
-
-  const userRecord = await auth.getUserByEmail(email);
-  if (!userRecord) {
-    throw new Error('User not found');
-  }
-  const updateData: Partial<User> = {};
-  if (password) updateData.password = password;
-  await auth.updateUser(userRecord.uid, updateData);
-};
-
 export const deleteUser = async (uid: string): Promise<void> => {
   await auth.deleteUser(uid);
   await userCollection.doc(uid).delete();

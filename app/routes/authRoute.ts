@@ -1,11 +1,9 @@
 import { Router, Request, Response } from 'express';
 import {
   createUser,
-  resetPassword,
   deleteUser,
   getUserById,
-  validateEmail,
-  getUserToken
+  validateEmail
 } from '../service/auth/auth.js';
 import { User } from '../models/User.js';
 import { isAuthenticated } from '../middlewares/isAuthenticated.js';
@@ -38,13 +36,6 @@ authRouter.post(
   '/validateEmail',
   (req: Request<{ email: string }>, res: Response) => {
     validateEmail(req, res);
-  }
-);
-
-authRouter.post(
-  '/reset-password',
-  (req: Request<{ email: string; password: string }>, res: Response) => {
-    resetPassword(req, res);
   }
 );
 

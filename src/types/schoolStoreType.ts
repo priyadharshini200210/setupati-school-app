@@ -112,7 +112,7 @@ export interface Homework {
 }
 
 // Store interface
-interface SchoolStore {
+export interface SchoolStore {
   // Current user
   currentUser: User | null;
 

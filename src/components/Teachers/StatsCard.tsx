@@ -1,6 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import type { LucideIcon } from 'lucide-react';
 import { StatsCardProps } from '@/types/type';
 
 export const StatsCard = ({

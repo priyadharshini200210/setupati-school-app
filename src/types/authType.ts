@@ -3,9 +3,9 @@ import { User } from 'firebase/auth';
 export interface AuthError {
   code: string;
   message: string;
-};
+}
 
-export type UserRole = 'admin' | 'teacher' | 'student' | null ;
+export type UserRole = 'admin' | 'teacher' | 'student' | null;
 
 export interface AuthState {
   user: User | null;
@@ -29,4 +29,4 @@ export interface FirebaseConfig {
   messagingSenderId: string;
   appId: string;
   measurementId: string;
-};
+}

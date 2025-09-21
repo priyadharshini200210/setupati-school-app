@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ProtectedRoute } from '@/components/Authentication/ProtectedRoute';
-import { RoleRoute } from '@/components/Authentication/RoleRoute';
 import Index from '@/pages/Index';
 import NotFound from '@/pages/NotFound';
 import { Toaster } from '@/components/ui/toaster';
@@ -15,6 +14,7 @@ import { LandingPage } from '@/pages/LandingPage';
 import { Gallery } from '@/pages/Gallery';
 import { useAuthStore } from '@/store/authStore';
 import { useSchoolStore } from '@/store/schoolStore';
+import { ResetPassword } from '@/components/Authentication/ResetPassword';
 
 const queryClient = new QueryClient();
 
@@ -30,6 +30,10 @@ export const router = createBrowserRouter([
   {
     path: 'auth/login',
     element: <AuthLayout />
+  },
+  {
+    path: 'auth/reset-password',
+    element: <ResetPassword />
   },
   {
     path: '/dashboard',
