@@ -3,6 +3,7 @@ import logger from './utils/logger.js';
 import 'dotenv/config';
 
 const serviceAccountBase64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
+
 if (!serviceAccountBase64) {
   throw new Error(
     'FIREBASE_SERVICE_ACCOUNT_BASE64 environment variable is not set.'
@@ -10,6 +11,7 @@ if (!serviceAccountBase64) {
 }
 
 let serviceAccountJson: admin.ServiceAccount;
+
 try {
   const decodedJson = Buffer.from(serviceAccountBase64, 'base64').toString(
     'utf8'
@@ -29,5 +31,6 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
+const auth = admin.auth();
 
-export { db };
+export { db, auth };

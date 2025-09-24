@@ -3,11 +3,11 @@ import {
   addStudent,
   getStudent,
   deleteStudent,
-  searchStudent as searchStudentApi,
-  getAllStudentDetails
-} from '../api/student.js';
-import { Student } from '../models/Student.js';
-import logger from '../utils/logger.js';
+  getAllStudentDetails,
+  searchStudent as searchStudentApi
+} from '../../api/student/student.js';
+import { Student } from '../../models/Student.js';
+import logger from '../../utils/logger.js';
 
 export const createStudent = async (
   req: Request<{ Student: Student }>,

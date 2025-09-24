@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -11,9 +12,21 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useSchoolStore } from '@/store/schoolStore';
 import { Bell, LogOut, User, Settings } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import api from '@/lib/axiosConfig';
+import { useAuthStore } from '@/store/AuthStore';
+import { User as UserData } from '@/types/schoolStore';
 
 export const Header = () => {
-  const { currentUser } = useSchoolStore();
+  const { currentUser, resetStore } = useSchoolStore();
+  const { resetAuthStore } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
   const getInitials = (name: string) => {
     return name
@@ -23,12 +36,35 @@ export const Header = () => {
       .toUpperCase();
   };
 
+  const handleLogout = async () => {
+    setIsLoading(true);
+
+    try {
+      await signOut(auth);
+      resetAuthStore();
+      resetStore();
+      navigate('/');
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to logout User. Please try again.';
+      toast({
+        title: 'Error',
+        description: errorMessage,
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <header className="bg-card border-b border-border px-6 py-4">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-foreground">
-            Welcome back, {currentUser?.name || 'User'}
+            Welcome back, {currentUser?.name}
           </h2>
           <p className="text-sm text-muted-foreground">
             Here's what's happening at your school today
@@ -65,13 +101,13 @@ export const Header = () => {
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">
-                    {currentUser?.name || 'User'}
+                    {currentUser?.name}
                   </p>
                   <p className="text-xs leading-none text-muted-foreground">
-                    {currentUser?.email || 'user@school.com'}
+                    {currentUser?.email}
                   </p>
                   <Badge variant="outline" className="w-fit text-xs">
-                    {currentUser?.role || 'admin'}
+                    {currentUser?.role}
                   </Badge>
                 </div>
               </DropdownMenuLabel>
@@ -85,9 +121,12 @@ export const Header = () => {
                 Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive">
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="text-destructive"
+              >
                 <LogOut className="mr-2 h-4 w-4" />
-                Log out
+                {isLoading ? 'Logging out...' : 'Log out'}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
