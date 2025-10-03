@@ -2,34 +2,37 @@ import admin from 'firebase-admin';
 import logger from './utils/logger.js';
 import 'dotenv/config';
 
+// Be tolerant for local/dev runs where Firebase service account may not be provided.
 const serviceAccountBase64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
+
+let db: any = null;
+let auth: any = null;
+
 if (!serviceAccountBase64) {
-  throw new Error(
-    'FIREBASE_SERVICE_ACCOUNT_BASE64 environment variable is not set.'
+  logger.warn(
+    'FIREBASE_SERVICE_ACCOUNT_BASE64 is not set. Firebase admin will not be initialized.'
   );
+} else {
+  try {
+    const decodedJson = Buffer.from(serviceAccountBase64, 'base64').toString(
+      'utf8'
+    );
+    const serviceAccountJson = JSON.parse(decodedJson);
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccountJson)
+    });
+    db = admin.firestore();
+    auth = admin.auth();
+    logger.info('Firebase admin initialized successfully.');
+  } catch (error: unknown) {
+    logger.error(
+      'Failed to initialize Firebase admin from FIREBASE_SERVICE_ACCOUNT_BASE64:',
+      (error as Error).message
+    );
+    // Keep server running — export nulls so routes can check and return 503 if needed.
+    db = null;
+    auth = null;
+  }
 }
-
-let serviceAccountJson: admin.ServiceAccount;
-
-try {
-  const decodedJson = Buffer.from(serviceAccountBase64, 'base64').toString(
-    'utf8'
-  );
-  serviceAccountJson = JSON.parse(decodedJson);
-  logger.info('Firebase service account JSON parsed successfully.');
-} catch (error: unknown) {
-  logger.error(
-    'Failed to decode or parse FIREBASE_SERVICE_ACCOUNT_BASE64:',
-    (error as Error).message
-  );
-  throw error;
-}
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccountJson)
-});
-
-const db = admin.firestore();
-const auth = admin.auth();
 
 export { db, auth };

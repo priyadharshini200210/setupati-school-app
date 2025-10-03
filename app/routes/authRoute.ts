@@ -5,7 +5,6 @@ import {
   getUserById,
   validateEmail
 } from '../service/auth/auth.js';
-import { User } from '../models/User.js';
 import { isAuthenticated } from '../middlewares/isAuthenticated.js';
 import { isAuthorized } from '../middlewares/isAuthorized.js';
 
@@ -15,7 +14,7 @@ authRouter.post(
   '/signup',
   isAuthenticated,
   isAuthorized({ hasRole: ['admin'] }),
-  (req: Request<{ User: User }>, res: Response) => {
+  (req, res) => {
     createUser(req, res);
   }
 );
@@ -27,17 +26,14 @@ authRouter.get(
     hasRole: ['admin', 'student', 'teacher'],
     allowSameUser: true
   }),
-  (req: Request<{ uid: string }>, res: Response) => {
+  (req, res) => {
     getUserById(req, res);
   }
 );
 
-authRouter.post(
-  '/validateEmail',
-  (req: Request<{ email: string }>, res: Response) => {
-    validateEmail(req, res);
-  }
-);
+authRouter.post('/validateEmail', (req, res) => {
+  validateEmail(req, res);
+});
 
 authRouter.delete(
   '/delete/:uid',
@@ -45,7 +41,7 @@ authRouter.delete(
   isAuthorized({
     hasRole: ['admin']
   }),
-  (req: Request<{ uid: string }>, res: Response) => {
+  (req, res) => {
     deleteUser(req, res);
   }
 );

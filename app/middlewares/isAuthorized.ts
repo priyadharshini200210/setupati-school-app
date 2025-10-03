@@ -6,15 +6,14 @@ export function isAuthorized(opts: {
 }) {
   return (req: Request, res: Response, next: NextFunction): Response | void => {
     const { role, email, uid } = res.locals;
-    const { id } = req.params;
+    const id = req.params.uid;
 
-    if (opts.allowSameUser && id && uid === id) return next();
+    if (opts.allowSameUser && id && uid === id)
+      if (opts.hasRole.includes(role)) return next();
 
     if (!role)
       return res.status(403).send({ message: 'Forbidden - No role found' });
 
-    if (opts.hasRole.includes(role)) return next();
-
-    return res.status(403).send({ message: 'Forbidden - No role found' });
+    return res.status(403).send({ message: 'Forbidden - Access' });
   };
 }

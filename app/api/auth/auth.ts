@@ -1,14 +1,11 @@
 import { db, auth } from '../../firebase.js';
 import { User } from '../../models/User.js';
+import { AppError, HttpCode } from '../../error.js';
 
 const userCollection = db.collection('users');
 
 export const addUser = async (data: User): Promise<string> => {
   const { name, email, password, role } = data;
-
-  if (!name || !email || !password || !role) {
-    throw new Error('Missing required user fields');
-  }
 
   const userRecord = await auth.createUser({
     email: email,
@@ -32,16 +29,10 @@ export const addUser = async (data: User): Promise<string> => {
 };
 
 export const getUserById = async (uid: string): Promise<User> => {
-  if (!uid) {
-    throw new Error('User ID is required');
-  }
   const userRecord = await auth.getUser(uid);
-  if (!userRecord) {
-    throw new Error('User not found');
-  }
   const userDoc = await userCollection.doc(uid).get();
   if (!userDoc.exists) {
-    throw new Error('User data not found in database');
+    throw new AppError('User data not found in database.', HttpCode.NOT_FOUND);
   }
 
   return { id: userRecord.uid, ...userDoc.data() } as User;
@@ -50,12 +41,15 @@ export const getUserById = async (uid: string): Promise<User> => {
 export const validateEmail = async (email: string): Promise<boolean> => {
   const userRecord = await auth.getUserByEmail(email);
   if (!userRecord) {
-    throw new Error('User not found');
+    throw new AppError('User Email not found.', HttpCode.NOT_FOUND);
   }
   return true;
 };
 
 export const deleteUser = async (uid: string): Promise<void> => {
+  const userRecord = await userCollection.doc(uid);
+  if (!userRecord.exists)
+    throw new AppError('User data not found.', HttpCode.NOT_FOUND);
+  await userRecord.delete();
   await auth.deleteUser(uid);
-  await userCollection.doc(uid).delete();
 };

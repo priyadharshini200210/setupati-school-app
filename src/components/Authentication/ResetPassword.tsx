@@ -11,11 +11,9 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Mail, EyeOff, Eye, CheckCircle, Lock } from 'lucide-react';
-import axios from 'axios';
 import { useToast } from '@/hooks/use-toast';
 import { verifyPasswordResetCode, confirmPasswordReset } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { BACKEND_URL } from '@/lib/utils';
 
 export const ResetPassword: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -27,7 +25,6 @@ export const ResetPassword: React.FC = () => {
     showPassword: false,
     showConfirmPassword: false
   });
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 

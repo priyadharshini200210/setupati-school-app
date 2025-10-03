@@ -49,7 +49,7 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
     } catch (error) {
       const errorMessage =
         error instanceof Error
-          ? error?.message
+          ? error.response?.data?.error || error.message
           : 'No User Found in this email ID or Failed to send reset email.';
 
       setIsSubmitted(false);

@@ -85,7 +85,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onForgotPassword }) => {
       } else {
         errorMessage =
           error instanceof Error
-            ? error.message
+            ? error.response.data.error || error.message
             : 'Failed to login. Please try again.';
       }
 
