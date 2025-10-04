@@ -33,7 +33,7 @@ export const createUser = async (req: Request, res: Response) => {
     }
 
     const id = await addUser(data);
-    
+
     res.status(201).json({ id, message: 'User created successfully' });
   } catch (err) {
     logger.error('Error in creating account: ', err);
