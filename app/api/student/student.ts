@@ -42,7 +42,7 @@ export const searchStudent = async (
   if (snapshot.empty) {
     return [];
   }
-  return snapshot.docs.map((doc) => ({
+  return snapshot.docs.map((doc: { id: string; data: () => unknown }) => ({
     id: doc.id,
     student: doc.data() as Student
   }));
