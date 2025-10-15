@@ -5,8 +5,8 @@ import 'dotenv/config';
 // Be tolerant for local/dev runs where Firebase service account may not be provided.
 const serviceAccountBase64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
 
-let db: any = null;
-let auth: any = null;
+let db: admin.firestore.Firestore | null = null;
+let auth: admin.auth.Auth | null = null;
 
 if (!serviceAccountBase64) {
   logger.warn(

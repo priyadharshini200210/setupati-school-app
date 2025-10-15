@@ -4,7 +4,7 @@ import logger from '../utils/logger.js';
 
 type DecodedToken = { uid: string; role?: string; email?: string } & Record<
   string,
-  any
+  unknown
 >;
 
 export async function isAuthenticated(
