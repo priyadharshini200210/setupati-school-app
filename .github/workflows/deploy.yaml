@@ -8,19 +8,96 @@ on:
   pull_request:
 
 jobs:
+  sync-secrets:
+    name: Decrypt and sync secrets (SOPS)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for encrypted secrets file
+        id: has_secrets
+        run: |
+          if [ -f "secrets/client/secrets.enc.yaml" ]; then
+            echo "found=true" >> $GITHUB_OUTPUT
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install sops, yq and gpg
+        if: steps.has_secrets.outputs.found == 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gnupg curl
+          curl -L "https://github.com/getsops/sops/releases/download/v3.11.0/sops-v3.11.0.linux.amd64" -o /usr/local/bin/sops
+          chmod +x /usr/local/bin/sops
+          curl -L "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64" -o /usr/local/bin/yq
+          chmod +x /usr/local/bin/yq
+
+      - name: Import GPG private key
+        if: steps.has_secrets.outputs.found == 'true'
+        env:
+          SOPS_GPG_PRIVATE_KEY: ${{ secrets.SOPS_GPG_PRIVATE_KEY }}
+        run: |
+          if [ -z "${SOPS_GPG_PRIVATE_KEY:-}" ]; then
+            echo "SOPS_GPG_PRIVATE_KEY is not set; cannot decrypt secrets." >&2
+            exit 1
+          fi
+          echo "$SOPS_GPG_PRIVATE_KEY" > /tmp/private.key
+          gpg --batch --import /tmp/private.key
+
+      - name: Decrypt secrets file
+        if: steps.has_secrets.outputs.found == 'true'
+        run: |
+          mkdir -p secrets/client
+          sops --decrypt secrets/client/secrets.enc.yaml > secrets/client/secrets.dec.yaml
+          echo "✅ Secrets decrypted successfully"
+
+      - name: Convert decrypted secrets to .env format
+        if: steps.has_secrets.outputs.found == 'true'
+        run: |
+          yq eval '. | to_entries | .[] | "\(.key)=\(.value)"' secrets/client/secrets.dec.yaml > secrets/client/secrets.env
+          echo "✅ Converted YAML secrets to .env format"
+
+      - name: Upload decrypted env file for next job
+        if: steps.has_secrets.outputs.found == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: decrypted-env
+          path: secrets/client/secrets.env
+
   deploy:
+    needs: [sync-secrets]
     name: Deploy to Server
     runs-on: ubuntu-latest
     container:
       image: node:20
     permissions:
-      checks: write          # allow Firebase action to create check-runs
-      contents: read         # read repo contents
-      pull-requests: write   # comment on PR with preview URL
+      checks: write
+      contents: read
+      pull-requests: write
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Download decrypted env file
+        uses: actions/download-artifact@v4
+        with:
+          name: decrypted-env
+          path: secrets/client
+
+      - name: Load environment variables
+        run: |
+          echo "Loading environment variables..."
+          set -a
+          source secrets/client/secrets.env
+          set +a
+          echo "✅ Environment variables loaded"
 
       - name: Install Dependencies
         run: npm ci
@@ -31,7 +108,6 @@ jobs:
       - name: Run Lint
         run: npm run lint
 
-      # Deploy preview for PRs
       - name: Deploy Preview (PR)
         if: github.event_name == 'pull_request'
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -41,7 +117,6 @@ jobs:
           projectId: setupati-school-app
           channelId: pr-${{ github.event.pull_request.number }}
 
-      # Deploy live for pushes to main/release
       - name: Deploy Live
         if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -54,22 +129,19 @@ jobs:
       - name: Check for changes in app folder
         id: changes
         run: |
-          # Check if any files changed in 'app/' compared to previous commit
-          echo "Checking changes in app/ folder..."
-          # Fetch the previous commit SHA to compare to
-          echo "CHANGED=$(git diff --name-only ${{ github.sha }} ${{ github.sha }}^ | grep '^app/' || true)" >> $GITHUB_ENV
+          CHANGED=$(git diff --name-only ${{ github.sha }} ${{ github.sha }}^ | grep '^app/' || true)
           if [ -n "$CHANGED" ]; then
-            echo "Changes found in app/: $CHANGED"
-            echo "deploy" > deploy_flag.txt
+            echo "deploy=true" >> $GITHUB_ENV
+            echo "✅ Changes found in app/: $CHANGED"
           else
-            echo "No changes found in app/"
+            echo "deploy=false" >> $GITHUB_ENV
+            echo "ℹ️ No changes in app/"
           fi
 
       - name: Deploy Backend to Render
-        if: (env.CHANGED != '') || (steps.changes.outputs.deploy_flag == 'deploy') && github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
+        if: env.deploy == 'true' && github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
         env:
           RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
-          echo "Deploying backend to Render due to changes in app/"
-          curl "$RENDER_DEPLOY_HOOK_URL"
-
+          echo "🚀 Deploying backend to Render..."
+          curl -X POST "$RENDER_DEPLOY_HOOK_URL"
