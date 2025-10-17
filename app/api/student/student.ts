@@ -1,5 +1,12 @@
 import { db } from '../../firebase.js';
 import { Student } from '../../models/Student.js';
+import { AppError, HttpCode } from '../../error.js';
+
+if (!db)
+  throw new AppError(
+    'Database or Auth connection not established',
+    HttpCode.INTERNAL_SERVER_ERROR
+  );
 
 const studentCollection = db.collection('Student');
 

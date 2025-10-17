@@ -12,7 +12,7 @@ export async function isAuthenticated(
   res: Response,
   next: NextFunction
 ): Promise<Response | void> {
-  const authorization = req.headers.authorization;
+  const authorization = req.headers?.authorization;
 
   if (!authorization || !authorization.startsWith('Bearer '))
     return res.status(401).send({ message: 'Unauthorized' });
@@ -20,7 +20,7 @@ export async function isAuthenticated(
   const token = authorization.split('Bearer ')[1];
 
   try {
-    const decodedToken = (await auth.verifyIdToken(token)) as DecodedToken;
+    const decodedToken = (await auth!.verifyIdToken(token)) as DecodedToken;
     logger.info('decodedToken', JSON.stringify(decodedToken));
     res.locals = {
       ...res.locals,

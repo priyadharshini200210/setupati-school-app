@@ -41,6 +41,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onForgotPassword }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     setIsLoading(true);
 
     try {
@@ -85,7 +86,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onForgotPassword }) => {
       } else {
         errorMessage =
           error instanceof Error
-            ? error.response.data.error || error.message
+            ? error.response?.data?.error || error?.message
             : 'Failed to login. Please try again.';
       }
 

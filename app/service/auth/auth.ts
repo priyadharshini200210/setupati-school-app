@@ -13,22 +13,25 @@ export const createUser = async (req: Request, res: Response) => {
     const data = req?.body;
     const { name, email, password, role } = data;
 
-    if (!name && !email && !password && !role) {
-      res
-        .status(400)
-        .json({ error: 'name,email,password,role fields are required' });
-      return;
-    } else if (!name || name.trim() === '') {
-      res.status(400).json({ error: 'Name is required' });
-      return;
-    } else if (!email || email.trim() === '') {
-      res.status(400).json({ error: 'Email is required' });
-      return;
-    } else if (!password || password.trim() === '') {
-      res.status(400).json({ error: 'Password is required' });
-      return;
-    } else if (!role || role.trim() === '') {
-      res.status(400).json({ error: 'Role is required' });
+    const requiredFields = [
+      { key: 'name', value: name },
+      { key: 'email', value: email },
+      { key: 'password', value: password },
+      { key: 'role', value: role }
+    ];
+
+    const missingFields = requiredFields.filter(
+      (field) => !field.value || field.value.trim() === ''
+    );
+
+    if (missingFields.length > 0) {
+      if (missingFields.length === requiredFields.length) {
+        res.status(400).json({ error: 'All fields are required' });
+        return;
+      }
+
+      const missingFieldName = missingFields[0].key;
+      res.status(400).json({ error: `${missingFieldName} is required` });
       return;
     }
 

@@ -6,7 +6,7 @@ export function isAuthorized(opts: {
 }) {
   return (req: Request, res: Response, next: NextFunction): Response | void => {
     const { role, uid } = res.locals;
-    const id = req.params.uid;
+    const id = req.params?.uid;
 
     if (opts.allowSameUser && id && uid === id)
       if (opts.hasRole.includes(role)) return next();
