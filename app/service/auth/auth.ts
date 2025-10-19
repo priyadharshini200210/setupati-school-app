@@ -20,19 +20,17 @@ export const createUser = async (req: Request, res: Response) => {
       { key: 'role', value: role }
     ];
 
-    const missingFields = requiredFields.filter(
-      (field) => !field.value || field.value.trim() === ''
-    );
+    const missingFields = requiredFields
+      .filter((field) => !field.value || field.value.trim() === '')
+      .map((field) => field.key);
 
     if (missingFields.length > 0) {
-      if (missingFields.length === requiredFields.length) {
-        res.status(400).json({ error: 'All fields are required' });
-        return;
-      }
+      const message =
+        missingFields.length === requiredFields.length
+          ? 'All fields are required'
+          : `Please enter the missing fields: ${missingFields.join(', ')}`;
 
-      const missingFieldName = missingFields[0].key;
-      res.status(400).json({ error: `${missingFieldName} is required` });
-      return;
+      return res.status(400).json({ error: message });
     }
 
     const id = await addUser(data);

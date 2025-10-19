@@ -8,11 +8,14 @@ export function isAuthorized(opts: {
     const { role, uid } = res.locals;
     const id = req.params?.uid;
 
-    if (opts.allowSameUser && id && uid === id)
-      if (opts.hasRole.includes(role)) return next();
-
     if (!role)
       return res.status(403).send({ message: 'Forbidden - No role found' });
+
+    if (opts.allowSameUser) {
+      if (id && uid === id) return next();
+    } else if (opts.hasRole.includes(role)) {
+      return next();
+    }
 
     return res.status(403).send({ message: 'Forbidden - Access' });
   };

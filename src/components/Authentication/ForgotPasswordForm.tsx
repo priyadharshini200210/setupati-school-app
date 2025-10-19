@@ -15,15 +15,19 @@ import { useToast } from '@/hooks/use-toast';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { BACKEND_URL } from '@/lib/utils';
+import { FormDataType } from './AuthLayout';
 
 interface ForgotPasswordFormProps {
-  onBackToLogin: () => void;
+  toggleCurrentView: (view: 'login' | 'forgot' | 'reset') => void;
+  formData: FormDataType;
+  handleInputChange: (field: string, value: string) => void;
 }
 
 export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
-  onBackToLogin
+  toggleCurrentView,
+  formData,
+  handleInputChange
 }) => {
-  const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -34,10 +38,10 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
 
     try {
       await axios.post(`${BACKEND_URL}/api/v1/auth/validateEmail`, {
-        email: email
+        email: formData.email
       });
 
-      await sendPasswordResetEmail(auth, email);
+      await sendPasswordResetEmail(auth, formData.email);
 
       setIsSubmitted(true);
 
@@ -93,8 +97,8 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
                 id="reset-email"
                 type="email"
                 placeholder="Enter your email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
                 className="pl-10 border-border focus:ring-accent"
                 disabled={isSubmitted}
                 required
@@ -117,7 +121,7 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
         </form>
 
         <Button
-          onClick={onBackToLogin}
+          onClick={() => toggleCurrentView('login')}
           variant="ghost"
           size="lg"
           className="w-full"

@@ -14,7 +14,6 @@ import { LandingPage } from '@/pages/LandingPage';
 import { Gallery } from '@/pages/Gallery';
 import { useAuthStore } from '@/store/authStore';
 import { useSchoolStore } from '@/store/schoolStore';
-import { ResetPassword } from '@/components/Authentication/ResetPassword';
 
 const queryClient = new QueryClient();
 
@@ -32,8 +31,12 @@ export const router = createBrowserRouter([
     element: <AuthLayout />
   },
   {
+    path: 'auth/forgot-password',
+    element: <AuthLayout />
+  },
+  {
     path: 'auth/reset-password',
-    element: <ResetPassword />
+    element: <AuthLayout />
   },
   {
     path: '/dashboard',
