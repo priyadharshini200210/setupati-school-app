@@ -9,17 +9,17 @@ on:
 
 jobs:
   sync-secrets:
-    name: Decrypt and sync secrets (SOPS)
+    name: 🔐 Decrypt & Sync Secrets (SOPS)
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
+    if: github.event_name == 'push' || github.event_name == 'pull_request' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
     permissions:
       contents: read
 
     steps:
-      - name: Checkout code
+      - name: 🧩 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check for encrypted secrets file
+      - name: 🔍 Check for encrypted secrets file
         id: has_secrets
         run: |
           if [ -f "secrets/client/secrets.enc.yaml" ]; then
@@ -28,7 +28,7 @@ jobs:
             echo "found=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Install sops, yq and gpg
+      - name: ⚙️ Setup SOPS
         if: steps.has_secrets.outputs.found == 'true'
         run: |
           sudo apt-get update
@@ -38,32 +38,37 @@ jobs:
           curl -L "https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64" -o /usr/local/bin/yq
           chmod +x /usr/local/bin/yq
 
-      - name: Import GPG private key
+      - name: 🔑 Import GPG Private Key
         if: steps.has_secrets.outputs.found == 'true'
         env:
           SOPS_GPG_PRIVATE_KEY: ${{ secrets.SOPS_GPG_PRIVATE_KEY }}
         run: |
           if [ -z "${SOPS_GPG_PRIVATE_KEY:-}" ]; then
-            echo "SOPS_GPG_PRIVATE_KEY is not set; cannot decrypt secrets." >&2
+            echo "❌ Missing SOPS_GPG_PRIVATE_KEY secret!" >&2
             exit 1
           fi
+          echo "🔑 Importing GPG private key..."
           echo "$SOPS_GPG_PRIVATE_KEY" > /tmp/private.key
           gpg --batch --import /tmp/private.key
+          echo "✅ GPG setup complete"
 
-      - name: Decrypt secrets file
+      - name: 🔓 Decrypt secrets using SOPS
         if: steps.has_secrets.outputs.found == 'true'
         run: |
           mkdir -p secrets/client
+          echo "🔓 Decrypting secrets..."
           sops --decrypt secrets/client/secrets.enc.yaml > secrets/client/secrets.dec.yaml
           echo "✅ Secrets decrypted successfully"
 
-      - name: Convert decrypted secrets to .env format
+      - name: 🧾 Convert YAML → .env
         if: steps.has_secrets.outputs.found == 'true'
         run: |
+          echo "🔁 Converting YAML to .env..."
+          sudo apt-get update && sudo apt-get install -y yq
           yq eval '. | to_entries | .[] | "\(.key)=\(.value)"' secrets/client/secrets.dec.yaml > secrets/client/secrets.env
-          echo "✅ Converted YAML secrets to .env format"
+          echo "✅ Converted secrets to .env format"
 
-      - name: Upload decrypted env file for next job
+      - name: 📦 Upload decrypted env file for deploy job
         if: steps.has_secrets.outputs.found == 'true'
         uses: actions/upload-artifact@v4
         with:
@@ -72,64 +77,49 @@ jobs:
 
   deploy:
     needs: [sync-secrets]
-    name: Deploy to Server
+    name: 🚀 Deploy to Server
     runs-on: ubuntu-latest
     container:
       image: node:20
     permissions:
-      checks: write
       contents: read
+      checks: write
       pull-requests: write
 
     steps:
-      - name: Checkout Code
+      - name: 🧩 Checkout code
         uses: actions/checkout@v4
 
-      - name: Download decrypted env file
+      - name: 📥 Download decrypted env
         uses: actions/download-artifact@v4
         with:
           name: decrypted-env
           path: secrets/client
 
-      - name: Load environment variables
+      - name: 🌱 Load environment variables
+        shell: bash
         run: |
-          echo "Loading environment variables..."
-          set -a
-          source secrets/client/secrets.env
-          set +a
-          echo "✅ Environment variables loaded"
+         echo "Loading environment variables..."
+         while IFS='=' read -r key value; do
+         # skip empty lines or comments
+         [[ -z "$key" || "$key" =~ ^# ]] && continue
+         echo "$key=$value" >> $GITHUB_ENV
+         done < secrets/client/secrets.env
+         echo "✅ Environment variables loaded globally"
 
-      - name: Install Dependencies
+      - name: 📦 Install dependencies
         run: npm ci
 
-      - name: Build App
+      - name: 🏗️ Build App
         run: npm run build
 
-      - name: Run Lint
+      - name: 🧹 Run Linter
         run: npm run lint
 
-      - name: Deploy Preview (PR)
-        if: github.event_name == 'pull_request'
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SETUPATI_SCHOOL_APP }}
-          projectId: setupati-school-app
-          channelId: pr-${{ github.event.pull_request.number }}
-
-      - name: Deploy Live
-        if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SETUPATI_SCHOOL_APP }}
-          projectId: setupati-school-app
-          channelId: live
-
-      - name: Check for changes in app folder
+      - name: 🔍 Check for app folder changes
         id: changes
         run: |
-          CHANGED=$(git diff --name-only ${{ github.sha }} ${{ github.sha }}^ | grep '^app/' || true)
+          CHANGED=$(git diff --name-only ${{ github.sha }}^ ${{ github.sha }} | grep '^app/' || true)
           if [ -n "$CHANGED" ]; then
             echo "deploy=true" >> $GITHUB_ENV
             echo "✅ Changes found in app/: $CHANGED"
@@ -138,7 +128,25 @@ jobs:
             echo "ℹ️ No changes in app/"
           fi
 
-      - name: Deploy Backend to Render
+      - name: 🌐 Deploy Preview (Pull Request)
+        if: github.event_name == 'pull_request'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SETUPATI_SCHOOL_APP }}
+          projectId: setupati-school-app
+          channelId: pr-${{ github.event.pull_request.number }}
+
+      - name: 🚀 Deploy Live
+        if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SETUPATI_SCHOOL_APP }}
+          projectId: setupati-school-app
+          channelId: live
+
+      - name: 🛠️ Deploy Backend to Render
         if: env.deploy == 'true' && github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
         env:
           RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
