@@ -1,22 +1,24 @@
 import { db, auth } from '../../firebase.js';
 import { User } from '../../models/User.js';
+import { AppError, HttpCode } from '../../error.js';
 
+if (!db || !auth)
+  throw new AppError(
+    'Database or Auth connection not established',
+    HttpCode.INTERNAL_SERVER_ERROR
+  );
 const userCollection = db.collection('users');
 
 export const addUser = async (data: User): Promise<string> => {
   const { name, email, password, role } = data;
 
-  if (!name || !email || !password || !role) {
-    throw new Error('Missing required user fields');
-  }
-
-  const userRecord = await auth.createUser({
+  const userRecord = await auth!.createUser({
     email: email,
     password: password,
     displayName: name
   });
 
-  await auth.setCustomUserClaims(userRecord.uid, { role });
+  await auth!.setCustomUserClaims(userRecord.uid, { role });
 
   const userDoc = {
     email: data.email,
@@ -32,50 +34,27 @@ export const addUser = async (data: User): Promise<string> => {
 };
 
 export const getUserById = async (uid: string): Promise<User> => {
-  if (!uid) {
-    throw new Error('User ID is required');
-  }
-  const userRecord = await auth.getUser(uid);
-  if (!userRecord) {
-    throw new Error('User not found');
-  }
+  const userRecord = await auth!.getUser(uid);
   const userDoc = await userCollection.doc(uid).get();
   if (!userDoc.exists) {
-    throw new Error('User data not found in database');
+    throw new AppError('User data not found in database.', HttpCode.NOT_FOUND);
   }
 
   return { id: userRecord.uid, ...userDoc.data() } as User;
 };
 
 export const validateEmail = async (email: string): Promise<boolean> => {
-  const userRecord = await auth.getUserByEmail(email);
+  const userRecord = await auth!.getUserByEmail(email);
   if (!userRecord) {
-    throw new Error('User not found');
+    throw new AppError('User Email not found.', HttpCode.NOT_FOUND);
   }
   return true;
 };
 
-export const resetPassword = async (data: {
-  email: string;
-  password: string;
-}): Promise<void> => {
-  const { email, password } = data;
-  if (!email && !password) {
-    throw new Error(
-      'At least one field (email or password) is required to update'
-    );
-  }
-
-  const userRecord = await auth.getUserByEmail(email);
-  if (!userRecord) {
-    throw new Error('User not found');
-  }
-  const updateData: Partial<User> = {};
-  if (password) updateData.password = password;
-  await auth.updateUser(userRecord.uid, updateData);
-};
-
 export const deleteUser = async (uid: string): Promise<void> => {
-  await auth.deleteUser(uid);
+  const userRecord = await userCollection.doc(uid).get();
+  if (!userRecord.exists)
+    throw new AppError('User data not found.', HttpCode.NOT_FOUND);
   await userCollection.doc(uid).delete();
+  await auth!.deleteUser(uid);
 };

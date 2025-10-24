@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ProtectedRoute } from '@/components/Authentication/ProtectedRoute';
-import { RoleRoute } from '@/components/Authentication/RoleRoute';
 import Index from '@/pages/Index';
 import NotFound from '@/pages/NotFound';
 import { Toaster } from '@/components/ui/toaster';
@@ -29,6 +28,14 @@ export const router = createBrowserRouter([
   },
   {
     path: 'auth/login',
+    element: <AuthLayout />
+  },
+  {
+    path: 'auth/forgot-password',
+    element: <AuthLayout />
+  },
+  {
+    path: 'auth/reset-password',
     element: <AuthLayout />
   },
   {

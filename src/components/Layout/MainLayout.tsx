@@ -1,9 +1,6 @@
 import { useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
-import { StudentsList } from '../Students/StudentsList';
-import { TeachersList } from '../Teachers/TeachersList';
-import { useSchoolStore } from '@/store/schoolStore';
 import { initializeSampleData } from '@/store/schoolStore';
 import { useAuthStore } from '@/store/authStore';
 import { StudentDashboard } from '@/components/students/StudentDashboard';
@@ -12,7 +9,6 @@ import { AdminDashboard } from '@/components/admin/AdminDashboard';
 import { RoleRoute } from '../Authentication/RoleRoute';
 
 export const MainLayout = () => {
-  const { activeView } = useSchoolStore();
   const { role } = useAuthStore();
 
   useEffect(() => {

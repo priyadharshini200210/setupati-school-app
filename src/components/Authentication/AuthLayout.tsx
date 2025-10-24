@@ -1,25 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { LoginForm } from './LoginForm';
 import { ForgotPasswordForm } from './ForgotPasswordForm';
-import { Navigate, useLocation } from 'react-router-dom';
+import { ResetPassword } from './ResetPassword';
 import { useAuthStore } from '@/store/authStore';
 
+export interface FormDataType {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  showPassword: boolean;
+  showConfirmPassword: boolean;
+}
+
 export const AuthLayout: React.FC = () => {
-  const [currentView, setCurrentView] = useState<'login' | 'forgot'>('login');
+  const [currentView, setCurrentView] = useState<'login' | 'forgot' | 'reset'>(
+    'login'
+  );
+  const [formData, setFormData] = useState<FormDataType>({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    showPassword: false,
+    showConfirmPassword: false
+  });
+
   const location = useLocation();
+  const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
 
-  const handleShowForgotPassword = () => {
-    setCurrentView('forgot');
+  useEffect(() => {
+    if (location.pathname.includes('reset-password')) {
+      setCurrentView('reset');
+    } else if (location.pathname.includes('forgot-password')) {
+      setCurrentView('forgot');
+    } else {
+      setCurrentView('login');
+    }
+  }, [location.pathname]);
+
+  const toggleCurrentView = (view: 'login' | 'forgot' | 'reset') => {
+    setCurrentView(view);
+
+    if (view === 'login') navigate('/auth/login');
+    else if (view === 'forgot') navigate('/auth/forgot-password');
+    else if (view === 'reset') navigate('/auth/reset-password');
   };
 
-  const handleBackToLogin = () => {
-    setCurrentView('login');
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  return isAuthenticated ? (
-    <Navigate to="/dashboard" state={{ from: location }} replace />
-  ) : (
+  const handleBooleanInputChange = (field: string, value: boolean) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const displayFormData = (data: Partial<FormDataType>) => {
+    setFormData((prev) => ({ ...prev, ...data }));
+  };
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" state={{ from: location }} replace />;
+  }
+
+  return (
     <div className="min-h-screen bg-gradient-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
@@ -31,11 +75,29 @@ export const AuthLayout: React.FC = () => {
           </p>
         </div>
 
+        {/* Transition between different views */}
         <div className="transition-all duration-300 ease-in-out">
           {currentView === 'login' ? (
-            <LoginForm onForgotPassword={handleShowForgotPassword} />
+            <LoginForm
+              toggleCurrentView={toggleCurrentView}
+              formData={formData}
+              handleInputChange={handleInputChange}
+              handleBooleanInputChange={handleBooleanInputChange}
+            />
+          ) : currentView === 'forgot' ? (
+            <ForgotPasswordForm
+              toggleCurrentView={toggleCurrentView}
+              formData={formData}
+              handleInputChange={handleInputChange}
+            />
           ) : (
-            <ForgotPasswordForm onBackToLogin={handleBackToLogin} />
+            <ResetPassword
+              toggleCurrentView={toggleCurrentView}
+              formData={formData}
+              displayFormData={displayFormData}
+              handleInputChange={handleInputChange}
+              handleBooleanInputChange={handleBooleanInputChange}
+            />
           )}
         </div>
 

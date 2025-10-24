@@ -16,10 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
-import api from '@/lib/axiosConfig';
 import { useAuthStore } from '@/store/AuthStore';
-import { User as UserData } from '@/types/schoolStore';
 
 export const Header = () => {
   const { currentUser, resetStore } = useSchoolStore();

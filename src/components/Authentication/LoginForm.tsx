@@ -22,25 +22,30 @@ import {
 import { useSchoolStore } from '@/store/schoolStore';
 import api from '@/lib/axiosConfig';
 import { User as UserData } from '@/types/schoolStore';
+import { FormDataType } from './AuthLayout';
 
 interface LoginFormProps {
-  onForgotPassword: () => void;
+  toggleCurrentView: (view: 'login' | 'forgot' | 'reset') => void;
+  formData: FormDataType;
+  handleInputChange: (field: string, value: string) => void;
+  handleBooleanInputChange: (field: string, value: boolean) => void;
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({ onForgotPassword }) => {
-  const [showPassword, setShowPassword] = useState(false);
+export const LoginForm: React.FC<LoginFormProps> = ({
+  toggleCurrentView,
+  formData,
+  handleInputChange,
+  handleBooleanInputChange
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const { setCurrentUser } = useSchoolStore();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     setIsLoading(true);
 
     try {
@@ -85,7 +90,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onForgotPassword }) => {
       } else {
         errorMessage =
           error instanceof Error
-            ? error.message
+            ? error.response?.data?.error || error?.message
             : 'Failed to login. Please try again.';
       }
 
@@ -97,10 +102,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onForgotPassword }) => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -154,7 +155,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onForgotPassword }) => {
               <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
                 id="password"
-                type={showPassword ? 'text' : 'password'}
+                type={formData.showPassword ? 'text' : 'password'}
                 placeholder="Enter your password"
                 value={formData.password}
                 onChange={(e) => handleInputChange('password', e.target.value)}
@@ -163,10 +164,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onForgotPassword }) => {
               />
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() =>
+                  handleBooleanInputChange(
+                    'showPassword',
+                    !formData?.showPassword
+                  )
+                }
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
               >
-                {showPassword ? (
+                {formData.showPassword ? (
                   <EyeOff className="w-4 h-4" />
                 ) : (
                   <Eye className="w-4 h-4" />
@@ -194,7 +200,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onForgotPassword }) => {
             </div>
             <button
               type="button"
-              onClick={onForgotPassword}
+              onClick={() => toggleCurrentView('forgot')}
               className="text-sm text-accent hover:text-accent/80 font-medium transition-colors"
             >
               Forgot password?

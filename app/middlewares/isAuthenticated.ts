@@ -2,26 +2,25 @@ import { NextFunction, Request, Response } from 'express';
 import { auth } from '../firebase.js';
 import logger from '../utils/logger.js';
 
+type DecodedToken = { uid: string; role?: string; email?: string } & Record<
+  string,
+  unknown
+>;
+
 export async function isAuthenticated(
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<Response | void> {
-  const { authorization } = req.headers;
+  const authorization = req.headers?.authorization;
 
-  if (!authorization) return res.status(401).send({ message: 'Unauthorized' });
-
-  if (!authorization.startsWith('Bearer'))
+  if (!authorization || !authorization.startsWith('Bearer '))
     return res.status(401).send({ message: 'Unauthorized' });
 
-  const split = authorization.split('Bearer ');
-  if (split.length !== 2)
-    return res.status(401).send({ message: 'Unauthorized' });
-
-  const token = split[1];
+  const token = authorization.split('Bearer ')[1];
 
   try {
-    const decodedToken: auth.DecodedIdToken = await auth.verifyIdToken(token);
+    const decodedToken = (await auth!.verifyIdToken(token)) as DecodedToken;
     logger.info('decodedToken', JSON.stringify(decodedToken));
     res.locals = {
       ...res.locals,
@@ -30,8 +29,9 @@ export async function isAuthenticated(
       email: decodedToken.email
     };
     return next();
-  } catch (err) {
-    logger.error(`${err.code} -  ${err.message}`);
+  } catch (err: unknown) {
+    const e = err as { code?: string; message?: string };
+    logger.error(`${e?.code ?? 'ERR'} - ${e?.message ?? String(err)}`);
     return res.status(401).send({ message: 'Unauthorized' });
   }
 }

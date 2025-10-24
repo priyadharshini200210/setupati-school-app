@@ -9,10 +9,11 @@
     "moduleResolution": "node",
     "strict": true,
     "noEmit": false,
+    "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    },
+    }
   },
   "ts-node": {
     "experimentalSpecifierResolution": "node",
