@@ -16,7 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { useAuthStore } from '@/store/AuthStore';
+import { useAuthStore } from '@/store/authStore';
 
 export const Header = () => {
   const { currentUser, resetStore } = useSchoolStore();
