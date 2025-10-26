@@ -5,7 +5,7 @@ import { initializeSampleData } from '@/store/schoolStore';
 import { useAuthStore } from '@/store/authStore';
 import { StudentDashboard } from '@/components/Students/StudentDashboard';
 import { TeacherDashboard } from '@/components/Teachers/TeacherDashboard';
-import { AdminDashboard } from '@/components/Admin/AdminDashboard';
+import { AdminDashboard } from '@/components/admin/AdminDashboard';
 import { RoleRoute } from '../Authentication/RoleRoute';
 
 export const MainLayout = () => {
