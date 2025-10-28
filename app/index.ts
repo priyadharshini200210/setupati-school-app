@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import studentRoutes from './routes/studentRoute.js';
+import gradeRoutes from './routes/gradeRoute.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import './firebase.js';
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(cors({ origin: true }));
 
 app.use('/students', studentRoutes);
+app.use('/grades', gradeRoutes);
 app.use('/api/v1/auth', authRouters);
 
 app.get('/alive', (req, res) => {
