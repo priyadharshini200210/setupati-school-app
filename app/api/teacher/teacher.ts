@@ -1,6 +1,7 @@
 import { db } from '../../firebase.js';
 import { Teacher } from '../../models/Teacher.js';
 import { AppError, HttpCode } from '../../error.js';
+import logger from '../../utils/logger.js';
 
 if (!db)
   throw new AppError(
@@ -71,14 +72,14 @@ export const updateTeacher = async (
   teacherId: string,
   data: Partial<Teacher>
 ): Promise<boolean> => {
-  console.log('In update teacher function');
+  logger.info('Updating teacher with ID:', teacherId);
   const teacherData = await getTeacher(teacherId);
   if (!teacherData?.id || !teacherData.teacher) {
     return false;
   }
-  console.log('teacher data found:', teacherData);
+  logger.info('Teacher data found:', teacherData);
   const teacherRef = teacherCollection.doc(teacherData.id);
   await teacherRef.update(data);
-  console.log('teacher data updated successfully');
+  logger.info('Teacher data updated successfully');
   return true;
 };

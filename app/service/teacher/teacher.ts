@@ -75,7 +75,6 @@ export const updateTeacherDetails = async (
   try {
     const teacherId = req.params.teacher_id;
     const data = req.body;
-    console.log('In service');
     const updated = await updateTeacher(teacherId, data);
     if (!updated) {
       return res.status(404).json({ error: 'Teacher not found' });

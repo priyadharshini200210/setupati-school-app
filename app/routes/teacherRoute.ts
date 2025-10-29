@@ -41,7 +41,6 @@ teacherRouter.put(
     req: Request<{ teacher_id: string; Teacher: Partial<Teacher> }>,
     res: Response
   ) => {
-    console.log('In route');
     updateTeacherDetails(req, res);
   }
 );
