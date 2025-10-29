@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import {
   addStudent,
-  getStudent,
   deleteStudent,
   getAllStudentDetails,
   searchStudent as searchStudentApi,
@@ -15,7 +14,7 @@ export const createStudent = async (
   res: Response
 ) => {
   try {
-    const data = req.body;
+    const data = req?.body;
     const id = await addStudent(data);
     res.status(201).json({ id });
   } catch (error) {
@@ -29,7 +28,7 @@ export const searchStudent = async (
   res: Response
 ) => {
   try {
-    const studentRollNo = req.params.student_rollno;
+    const studentRollNo = req?.params?.student_rollno;
     if (!studentRollNo) {
       return res.status(400).json({ error: 'Student roll number is required' });
     }
@@ -46,9 +45,11 @@ export const deleteStudentDetails = async (
   res: Response
 ): Promise<Response | void> => {
   try {
-    const studentRollNo = req.params.student_rollno;
+    const studentRollNo = req?.params?.student_rollno;
+    if (!studentRollNo) {
+      return res.status(400).json({ error: 'Student roll number is required' });
+    }
     const deleted = await deleteStudent(studentRollNo);
-    logger.info('deleted', deleted);
     if (!deleted) {
       return res.status(404).json({ error: 'Student not found' });
     }
@@ -77,9 +78,11 @@ export const updateStudentDetails = async (
   res: Response
 ) => {
   try {
-    const studentRollNo = req.params.student_rollno;
-    const data = req.body;
-    console.log('In service');
+    const studentRollNo = req?.params?.student_rollno;
+    const data = req?.body;
+    if (!studentRollNo) {
+      return res.status(400).json({ error: 'Student roll number is required' });
+    }
     const updated = await updateStudent(studentRollNo, data);
     if (!updated) {
       return res.status(404).json({ error: 'Student not found' });
