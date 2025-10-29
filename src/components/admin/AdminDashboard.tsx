@@ -5,7 +5,7 @@ import { TodaySchedule } from './TodaySchedule';
 import { QuickActions } from './QuickActions';
 import { RecentAnnouncements } from './RecentAnnouncements';
 
-export const Dashboard = () => {
+export const AdminDashboard = () => {
   const {
     getStudentCount,
     getTeacherCount,

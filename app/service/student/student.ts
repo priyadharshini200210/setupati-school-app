@@ -4,9 +4,9 @@ import {
   getStudent,
   deleteStudent,
   searchStudent as searchStudentApi
-} from '../api/student.js';
-import { Student } from '../models/Student.js';
-import logger from '../utils/logger.js';
+} from '../../api/student/student.js';
+import { Student } from '../../models/Student.js';
+import logger from '../../utils/logger.js';
 
 export const createStudent = async (
   req: Request<{ Student: Student }>,
