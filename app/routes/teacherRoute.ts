@@ -11,7 +11,7 @@ import { Teacher } from '../models/Teacher.js';
 const teacherRouter = Router();
 
 teacherRouter.post(
-  '/create/teacher',
+  '/create',
   (req: Request<{ Teacher: Teacher }>, res: Response) => {
     createTeacher(req, res);
   }

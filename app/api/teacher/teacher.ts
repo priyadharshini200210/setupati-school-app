@@ -19,7 +19,9 @@ export const addTeacher = async (data: Teacher): Promise<string> => {
 export const getTeacher = async (
   teacherId: string
 ): Promise<{ id: string; teacher: Teacher | null }> => {
-  const teacherDoc = await teacherCollection.where('id', '==', teacherId).get();
+  const teacherDoc = await teacherCollection
+    .where('teacher_id', '==', teacherId)
+    .get();
   if (teacherDoc.empty) {
     return { id: '', teacher: null };
   }
@@ -40,11 +42,13 @@ export const deleteTeacher = async (teacherId: string): Promise<boolean> => {
 export const searchTeacher = async (
   teacherId: string
 ): Promise<{ id: string; teacher: Teacher }[]> => {
-  const snapshot = await teacherCollection.where('id', '==', teacherId).get();
+  const snapshot = await teacherCollection
+    .where('teacher_id', '==', teacherId)
+    .get();
   if (snapshot.empty) {
     return [];
   }
-  return snapshot.docs.map((doc: { id: string; data: () => unknown }) => ({
+  return snapshot.docs.map((doc) => ({
     id: doc.id,
     teacher: doc.data() as Teacher
   }));
