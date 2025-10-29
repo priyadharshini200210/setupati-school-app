@@ -1,6 +1,7 @@
 import { db } from '../../firebase.js';
 import { Student } from '../../models/Student.js';
 import { AppError, HttpCode } from '../../error.js';
+import logger from 'app/utils/logger.js';
 
 if (!db)
   throw new AppError(
@@ -13,6 +14,7 @@ const studentCollection = db.collection('students');
 export const addStudent = async (data: Student): Promise<string> => {
   const plainData = { ...data };
   const docRef = await studentCollection.add(plainData);
+  logger.info('Student added with ID:', docRef.id);
   return docRef.id;
 };
 
@@ -26,6 +28,7 @@ export const getStudent = async (
     return { id: '', student: null };
   }
   const doc = studentDoc.docs[0];
+  logger.info('Student data found:', doc.data());
   return { id: doc.id, student: doc.data() as Student };
 };
 
@@ -38,6 +41,7 @@ export const deleteStudent = async (
   }
   const studentRef = studentCollection.doc(studentData.id);
   await studentRef.delete();
+  logger.info('Student deleted successfully:', studentRollNo);
   return true;
 };
 
@@ -50,6 +54,10 @@ export const searchStudent = async (
   if (snapshot.empty) {
     return [];
   }
+  logger.info(
+    'Student data found:',
+    snapshot.docs.map((doc: { id: string; data: () => unknown }) => doc.data())
+  );
   return snapshot.docs.map((doc: { id: string; data: () => unknown }) => ({
      id: doc.id,
     student: doc.data() as Student
@@ -61,6 +69,10 @@ export const getAllStudentDetails = async (): Promise<{ id: string; student: Stu
   if (snapshot.empty) {
     return [];
   }
+  logger.info(
+    'All student data:',
+    snapshot.docs.map((doc: { id: string; data: () => unknown }) => doc.data())
+  );
   return snapshot.docs.map((doc: { id: string; data: () => unknown }) => ({
     id: doc.id,
     student: doc.data() as Student
@@ -71,14 +83,12 @@ export const updateStudent = async (
   studentRollNo: string,
   data: Partial<Student>
 ): Promise<boolean> => {
-  console.log('In updateStudent function');
   const studentData = await getStudent(studentRollNo);
   if (!studentData?.id || !studentData.student) {
     return false;
   }
-  console.log('Student data found:', studentData);
   const studentRef = studentCollection.doc(studentData.id);
   await studentRef.update(data);
-  console.log('Student data updated successfully');
+  logger.info('Student updated successfully:', studentRollNo);
   return true;
 };

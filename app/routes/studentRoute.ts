@@ -38,7 +38,6 @@ studentRouter.get('/all', (req: Request, res: Response) => {
 studentRouter.put(
   '/update/:student_rollno',
   (req: Request<{ student_rollno: string; Student: Partial<Student> }>, res: Response) => {
-    console.log('In route');
     updateStudentDetails(req, res);
   }
 );
