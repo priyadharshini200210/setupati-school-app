@@ -14,6 +14,7 @@ const teacherCollection = db.collection('teachers');
 export const addTeacher = async (data: Teacher): Promise<string> => {
   const plainData = { ...data };
   const docRef = await teacherCollection.add(plainData);
+  logger.info('Teacher added with ID:', docRef.id);
   return docRef.id;
 };
 
@@ -24,19 +25,23 @@ export const getTeacher = async (
     .where('teacher_id', '==', teacherId)
     .get();
   if (teacherDoc.empty) {
+    logger.info('No teacher found with ID:', teacherId);
     return { id: '', teacher: null };
   }
   const doc = teacherDoc.docs[0];
+  logger.info('Teacher found with ID:', teacherId);
   return { id: doc.id, teacher: doc.data() as Teacher };
 };
 
 export const deleteTeacher = async (teacherId: string): Promise<boolean> => {
   const teacherData = await getTeacher(teacherId);
   if (!teacherData) {
+    logger.info('No teacher found to delete with ID:', teacherId);
     return false;
   }
   const teacherRef = teacherCollection.doc(teacherData.id);
   await teacherRef.delete();
+  logger.info('Teacher deleted with ID:', teacherId);
   return true;
 };
 
@@ -47,8 +52,10 @@ export const searchTeacher = async (
     .where('teacher_id', '==', teacherId)
     .get();
   if (snapshot.empty) {
+    logger.info('No teachers found with ID:', teacherId);
     return [];
   }
+  logger.info('Teachers found with ID:', teacherId);
   return snapshot.docs.map((doc) => ({
     id: doc.id,
     teacher: doc.data() as Teacher
@@ -60,8 +67,10 @@ export const getAllTeacherDetails = async (): Promise<
 > => {
   const snapshot = await teacherCollection.get();
   if (snapshot.empty) {
+    logger.info('No teachers found in the database');
     return [];
   }
+  logger.info('Fetched all teachers from the database');
   return snapshot.docs.map((doc: { id: string; data: () => unknown }) => ({
     id: doc.id,
     teacher: doc.data() as Teacher
