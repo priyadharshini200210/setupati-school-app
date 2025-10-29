@@ -13,8 +13,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    },
-    "allowImportingTsExtensions": true
+    }
   },
   "ts-node": {
     "experimentalSpecifierResolution": "node",

@@ -1,7 +1,7 @@
-import { db } from '../../firebase.ts';
-import { Grade } from '../../models/Grade.ts';
-import { AppError, HttpCode } from '../../error.ts';
-import logger from 'app/utils/logger.ts';
+import { db } from '../../firebase.js';
+import { Grade } from '../../models/Grade.js';
+import { AppError, HttpCode } from '../../error.js';
+import logger from '../../utils/logger.js';
 
 if (!db)
   throw new AppError(
@@ -14,7 +14,6 @@ const gradeCollection = db.collection('grades');
 // Add grade
 export const addGrade = async (data: Grade): Promise<string> => {
   const plainData = { ...data };
-  logger.info('Adding grade with data:', plainData);
   const docRef = await gradeCollection.add(plainData);
   logger.info('Grade added with ID:', docRef.id);
   return docRef.id;

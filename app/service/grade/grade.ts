@@ -5,9 +5,9 @@ import {
   getAllGradeDetails as getAllGradeDetailsApi,
   searchGrade as searchGradeApi,
   updateGrade as updateGradeApi
-} from '../../api/grade/grade.ts';
-import { Grade } from '../../models/Grade.ts';
-import logger from '../../utils/logger.ts';
+} from '../../api/grade/grade.js';
+import { Grade } from '../../models/Grade.js';
+import logger from '../../utils/logger.js';
 
 export const createGrade = async (
   req: Request<{ grade: Grade }>,

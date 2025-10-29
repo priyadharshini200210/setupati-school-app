@@ -4,10 +4,10 @@ import {
   deleteGrade,
   getAllGradeDetails,
   updateGrade
-} from '../service/grade/grade.ts';
+} from '../service/grade/grade.js';
 import { Router, Request, Response } from 'express';
-import { Grade } from '../models/Grade.ts';
-import logger from 'app/utils/logger.ts';
+import { Grade } from '../models/Grade.js';
+import logger from '../../app/utils/logger.js';
 
 const gradeRouter = Router();
 gradeRouter.post('/create', (req: Request<{ grade: Grade }>, res: Response) => {
