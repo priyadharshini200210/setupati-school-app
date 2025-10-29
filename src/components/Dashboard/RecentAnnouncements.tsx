@@ -1,14 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Bell } from 'lucide-react';
+import { Circular } from '@/models/Circular';
 
-interface Circular {
-  id: string;
-  title: string;
-  description: string;
-  targeted_group: string;
-  issued_date: string;
-}
 interface RecentAnnouncementsProps {
   circulars: Circular[];
 }

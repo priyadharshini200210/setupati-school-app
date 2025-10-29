@@ -11,20 +11,7 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { Edit, Eye } from 'lucide-react';
-
-type Teacher = {
-  id: string;
-  first_name: string;
-  last_name: string;
-  designation: string;
-  qualification: string;
-  subject_ids: string[];
-  experienced_years: number;
-  section_ids: string[];
-  doj: string;
-  dob: string;
-  gender: string;
-};
+import { Teacher } from '@/models/Teacher';
 
 interface TeachersTableProps {
   teachers: Teacher[];

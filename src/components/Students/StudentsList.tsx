@@ -11,20 +11,7 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { Edit, Eye } from 'lucide-react';
-
-type Student = {
-  id: string;
-  f_name: string;
-  l_name: string;
-  roll_no: string;
-  section_id: string;
-  gender: string;
-  dob: string;
-  phone_num1: string;
-  city: string;
-  state: string;
-  blood_group: string;
-};
+import { Student } from '@/models/Student';
 
 interface StudentListProps {
   students: Student[];
