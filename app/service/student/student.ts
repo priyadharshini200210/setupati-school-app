@@ -60,10 +60,7 @@ export const deleteStudentDetails = async (
   }
 };
 
-export const getAllStudents = async (
-  req: Request,
-  res: Response
-) => {
+export const getAllStudents = async (req: Request, res: Response) => {
   try {
     const students = await getAllStudentDetails();
     res.status(200).json(students);

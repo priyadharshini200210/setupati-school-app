@@ -37,7 +37,10 @@ studentRouter.get('/all', (req: Request, res: Response) => {
 
 studentRouter.put(
   '/update/:student_rollno',
-  (req: Request<{ student_rollno: string; Student: Partial<Student> }>, res: Response) => {
+  (
+    req: Request<{ student_rollno: string; Student: Partial<Student> }>,
+    res: Response
+  ) => {
     updateStudentDetails(req, res);
   }
 );

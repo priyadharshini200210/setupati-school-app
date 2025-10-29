@@ -15,7 +15,7 @@ export const createTeacher = async (
   res: Response
 ) => {
   try {
-    const data = req.body;
+    const data = req?.body;
     const id = await addTeacher(data);
     res.status(201).json({ id });
   } catch (error) {
@@ -29,7 +29,7 @@ export const searchTeacher = async (
   res: Response
 ) => {
   try {
-    const teacherId = req.params.teacher_id;
+    const teacherId = req?.params?.teacher_id;
     if (validateTeacherId(teacherId)) {
       return res.status(400).json({ error: validateTeacherId(teacherId) });
     }
@@ -46,7 +46,7 @@ export const deleteTeacherDetails = async (
   res: Response
 ): Promise<Response | void> => {
   try {
-    const teacherId = req.params.teacher_id;
+    const teacherId = req?.params?.teacher_id;
     if (validateTeacherId(teacherId)) {
       return res.status(400).json({ error: validateTeacherId(teacherId) });
     }
@@ -77,11 +77,11 @@ export const updateTeacherDetails = async (
   res: Response
 ) => {
   try {
-    const teacherId = req.params.teacher_id;
+    const teacherId = req?.params?.teacher_id;
     if (validateTeacherId(teacherId)) {
       return res.status(400).json({ error: validateTeacherId(teacherId) });
     }
-    const data = req.body;
+    const data = req?.body;
     const updated = await updateTeacher(teacherId, data);
     if (!updated) {
       return res.status(404).json({ error: 'Teacher not found' });

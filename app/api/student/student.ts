@@ -43,30 +43,37 @@ export const deleteStudent = async (
     return studentCollection.doc(id).delete();
   });
   await Promise.all(deletePromises);
-  logger.info(`Deleted ${studentData.length} student(s) with roll number: ${studentRollNo}`);
+  logger.info(
+    `Deleted ${studentData.length} student(s) with roll number: ${studentRollNo}`
+  );
   return true;
 };
 
-
 export const searchStudent = async (
   studentRollNo: string
-): Promise<{ id: string; student: Student| null}[]> => {
+): Promise<{ id: string; student: Student | null }[]> => {
   const snapshot = await studentCollection
     .where('roll_no', '==', studentRollNo)
     .get();
   if (snapshot.empty) {
     return [];
   }
-  logger.info(`Student data found:  ${JSON.stringify(snapshot.docs.map((doc) => doc.data()))}`);
+  logger.info(
+    `Student data found:  ${JSON.stringify(snapshot.docs.map((doc) => doc.data()))}`
+  );
   return mapDocsWithKey<Student, 'student'>(snapshot.docs, 'student');
 };
 
-export const getAllStudentDetails = async (): Promise<{ id: string; student: Student| null}[]> => {
+export const getAllStudentDetails = async (): Promise<
+  { id: string; student: Student | null }[]
+> => {
   const snapshot = await studentCollection.get();
   if (snapshot.empty) {
     return [];
   }
-  logger.info(`All student data found: ${JSON.stringify(snapshot.docs.map((doc) => doc.data()))}`);
+  logger.info(
+    `All student data found: ${JSON.stringify(snapshot.docs.map((doc) => doc.data()))}`
+  );
   return mapDocsWithKey<Student, 'student'>(snapshot.docs, 'student');
 };
 
@@ -84,7 +91,8 @@ export const updateStudent = async (
     return studentRef.update(data);
   });
   await Promise.all(updatePromises);
-  logger.info(`Updated ${studentData.length} student(s) with roll number: ${studentRollNo}`);
+  logger.info(
+    `Updated ${studentData.length} student(s) with roll number: ${studentRollNo}`
+  );
   return true;
 };
-
