@@ -2,7 +2,7 @@ import { db } from '../../firebase.js';
 import { Student } from '../../models/Student.js';
 import { AppError, HttpCode } from '../../error.js';
 import logger from './../../utils/logger.js';
-import { DocumentData } from 'firebase/firestore';
+import { mapDocsWithKey } from '../../../app/utils/helper.js';
 
 if (!db)
   throw new AppError(
@@ -11,15 +11,6 @@ if (!db)
   );
 
 const studentCollection = db.collection('students');
-
-export const mapStudentDocs = (
-  docs: DocumentData[]
-): { id: string; student: Student }[] => {
-  return docs.map((doc) => ({
-     id: doc.id,
-    student: doc.data() as Student
-  }));
-};
 
 export const addStudent = async (data: Student): Promise<string> => {
   const docRef = await studentCollection.add(data);
@@ -36,24 +27,21 @@ export const getStudent = async (
   if (studentDoc.empty) {
     return [{ id: '', student: null }];
   }
-  return mapStudentDocs(studentDoc.docs);
+  return mapDocsWithKey<Student, 'student'>(studentDoc.docs, 'student');
 };
 
 export const deleteStudent = async (
   studentRollNo: string
 ): Promise<boolean> => {
   const studentData = await getStudent(studentRollNo);
-
   if (!studentData.length) {
     logger.info(`No students found with roll number: ${studentRollNo}`);
     return false;
   }
-
   const deletePromises = studentData.map(({ id }) => {
     logger.info(`Deleting student with ID: ${id}`);
     return studentCollection.doc(id).delete();
   });
-
   await Promise.all(deletePromises);
   logger.info(`Deleted ${studentData.length} student(s) with roll number: ${studentRollNo}`);
   return true;
@@ -62,7 +50,7 @@ export const deleteStudent = async (
 
 export const searchStudent = async (
   studentRollNo: string
-): Promise<{ id: string; student: Student }[]> => {
+): Promise<{ id: string; student: Student| null}[]> => {
   const snapshot = await studentCollection
     .where('roll_no', '==', studentRollNo)
     .get();
@@ -70,16 +58,16 @@ export const searchStudent = async (
     return [];
   }
   logger.info(`Student data found:  ${JSON.stringify(snapshot.docs.map((doc) => doc.data()))}`);
-  return mapStudentDocs(snapshot.docs);
+  return mapDocsWithKey<Student, 'student'>(snapshot.docs, 'student');
 };
 
-export const getAllStudentDetails = async (): Promise<{ id: string; student: Student }[]> => {
+export const getAllStudentDetails = async (): Promise<{ id: string; student: Student| null}[]> => {
   const snapshot = await studentCollection.get();
   if (snapshot.empty) {
     return [];
   }
   logger.info(`All student data found: ${JSON.stringify(snapshot.docs.map((doc) => doc.data()))}`);
-  return mapStudentDocs(snapshot.docs);
+  return mapDocsWithKey<Student, 'student'>(snapshot.docs, 'student');
 };
 
 export const updateStudent = async (
@@ -87,17 +75,14 @@ export const updateStudent = async (
   data: Partial<Student>
 ): Promise<boolean> => {
   const studentData = await getStudent(studentRollNo);
-
   if (!studentData.length) {
     logger.info(`No students found with roll number: ${studentRollNo}`);
     return false;
   }
-
   const updatePromises = studentData.map(({ id }) => {
     const studentRef = studentCollection.doc(id);
     return studentRef.update(data);
   });
-
   await Promise.all(updatePromises);
   logger.info(`Updated ${studentData.length} student(s) with roll number: ${studentRollNo}`);
   return true;

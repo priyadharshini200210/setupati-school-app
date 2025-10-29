@@ -28,7 +28,7 @@ export const searchStudent = async (
   res: Response
 ) => {
   try {
-    const studentRollNo = req?.params?.student_rollno;
+    const { student_rollno: studentRollNo } = req?.params || {};
     if (!studentRollNo) {
       return res.status(400).json({ error: 'Student roll number is required' });
     }
@@ -45,7 +45,7 @@ export const deleteStudentDetails = async (
   res: Response
 ): Promise<Response | void> => {
   try {
-    const studentRollNo = req?.params?.student_rollno;
+    const { student_rollno: studentRollNo } = req?.params || {};
     if (!studentRollNo) {
       return res.status(400).json({ error: 'Student roll number is required' });
     }
@@ -78,7 +78,7 @@ export const updateStudentDetails = async (
   res: Response
 ) => {
   try {
-    const studentRollNo = req?.params?.student_rollno;
+    const { student_rollno: studentRollNo } = req?.params || {};
     const data = req?.body;
     if (!studentRollNo) {
       return res.status(400).json({ error: 'Student roll number is required' });
