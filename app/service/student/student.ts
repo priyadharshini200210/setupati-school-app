@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import {
   addStudent,
-  getStudent,
   deleteStudent,
-  searchStudent as searchStudentApi
+  getAllStudentDetails,
+  searchStudent as searchStudentApi,
+  updateStudent
 } from '../../api/student/student.js';
 import { Student } from '../../models/Student.js';
 import logger from '../../utils/logger.js';
@@ -13,7 +14,7 @@ export const createStudent = async (
   res: Response
 ) => {
   try {
-    const data = req.body.Student;
+    const data = req?.body;
     const id = await addStudent(data);
     res.status(201).json({ id });
   } catch (error) {
@@ -22,19 +23,19 @@ export const createStudent = async (
   }
 };
 
-export const getStudentDetails = async (
+export const searchStudent = async (
   req: Request<{ student_rollno: string }>,
   res: Response
 ) => {
   try {
-    const studentRollNo = req.params.student_rollno;
-    const student = await getStudent(studentRollNo);
-    if (!student) {
-      return res.status(404).json({ error: 'Student not found' });
+    const { student_rollno: studentRollNo } = req?.params || {};
+    if (!studentRollNo) {
+      return res.status(400).json({ error: 'Student roll number is required' });
     }
-    res.status(200).json(student);
+    const students = await searchStudentApi(studentRollNo);
+    res.status(200).json(students);
   } catch (error) {
-    logger.error('Error fetching student details:', error);
+    logger.error('Error searching for students:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
@@ -44,9 +45,11 @@ export const deleteStudentDetails = async (
   res: Response
 ): Promise<Response | void> => {
   try {
-    const studentRollNo = req.params.student_rollno;
+    const { student_rollno: studentRollNo } = req?.params || {};
+    if (!studentRollNo) {
+      return res.status(400).json({ error: 'Student roll number is required' });
+    }
     const deleted = await deleteStudent(studentRollNo);
-    logger.info('deleted', deleted);
     if (!deleted) {
       return res.status(404).json({ error: 'Student not found' });
     }
@@ -57,19 +60,36 @@ export const deleteStudentDetails = async (
   }
 };
 
-export const searchStudent = async (
-  req: Request<{ student_rollno: string }>,
+export const getAllStudents = async (
+  req: Request,
   res: Response
 ) => {
   try {
-    const studentRollNo = req.params.student_rollno;
+    const students = await getAllStudentDetails();
+    res.status(200).json(students);
+  } catch (error) {
+    logger.error('Error fetching all students:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+export const updateStudentDetails = async (
+  req: Request<{ student_rollno: string; Student: Partial<Student> }>,
+  res: Response
+) => {
+  try {
+    const { student_rollno: studentRollNo } = req?.params || {};
+    const data = req?.body;
     if (!studentRollNo) {
       return res.status(400).json({ error: 'Student roll number is required' });
     }
-    const students = await searchStudentApi(studentRollNo);
-    res.status(200).json(students);
+    const updated = await updateStudent(studentRollNo, data);
+    if (!updated) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+    res.status(204).json({});
   } catch (error) {
-    logger.error('Error searching for students:', error);
+    logger.error('Error updating student details:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
