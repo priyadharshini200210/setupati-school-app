@@ -14,7 +14,7 @@ export const createTeacher = async (
   res: Response
 ) => {
   try {
-    const data = req?.body;
+    const { body: data } = req ?? {};
     const id = await addTeacher(data);
     res.status(201).json({ id });
   } catch (error) {
@@ -28,9 +28,9 @@ export const searchTeacher = async (
   res: Response
 ) => {
   try {
-    const teacherId = req?.params?.teacher_id;
+    const { teacher_id: teacherId } = req.params;
     if (!teacherId) {
-      return res.status(400).json({ error: 'Teacher ID is required' });
+      res.status(400).json({ error: 'Teacher ID is required' });
     }
     const teachers = await searchTeacherApi(teacherId);
     res.status(200).json(teachers);
@@ -45,14 +45,14 @@ export const deleteTeacherDetails = async (
   res: Response
 ): Promise<Response | void> => {
   try {
-    const teacherId = req?.params?.teacher_id;
+    const { teacher_id: teacherId } = req.params;
     if (!teacherId) {
-      return res.status(400).json({ error: 'Teacher ID is required' });
+      res.status(400).json({ error: 'Teacher ID is required' });
     }
     const deleted = await deleteTeacher(teacherId);
     logger.info('deleted teacher data', deleted);
     if (!deleted) {
-      return res.status(404).json({ error: 'Teacher not found' });
+      res.status(404).json({ error: 'Teacher not found' });
     }
     res.status(204).json({});
   } catch (error) {
@@ -76,14 +76,14 @@ export const updateTeacherDetails = async (
   res: Response
 ) => {
   try {
-    const teacherId = req?.params?.teacher_id;
+    const { teacher_id: teacherId } = req.params;
     if (!teacherId) {
-      return res.status(400).json({ error: 'Teacher ID is required' });
+      res.status(400).json({ error: 'Teacher ID is required' });
     }
     const data = req?.body;
     const updated = await updateTeacher(teacherId, data);
     if (!updated) {
-      return res.status(404).json({ error: 'Teacher not found' });
+      res.status(404).json({ error: 'Teacher not found' });
     }
     res.status(204).json({});
   } catch (error) {
