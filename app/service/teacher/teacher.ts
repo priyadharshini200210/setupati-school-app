@@ -8,7 +8,6 @@ import {
 } from '../../api/teacher/teacher.js';
 import { Teacher } from '../../models/Teacher.js';
 import logger from '../../utils/logger.js';
-import { validateTeacherId } from '../../utils/validation.js';
 
 export const createTeacher = async (
   req: Request<{ Teacher: Teacher }>,
@@ -30,8 +29,8 @@ export const searchTeacher = async (
 ) => {
   try {
     const teacherId = req?.params?.teacher_id;
-    if (validateTeacherId(teacherId)) {
-      return res.status(400).json({ error: validateTeacherId(teacherId) });
+    if (!teacherId) {
+      return res.status(400).json({ error: 'Teacher ID is required' });
     }
     const teachers = await searchTeacherApi(teacherId);
     res.status(200).json(teachers);
@@ -47,8 +46,8 @@ export const deleteTeacherDetails = async (
 ): Promise<Response | void> => {
   try {
     const teacherId = req?.params?.teacher_id;
-    if (validateTeacherId(teacherId)) {
-      return res.status(400).json({ error: validateTeacherId(teacherId) });
+    if (!teacherId) {
+      return res.status(400).json({ error: 'Teacher ID is required' });
     }
     const deleted = await deleteTeacher(teacherId);
     logger.info('deleted teacher data', deleted);
@@ -78,8 +77,8 @@ export const updateTeacherDetails = async (
 ) => {
   try {
     const teacherId = req?.params?.teacher_id;
-    if (validateTeacherId(teacherId)) {
-      return res.status(400).json({ error: validateTeacherId(teacherId) });
+    if (!teacherId) {
+      return res.status(400).json({ error: 'Teacher ID is required' });
     }
     const data = req?.body;
     const updated = await updateTeacher(teacherId, data);

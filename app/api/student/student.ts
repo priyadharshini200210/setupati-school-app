@@ -2,7 +2,7 @@ import { db } from '../../firebase.js';
 import { Student } from '../../models/Student.js';
 import { AppError, HttpCode } from '../../error.js';
 import logger from './../../utils/logger.js';
-import { mapDocsWithKey } from '../../../app/utils/helper.js';
+import { mapDocsWithKey } from '../../utils/helper.js';
 
 if (!db)
   throw new AppError(
