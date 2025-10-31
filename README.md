@@ -4,10 +4,10 @@
 - [ ] Announcements / Circulars
 - [ ] Upcoming Events
 - [ ] Student Section
-- [ ] Timetable (Offline support)
+- [x] Timetable (Offline support)
 - [ ] Homework
 - [ ] Exam Results
-- [ ] Attendance
+- [x] Attendance
 - [ ] Parent Section
 - [ ] View Student Progress
 - [ ] View Attendance
