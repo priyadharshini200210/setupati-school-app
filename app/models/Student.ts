@@ -19,4 +19,3 @@ export interface Student {
   updated_at: string; // ISO 8601 format
   grade_name: string;
 }
-

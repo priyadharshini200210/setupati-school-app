@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import './firebase.js';
 import logger from './utils/logger.js';
 import authRouters from './routes/authRoute.js';
+import teacherRouter from './routes/teacherRoute.js';
 import subjectRouter from './routes/subjectRoute.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use(cors({ origin: true }));
 
 app.use('/students', studentRoutes);
+app.use('/teachers', teacherRouter);
 app.use('/api/v1/auth', authRouters);
 app.use('/subjects', subjectRouter);
 
