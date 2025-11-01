@@ -14,7 +14,7 @@ export const createSubject = async (
   res: Response
 ) => {
   try {
-    const data = req?.body;
+    const { body: data } = req ?? {};
     const id = await addSubject(data);
     res.status(201).json({ id });
   } catch (error) {
@@ -30,7 +30,7 @@ export const searchSubject = async (
   try {
     const { subject_id: subjectId } = req?.params || {};
     if (!subjectId) {
-      return res.status(400).json({ error: 'Subject ID is required' });
+      res.status(400).json({ error: 'Subject ID is required' });
     }
     const subjects = await searchSubjectApi(subjectId);
     res.status(200).json(subjects);
@@ -47,11 +47,11 @@ export const deleteSubjectDetails = async (
   try {
     const { subject_id: subjectId } = req?.params || {};
     if (!subjectId) {
-      return res.status(400).json({ error: 'Subject ID is required' });
+      res.status(400).json({ error: 'Subject ID is required' });
     }
     const deleted = await deleteSubject(subjectId);
     if (!deleted) {
-      return res.status(404).json({ error: 'Subject not found' });
+      res.status(404).json({ error: 'Subject not found' });
     }
     res.status(204).json({});
   } catch (error) {
@@ -78,11 +78,11 @@ export const updateSubjectDetails = async (
     const { subject_id: subjectId } = req?.params || {};
     const data = req?.body;
     if (!subjectId) {
-      return res.status(400).json({ error: 'Subject ID is required' });
+      res.status(400).json({ error: 'Subject ID is required' });
     }
     const updated = await updateSubject(subjectId, data);
     if (!updated) {
-      return res.status(404).json({ error: 'Subject not found' });
+      res.status(404).json({ error: 'Subject not found' });
     }
     res.status(204).json({});
   } catch (error) {
