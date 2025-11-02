@@ -38,8 +38,64 @@ export const router = createBrowserRouter([
     path: 'auth/reset-password',
     element: <AuthLayout />
   },
+    {
+    path: '/students',
+    element: (
+      <ProtectedRoute>
+        <Index />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: '/teachers',
+    element: (
+      <ProtectedRoute>
+        <Index />
+      </ProtectedRoute>
+    )
+  },
   {
     path: '/dashboard',
+    element: (
+      <ProtectedRoute>
+        <Index />
+      </ProtectedRoute>
+    )
+  },
+    {
+    path: '/subjects',
+    element: (
+      <ProtectedRoute>
+        <Index />
+      </ProtectedRoute>
+    )
+  },
+    {
+    path: '/attendance',
+    element: (
+      <ProtectedRoute>
+        <Index />
+      </ProtectedRoute>
+    )
+  },
+    {
+    path: '/timetable',
+    element: (
+      <ProtectedRoute>
+        <Index />
+      </ProtectedRoute>
+    )
+  },
+    {
+    path: '/circulars',
+    element: (
+      <ProtectedRoute>
+        <Index />
+      </ProtectedRoute>
+    )
+  },
+  {
+    path: '/settings',
     element: (
       <ProtectedRoute>
         <Index />

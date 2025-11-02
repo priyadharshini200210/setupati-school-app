@@ -2,14 +2,17 @@ import { useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { initializeSampleData } from '@/store/schoolStore';
-import { useAuthStore } from '@/store/authStore';
 import { StudentDashboard } from '@/components/Students/StudentDashboard';
 import { TeacherDashboard } from '@/components/Teachers/TeacherDashboard';
 import { AdminDashboard } from '@/components/admin/AdminDashboard';
 import { RoleRoute } from '../Authentication/RoleRoute';
+import { SubjectsPage } from '@/components/Subjects';
+import { AttendancePage } from '@/components/Attendance';
+import { TimetablePage } from '@/components/Timetable';
+import { CircularPage } from '@/components/Circulars';
+import { SettingsPage } from '@/components/Settings';
 
 export const MainLayout = () => {
-  const { role } = useAuthStore();
 
   useEffect(() => {
     // Initialize sample data on mount
@@ -17,81 +20,51 @@ export const MainLayout = () => {
   }, []);
 
   const renderContent = () => {
-    switch (role) {
-      case 'student':
-        return (
-          <RoleRoute allowedRoles={['student']}>
-            <StudentDashboard />
-          </RoleRoute>
-        );
-      case 'teacher':
-        return (
-          <RoleRoute allowedRoles={['teacher']}>
-            <TeacherDashboard />
-          </RoleRoute>
-        );
-      case 'admin':
-        return (
-          <RoleRoute allowedRoles={['admin']}>
-            <AdminDashboard />
-          </RoleRoute>
-        );
-      case 'subjects':
-        return (
-          <div className="text-center py-12">
-            <h2 className="text-xl font-semibold text-foreground mb-2">
-              Subjects Management
-            </h2>
-            <p className="text-muted-foreground">
-              Subjects module coming soon...
-            </p>
-          </div>
-        );
-      case 'attendance':
-        return (
-          <div className="text-center py-12">
-            <h2 className="text-xl font-semibold text-foreground mb-2">
-              Attendance Tracking
-            </h2>
-            <p className="text-muted-foreground">
-              Attendance module coming soon...
-            </p>
-          </div>
-        );
-      case 'timetable':
-        return (
-          <div className="text-center py-12">
-            <h2 className="text-xl font-semibold text-foreground mb-2">
-              Timetable Management
-            </h2>
-            <p className="text-muted-foreground">
-              Timetable module coming soon...
-            </p>
-          </div>
-        );
-      case 'circulars':
-        return (
-          <div className="text-center py-12">
-            <h2 className="text-xl font-semibold text-foreground mb-2">
-              Circulars & Announcements
-            </h2>
-            <p className="text-muted-foreground">
-              Circulars module coming soon...
-            </p>
-          </div>
-        );
-      case 'settings':
-        return (
-          <div className="text-center py-12">
-            <h2 className="text-xl font-semibold text-foreground mb-2">
-              Settings
-            </h2>
-            <p className="text-muted-foreground">
-              Settings module coming soon...
-            </p>
-          </div>
-        );
-    }
+    const routes = {
+      '/students': () => (
+        <RoleRoute allowedRoles={['student', 'admin']}>
+          <StudentDashboard />
+        </RoleRoute>
+      ),
+      '/teachers': () => (
+        <RoleRoute allowedRoles={['teacher', 'admin']}>
+          <TeacherDashboard />
+        </RoleRoute>
+      ),
+      '/dashboard': () => (
+        <RoleRoute allowedRoles={['admin']}>
+          <AdminDashboard />
+        </RoleRoute>
+      ),
+      '/subjects': () => (
+        <RoleRoute allowedRoles={['admin']}>
+          <SubjectsPage />
+        </RoleRoute>
+      ),
+      '/attendance': () => (
+        <RoleRoute allowedRoles={['admin']}>
+          <AttendancePage />
+        </RoleRoute>
+      ),
+      '/timetable': () => (
+        <RoleRoute allowedRoles={['admin']}>
+          <TimetablePage />
+        </RoleRoute>
+      ),
+      '/circulars': () => (
+        <RoleRoute allowedRoles={['admin']}>
+          <CircularPage />
+        </RoleRoute>
+      ),
+      '/settings': () => (
+        <RoleRoute allowedRoles={['admin']}>
+          <SettingsPage />
+        </RoleRoute>
+      ),
+    };
+
+    const currentPath = window.location.pathname;
+    return routes[currentPath] ? routes[currentPath]() : null;
   };
 
   return (

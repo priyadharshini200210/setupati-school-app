@@ -118,16 +118,19 @@ export const Sidebar = () => {
               key={item.id}
               variant={isActive ? 'default' : 'ghost'}
               className={cn(
-                'w-full justify-start h-10 transition-all duration-200',
-                isCollapsed && 'justify-center px-2',
-                isActive &&
-                  'bg-gradient-primary text-primary-foreground shadow-soft'
+              'w-full justify-start h-10 transition-all duration-200',
+              isCollapsed && 'justify-center px-2',
+              isActive &&
+                'bg-gradient-primary text-primary-foreground shadow-soft'
               )}
-              onClick={() => setActiveView(item.id)}
+              onClick={() => {
+              setActiveView(item.id);
+              window.location.href = `/${item.id}`;
+              }}
             >
               <Icon className={cn('h-4 w-4', !isCollapsed && 'mr-3')} />
               {!isCollapsed && (
-                <span className="text-sm font-medium">{item.label}</span>
+              <span className="text-sm font-medium">{item.label}</span>
               )}
             </Button>
           );
