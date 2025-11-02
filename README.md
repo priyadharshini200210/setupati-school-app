@@ -6,7 +6,7 @@
 - [ ] Student Section
 - [x] Timetable (Offline support)
 - [ ] Homework
-- [ ] Exam Results
+- [x] Exam Results
 - [x] Attendance
 - [ ] Parent Section
 - [ ] View Student Progress
