@@ -80,7 +80,7 @@ export const updateGrade = async (
 ): Promise<boolean> => {
   logger.info(`Updating grade with ID: ${gradeName}`);
   const gradeData = await getGrade(gradeName);
-  if (!gradeData.length && gradeData[0].grade === null) {
+  if (!gradeData.length || gradeData[0].grade === null) {
     logger.info(`No grade found to update with ID: ${gradeName}`);
     return false;
   }
