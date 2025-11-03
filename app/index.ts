@@ -11,6 +11,7 @@ import teacherRouter from './routes/teacherRoute.js';
 import attendanceRouter from './routes/attendanceRoute.js';
 import gradeRouter from './routes/gradeRoute.js';
 import circularRouter from './routes/circularRoute.js';
+import parentRouter from './routes/parentRoute.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,6 +29,7 @@ app.use('/attendance', attendanceRouter);
 app.use('/grades', gradeRouter);
 app.use('/circulars', circularRouter);
 app.use('/teachers', teacherRouter);
+app.use('/parents', parentRouter);
 app.use('/api/v1/auth', authRouters);
 
 app.get('/alive', (req, res) => {
