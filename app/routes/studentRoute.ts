@@ -6,7 +6,8 @@ import {
   updateStudentDetails
 } from '../service/student/student.js';
 import { Router, Request, Response } from 'express';
-import { Student } from '../models/Student.js';
+import type student from '@setupati-school/setupati-types/models';
+type Student = typeof student;
 
 const studentRouter = Router();
 
@@ -37,7 +38,10 @@ studentRouter.get('/all', (req: Request, res: Response) => {
 
 studentRouter.put(
   '/update/:student_rollno',
-  (req: Request<{ student_rollno: string; Student: Partial<Student> }>, res: Response) => {
+  (
+    req: Request<{ student_rollno: string; Student: Partial<Student> }>,
+    res: Response
+  ) => {
     updateStudentDetails(req, res);
   }
 );

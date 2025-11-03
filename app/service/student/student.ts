@@ -6,8 +6,9 @@ import {
   searchStudent as searchStudentApi,
   updateStudent
 } from '../../api/student/student.js';
-import { Student } from '../../models/Student.js';
+import type student from '@setupati-school/setupati-types/models';
 import logger from '../../utils/logger.js';
+type Student =  typeof student;
 
 export const createStudent = async (
   req: Request<{ Student: Student }>,
@@ -60,10 +61,7 @@ export const deleteStudentDetails = async (
   }
 };
 
-export const getAllStudents = async (
-  req: Request,
-  res: Response
-) => {
+export const getAllStudents = async (req: Request, res: Response) => {
   try {
     const students = await getAllStudentDetails();
     res.status(200).json(students);
