@@ -9,14 +9,10 @@ import { Badge } from '@/components/ui/badge';
 import { StatsCard } from './StatsCard';
 import { Calendar, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { useSchoolStore } from '@/store/schoolStore';
+import { formatDate } from '../../lib/utils';
+import { AttendanceRecord,AttendanceStatus } from '../../types/type';
 
-type AttendanceStatus = 'present' | 'absent' | 'leave';
-type AttendanceRecord = {
-  date: string; // ISO string or yyyy-mm-dd
-  status: AttendanceStatus;
-  note?: string;
-  id?: string;
-};
+
 
 export const StudentAttendance = () => {
   const { getMyAttendance } = useSchoolStore();
@@ -24,41 +20,22 @@ export const StudentAttendance = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    let mounted = true;
-    const load = async () => {
-      setLoading(true);
-      try {
-        // support sync or async store getter
-        const res = getMyAttendance ? getMyAttendance() : [];
-        const data: AttendanceRecord[] =
-          res && typeof (res as any).then === 'function' ? await res : res;
-        if (mounted) setRecords(Array.isArray(data) ? data : []);
-      } catch {
-        if (mounted) setRecords([]);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
-    load();
-    return () => {
-      mounted = false;
-    };
-  }, [getMyAttendance]);
+  setLoading(true);
+  try {
+    const data = getMyAttendance ? getMyAttendance() : [];
+    setRecords(Array.isArray(data) ? data : []);
+  } catch {
+    setRecords([]);
+  } finally {
+    setLoading(false);
+  }
+}, [getMyAttendance]);
 
   const total = records.length;
   const present = records.filter((r) => r.status === 'present').length;
   const absent = records.filter((r) => r.status === 'absent').length;
   const leave = records.filter((r) => r.status === 'leave').length;
   const attendanceRate = total > 0 ? Math.round((present / total) * 100) : 0;
-
-  const formatDate = (iso: string) => {
-    try {
-      const d = new Date(iso);
-      return d.toLocaleDateString();
-    } catch {
-      return iso;
-    }
-  };
 
   const badgeFor = (s: AttendanceStatus) => {
     switch (s) {

@@ -7,20 +7,7 @@ import {
 } from '@/components/ui/card';
 import { Calendar } from 'lucide-react';
 import { useSchoolStore } from '@/store/schoolStore';
-
-type Period = {
-  id?: string;
-  time?: string; // e.g. "09:00 - 10:00"
-  subject: string;
-  teacher?: string;
-  room?: string;
-};
-
-type DayTimetable = {
-  day: string; // "Monday", "Tuesday", ...
-  date?: string;
-  periods: Period[];
-};
+import { DayTimetable, Period } from '../../types/type';
 
 export const StudentTimetable: React.FC = () => {
   const { getMyTimetable } = useSchoolStore();

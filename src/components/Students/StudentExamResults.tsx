@@ -3,28 +3,13 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Award, Calendar } from 'lucide-react';
 import { useSchoolStore } from '@/store/schoolStore';
-
-type SubjectMark = {
-    subject: string;
-    marks: number;
-    maxMarks?: number;
-    remark?: string;
-};
-
-type ExamResult = {
-    id?: string;
-    title: string;
-    date?: string;
-    subjects: SubjectMark[];
-    note?: string;
-};
+import { formatDate } from '../../lib/utils';
+import { ExamResult, SubjectMark } from '../../types/type';
 
 export const StudentExamResults: React.FC = () => {
     const { getMyResults } = useSchoolStore();
     const [results, setResults] = useState<ExamResult[]>([]);
     const [loading, setLoading] = useState(true);
-
-    const formatDate = (d?: string) => (d ? new Date(d).toLocaleDateString() : '—');
 
     const calcTotals = (subjects: SubjectMark[]) => {
         const totalMarks = subjects.reduce((s, x) => s + (Number(x.marks) || 0), 0);
