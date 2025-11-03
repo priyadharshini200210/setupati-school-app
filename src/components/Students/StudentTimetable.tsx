@@ -15,26 +15,15 @@ export const StudentTimetable: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    let mounted = true;
-    const load = async () => {
-      setLoading(true);
-      try {
-        const res = getMyTimetable ? getMyTimetable() : [];
-        const data: DayTimetable[] =
-          res && typeof (res as Promise<DayTimetable[]>).then === 'function'
-            ? await res
-            : (res as DayTimetable[]);
-        if (mounted) setTimetable(Array.isArray(data) ? data : []);
-      } catch {
-        if (mounted) setTimetable([]);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
-    load();
-    return () => {
-      mounted = false;
-    };
+    setLoading(true);
+    try {
+      const data = getMyTimetable ? getMyTimetable() : [];
+      setTimetable(Array.isArray(data) ? (data as DayTimetable[]) : []);
+    } catch {
+      setTimetable([]);
+    } finally {
+      setLoading(false);
+    }
   }, [getMyTimetable]);
 
   const days = useMemo<DayTimetable[]>(
@@ -42,12 +31,12 @@ export const StudentTimetable: React.FC = () => {
       timetable.length > 0
         ? timetable
         : [
-            { day: 'Monday', periods: [] },
-            { day: 'Tuesday', periods: [] },
-            { day: 'Wednesday', periods: [] },
-            { day: 'Thursday', periods: [] },
-            { day: 'Friday', periods: [] }
-          ],
+          { day: 'Monday', periods: [] },
+          { day: 'Tuesday', periods: [] },
+          { day: 'Wednesday', periods: [] },
+          { day: 'Thursday', periods: [] },
+          { day: 'Friday', periods: [] }
+        ],
     [timetable]
   );
 
