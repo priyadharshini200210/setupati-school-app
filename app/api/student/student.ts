@@ -35,7 +35,7 @@ export const deleteStudent = async (
   studentRollNo: string
 ): Promise<boolean> => {
   const studentData = await getStudent(studentRollNo);
-  if (!studentData.length && studentData[0].student === null) {
+  if (!studentData.length || studentData[0].student === null) {
     logger.info(`No students found with roll number: ${studentRollNo}`);
     return false;
   }
@@ -83,7 +83,7 @@ export const updateStudent = async (
   data: Partial<Student>
 ): Promise<boolean> => {
   const studentData = await getStudent(studentRollNo);
-  if (!studentData.length && studentData[0].student === null) {
+  if (!studentData.length || studentData[0].student === null) {
     logger.info(`No students found with roll number: ${studentRollNo}`);
     return false;
   }

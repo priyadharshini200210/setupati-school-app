@@ -34,7 +34,7 @@ export const getCircular = async (
 
 export const deleteCircular = async (circularId: string): Promise<boolean> => {
   const circularData = await getCircular(circularId);
-  if (!circularData.length && circularData[0].circular === null) {
+  if (!circularData.length || circularData[0].circular === null) {
     logger.info(`No circular found to delete with ID: ${circularId}`);
     return false;
   }
@@ -80,7 +80,7 @@ export const updateCircular = async (
 ): Promise<boolean> => {
   logger.info(`Updating circular with ID: ${circularId}`);
   const circularData = await getCircular(circularId);
-  if (!circularData.length && circularData[0].circular === null) {
+  if (!circularData.length || circularData[0].circular === null) {
     logger.info(`No circular found to update with ID: ${circularId}`);
     return false;
   }

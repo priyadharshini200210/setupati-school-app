@@ -34,7 +34,7 @@ export const getGrade = async (
 
 export const deleteGrade = async (gradeName: string): Promise<boolean> => {
   const gradeData = await getGrade(gradeName);
-  if (!gradeData.length && gradeData[0].grade === null) {
+  if (!gradeData.length || gradeData[0].grade === null) {
     logger.info(`No grade found to delete with ID: ${gradeName}`);
     return false;
   }

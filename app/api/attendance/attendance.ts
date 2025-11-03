@@ -11,7 +11,7 @@ if (!db)
     HttpCode.INTERNAL_SERVER_ERROR
   );
 
-const attendanceCollection = db.collection('attendence');
+const attendanceCollection = db.collection('attendance');
 
 export const addAttendance = async (data: Attendance): Promise<string> => {
   const docRef = await attendanceCollection.add(data);
@@ -34,7 +34,7 @@ export const getAttendance = async (
 
 export const deleteAttendance = async (attendance_id: string): Promise<boolean> => {
   const attendanceData = await getAttendance(attendance_id);
-  if (!attendanceData.length && attendanceData[0].attendance === null) {
+  if (!attendanceData.length || attendanceData[0].attendance === null) {
     logger.info(`No attendance found to delete with ID: ${attendance_id}`);
     return false;
   }
@@ -80,7 +80,7 @@ export const updateAttendance = async (
 ): Promise<boolean> => {
   logger.info(`Updating attendance with ID: ${attendance_id}`);
   const attendanceData = await getAttendance(attendance_id);
-  if (!attendanceData.length && attendanceData[0].attendance === null) {
+  if (!attendanceData.length || attendanceData[0].attendance === null) {
     logger.info(`No attendance found to update with ID: ${attendance_id}`);
     return false;
   }
