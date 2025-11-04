@@ -8,6 +8,7 @@ import './firebase.js';
 import logger from './utils/logger.js';
 import authRouters from './routes/authRoute.js';
 import teacherRouter from './routes/teacherRoute.js';
+import sectionRouter from './routes/sectionRoute.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,6 +24,7 @@ app.use(cors({ origin: true }));
 app.use('/students', studentRoutes);
 app.use('/teachers', teacherRouter);
 app.use('/api/v1/auth', authRouters);
+app.use('/sections', sectionRouter);
 
 app.get('/alive', (req, res) => {
   res.status(200).send('OK Backend alive');
