@@ -3,7 +3,6 @@ import type timeTable from '@setupati-school/setupati-types/models';
 import { AppError, HttpCode } from '../../error.js';
 import logger from '../../utils/logger.js';
 import { mapDocsWithKey } from '../../utils/helper.js';
-import { getTeacher } from '../teacher/teacher.js';
 type TimeTable = typeof timeTable;
 
 if (!db)

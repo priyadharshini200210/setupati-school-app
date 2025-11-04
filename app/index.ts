@@ -13,6 +13,7 @@ import gradeRouter from './routes/gradeRoute.js';
 import circularRouter from './routes/circularRoute.js';
 import timeTableRouter from './routes/timetableRoute.js';
 import parentRouter from './routes/parentRoute.js';
+import examResultRouter from './routes/examresultRoute.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,6 +33,7 @@ app.use('/circulars', circularRouter);
 app.use('/teachers', teacherRouter);
 app.use('/timetables', timeTableRouter);
 app.use('/parents', parentRouter);
+app.use('/examresults', examResultRouter);
 app.use('/api/v1/auth', authRouters);
 
 app.get('/alive', (req, res) => {
