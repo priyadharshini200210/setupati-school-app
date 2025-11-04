@@ -8,6 +8,9 @@ import './firebase.js';
 import logger from './utils/logger.js';
 import authRouters from './routes/authRoute.js';
 import teacherRouter from './routes/teacherRoute.js';
+import attendanceRouter from './routes/attendanceRoute.js';
+import gradeRouter from './routes/gradeRoute.js';
+import circularRouter from './routes/circularRoute.js';
 import sectionRouter from './routes/sectionRoute.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -22,6 +25,9 @@ app.use(express.json());
 app.use(cors({ origin: true }));
 
 app.use('/students', studentRoutes);
+app.use('/attendance', attendanceRouter);
+app.use('/grades', gradeRouter);
+app.use('/circulars', circularRouter);
 app.use('/teachers', teacherRouter);
 app.use('/api/v1/auth', authRouters);
 app.use('/sections', sectionRouter);
