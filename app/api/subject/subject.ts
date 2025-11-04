@@ -1,8 +1,9 @@
 import { db } from '../../firebase.js';
-import { Subject } from '../../models/Subject.js';
+import type subject from '@setupati-school/setupati-types/models';
 import { AppError, HttpCode } from '../../error.js';
 import logger from './../../utils/logger.js';
 import { mapDocsWithKey } from '../../../app/utils/helper.js';
+type Subject = typeof subject;
 
 if (!db)
   throw new AppError(
@@ -33,7 +34,7 @@ export const getSubject = async (
 
 export const deleteSubject = async (subjectId: string): Promise<boolean> => {
   const subjectData = await getSubject(subjectId);
-  if (!subjectData.length) {
+  if (!subjectData.length || subjectData[0].subject === null) {
     logger.info(`No subjects found with ID: ${subjectId}`);
     return false;
   }
@@ -81,7 +82,7 @@ export const updateSubject = async (
   data: Partial<Subject>
 ): Promise<boolean> => {
   const subjectData = await getSubject(subjectId);
-  if (!subjectData.length) {
+  if (!subjectData.length || subjectData[0].subject === null) {
     logger.info(`No subjects found with subject ID: ${subjectId}`);
     return false;
   }

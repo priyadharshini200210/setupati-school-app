@@ -6,8 +6,9 @@ import {
   searchSubject as searchSubjectApi,
   updateSubject
 } from '../../api/subject/subject.js';
-import { Subject } from '../../models/Subject.js';
+import type subject from '@setupati-school/setupati-types/models';
 import logger from '../../utils/logger.js';
+type Subject = typeof subject;
 
 export const createSubject = async (
   req: Request<{ Subject: Subject }>,

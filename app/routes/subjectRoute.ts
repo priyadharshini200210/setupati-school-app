@@ -6,7 +6,8 @@ import {
   updateSubjectDetails
 } from '../service/subject/subject.js';
 import { Router, Request, Response } from 'express';
-import { Subject } from '../models/Subject.js';
+import type subject from '@setupati-school/setupati-types/models';
+type Subject = typeof subject;
 
 const subjectRouter = Router();
 

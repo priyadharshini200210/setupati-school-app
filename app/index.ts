@@ -11,6 +11,7 @@ import teacherRouter from './routes/teacherRoute.js';
 import attendanceRouter from './routes/attendanceRoute.js';
 import gradeRouter from './routes/gradeRoute.js';
 import circularRouter from './routes/circularRoute.js';
+import subjectRouter from './routes/subjectRoute.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
