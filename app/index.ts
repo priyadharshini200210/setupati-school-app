@@ -11,7 +11,11 @@ import teacherRouter from './routes/teacherRoute.js';
 import attendanceRouter from './routes/attendanceRoute.js';
 import gradeRouter from './routes/gradeRoute.js';
 import circularRouter from './routes/circularRoute.js';
-import sectionRouter from './routes/sectionRoute.js';
+import subjectRouter from './routes/subjectRoute.js';
+import timeTableRouter from './routes/timetableRoute.js';
+import parentRouter from './routes/parentRoute.js';
+import examResultRouter from './routes/examresultRoute.js';
+import examTimeTableRouter from './routes/examTimeTableRoute.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,8 +33,12 @@ app.use('/attendance', attendanceRouter);
 app.use('/grades', gradeRouter);
 app.use('/circulars', circularRouter);
 app.use('/teachers', teacherRouter);
+app.use('/timetables', timeTableRouter);
+app.use('/parents', parentRouter);
+app.use('/examresults', examResultRouter);
+app.use('/examtimetables', examTimeTableRouter);
 app.use('/api/v1/auth', authRouters);
-app.use('/sections', sectionRouter);
+app.use('/subjects', subjectRouter);
 
 app.get('/alive', (req, res) => {
   res.status(200).send('OK Backend alive');
