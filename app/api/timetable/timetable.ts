@@ -32,7 +32,9 @@ export const getTimeTable = async (
   return mapDocsWithKey<TimeTable, 'timeTable'>(timeTableDoc.docs, 'timeTable');
 };
 
-export const deleteTimeTable = async (timeTableId: string): Promise<boolean> => {
+export const deleteTimeTable = async (
+  timeTableId: string
+): Promise<boolean> => {
   const timeTableData = await getTimeTable(timeTableId);
   if (!timeTableData.length || timeTableData[0].timeTable === null) {
     logger.info(`No time table found to delete with ID: ${timeTableId}`);
@@ -44,7 +46,9 @@ export const deleteTimeTable = async (timeTableId: string): Promise<boolean> => 
   });
 
   await Promise.all(deletePromises);
-  logger.info(`Deleted ${timeTableData.length} time table(s) with ID: ${timeTableId}`);
+  logger.info(
+    `Deleted ${timeTableData.length} time table(s) with ID: ${timeTableId}`
+  );
   return true;
 };
 
@@ -89,6 +93,8 @@ export const updateTimeTable = async (
     return timeTableRef.update(data);
   });
   await Promise.all(updatePromises);
-  logger.info(`Updated ${timeTableData.length} time table(s) with ID: ${timeTableId}`);
+  logger.info(
+    `Updated ${timeTableData.length} time table(s) with ID: ${timeTableId}`
+  );
   return true;
 };

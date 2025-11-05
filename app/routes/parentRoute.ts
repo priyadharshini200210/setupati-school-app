@@ -1,6 +1,12 @@
 import { Router, Request, Response } from 'express';
 import type parent from '@setupati-school/setupati-types/models';
-import { createParent, getAllParents, searchParent ,deleteParentDetails,updateParentDetails } from '../service/parent/parent.js';
+import {
+  createParent,
+  getAllParents,
+  searchParent,
+  deleteParentDetails,
+  updateParentDetails
+} from '../service/parent/parent.js';
 
 type Parent = typeof parent;
 

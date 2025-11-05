@@ -1,8 +1,14 @@
 import { Request, Response } from 'express';
 import type examTimeTable from '@setupati-school/setupati-types/models';
 import logger from '../../utils/logger.js';
-import { addExamTimeTable, deleteExamTimeTable, getAllExamTimeTables, updateExamTimeTable, searchExamTimeTable as searchExamTimeTableApi } from '../../api/examtimetable/examtimetable.js';
-type ExamTimeTable =  typeof examTimeTable;
+import {
+  addExamTimeTable,
+  deleteExamTimeTable,
+  getAllExamTimeTables,
+  updateExamTimeTable,
+  searchExamTimeTable as searchExamTimeTableApi
+} from '../../api/examtimetable/examtimetable.js';
+type ExamTimeTable = typeof examTimeTable;
 
 export const createExamTimeTable = async (
   req: Request<{ ExamTimeTable: ExamTimeTable }>,
@@ -56,7 +62,10 @@ export const deleteExamTimeTableDetails = async (
   }
 };
 
-export const getAllExamTimeTablesDetails = async (req: Request, res: Response) => {
+export const getAllExamTimeTablesDetails = async (
+  req: Request,
+  res: Response
+) => {
   try {
     const examTimeTables = await getAllExamTimeTables();
     res.status(200).json(examTimeTables);
@@ -67,7 +76,10 @@ export const getAllExamTimeTablesDetails = async (req: Request, res: Response) =
 };
 
 export const updateExamTimeTableDetails = async (
-  req: Request<{ exam_time_table_id: string; ExamTimeTable: Partial<ExamTimeTable> }>,
+  req: Request<{
+    exam_time_table_id: string;
+    ExamTimeTable: Partial<ExamTimeTable>;
+  }>,
   res: Response
 ) => {
   try {
