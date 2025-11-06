@@ -1,6 +1,12 @@
 import { Router, Request, Response } from 'express';
 import type attendance from '@setupati-school/setupati-types/models';
-import { createAttendance, deleteAttendanceDetails, getAllAttendance, searchAttendance, updateAttendanceDetails } from '../service/attendance/attendance.js';
+import {
+  createAttendance,
+  deleteAttendanceDetails,
+  getAllAttendance,
+  searchAttendance,
+  updateAttendanceDetails
+} from '../service/attendance/attendance.js';
 type Attendance = typeof attendance;
 
 const attendanceRouter = Router();

@@ -44,7 +44,9 @@ export const deleteCircular = async (circularId: string): Promise<boolean> => {
   });
 
   await Promise.all(deletePromises);
-  logger.info(`Deleted ${circularData.length} circular(s) with ID: ${circularId}`);
+  logger.info(
+    `Deleted ${circularData.length} circular(s) with ID: ${circularId}`
+  );
   return true;
 };
 
@@ -89,6 +91,8 @@ export const updateCircular = async (
     return circularRef.update(data);
   });
   await Promise.all(updatePromises);
-  logger.info(`Updated ${circularData.length} circular(s) with ID: ${circularId}`);
+  logger.info(
+    `Updated ${circularData.length} circular(s) with ID: ${circularId}`
+  );
   return true;
 };

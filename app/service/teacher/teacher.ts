@@ -8,7 +8,7 @@ import {
 } from '../../api/teacher/teacher.js';
 import type teacher from '@setupati-school/setupati-types/models';
 import logger from '../../utils/logger.js';
-type Teacher =  typeof teacher;
+type Teacher = typeof teacher;
 
 export const createTeacher = async (
   req: Request<{ Teacher: Teacher }>,

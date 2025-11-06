@@ -1,6 +1,12 @@
 import { Router, Request, Response } from 'express';
 import type examResult from '@setupati-school/setupati-types/models';
-import { createExamResult, searchExamResult, updateExamResultDetails, getAllExamResultsDetails,deleteExamResultDetails } from '../service/examresult/examresult.js';
+import {
+  createExamResult,
+  searchExamResult,
+  updateExamResultDetails,
+  getAllExamResultsDetails,
+  deleteExamResultDetails
+} from '../service/examresult/examresult.js';
 type ExamResult = typeof examResult;
 
 const examResultRouter = Router();

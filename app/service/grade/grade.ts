@@ -1,7 +1,13 @@
 import { Request, Response } from 'express';
 import type grade from '@setupati-school/setupati-types/models';
 import logger from '../../utils/logger.js';
-import { addGrade, deleteGrade, getAllGradeDetails, updateGrade,searchGrade as searchGradeApi } from '../../api/grade/grade.js';
+import {
+  addGrade,
+  deleteGrade,
+  getAllGradeDetails,
+  updateGrade,
+  searchGrade as searchGradeApi
+} from '../../api/grade/grade.js';
 type Grade = typeof grade;
 
 export const createGrade = async (

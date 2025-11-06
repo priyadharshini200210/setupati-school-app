@@ -1,6 +1,12 @@
 import { Router, Request, Response } from 'express';
 import type circular from '@setupati-school/setupati-types/models';
-import { createCircular, deleteCircularDetails, getAllCirculars, searchCircular, updateCircularDetails } from '../service/circular/circular.js';
+import {
+  createCircular,
+  deleteCircularDetails,
+  getAllCirculars,
+  searchCircular,
+  updateCircularDetails
+} from '../service/circular/circular.js';
 type Circular = typeof circular;
 
 const circularRouter = Router();

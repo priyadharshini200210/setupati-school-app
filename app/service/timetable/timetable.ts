@@ -1,8 +1,14 @@
 import { Request, Response } from 'express';
 import type timeTable from '@setupati-school/setupati-types/models';
 import logger from '../../utils/logger.js';
-import { addTimeTable, updateTimeTable, searchTimeTable as searchTimeTableApi, deleteTimeTable, getAllTimeTables } from '../../api/timetable/timetable.js';
-type TimeTable =  typeof timeTable;
+import {
+  addTimeTable,
+  updateTimeTable,
+  searchTimeTable as searchTimeTableApi,
+  deleteTimeTable,
+  getAllTimeTables
+} from '../../api/timetable/timetable.js';
+type TimeTable = typeof timeTable;
 
 export const createTimeTable = async (
   req: Request<{ TimeTable: TimeTable }>,

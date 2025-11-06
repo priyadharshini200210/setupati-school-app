@@ -16,6 +16,7 @@ import timeTableRouter from './routes/timetableRoute.js';
 import parentRouter from './routes/parentRoute.js';
 import examResultRouter from './routes/examresultRoute.js';
 import examTimeTableRouter from './routes/examTimeTableRoute.js';
+import sectionRouter from './routes/sectionRoute.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -39,6 +40,7 @@ app.use('/examresults', examResultRouter);
 app.use('/examtimetables', examTimeTableRouter);
 app.use('/api/v1/auth', authRouters);
 app.use('/subjects', subjectRouter);
+app.use('/sections', sectionRouter);
 
 app.get('/alive', (req, res) => {
   res.status(200).send('OK Backend alive');

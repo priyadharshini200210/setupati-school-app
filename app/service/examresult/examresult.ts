@@ -1,8 +1,14 @@
 import { Request, Response } from 'express';
 import type examResult from '@setupati-school/setupati-types/models';
 import logger from '../../utils/logger.js';
-import { addExamResult, deleteExamResult, getAllExamResults, updateExamResult,searchExamResult as searchExamResultApi } from '../../api/examresult/examresult.js';
-type ExamResult =  typeof examResult;
+import {
+  addExamResult,
+  deleteExamResult,
+  getAllExamResults,
+  updateExamResult,
+  searchExamResult as searchExamResultApi
+} from '../../api/examresult/examresult.js';
+type ExamResult = typeof examResult;
 
 export const createExamResult = async (
   req: Request<{ ExamResult: ExamResult }>,

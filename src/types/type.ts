@@ -22,18 +22,18 @@ export type AttendanceRecord = {
 };
 
 export type SubjectMark = {
-    subject: string;
-    marks: number;
-    maxMarks?: number;
-    remark?: string;
+  subject: string;
+  marks: number;
+  maxMarks?: number;
+  remark?: string;
 };
 
 export type ExamResult = {
-    id?: string;
-    title: string;
-    date?: string;
-    subjects: SubjectMark[];
-    note?: string;
+  id?: string;
+  title: string;
+  date?: string;
+  subjects: SubjectMark[];
+  note?: string;
 };
 
 export type Period = {

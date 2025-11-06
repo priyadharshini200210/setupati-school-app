@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { StatsCard } from './StatsCard';
 import { Calendar, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { useSchoolStore } from '@/store/schoolStore';
 import { formatDate } from '../../lib/utils';
-import { AttendanceRecord,AttendanceStatus } from '../../types/type';
-
-
+import { AttendanceRecord, AttendanceStatus } from '../../types/type';
 
 export const StudentAttendance = () => {
   const { getMyAttendance } = useSchoolStore();
@@ -20,16 +13,16 @@ export const StudentAttendance = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-  setLoading(true);
-  try {
-    const data = getMyAttendance ? getMyAttendance() : [];
-    setRecords(Array.isArray(data) ? data : []);
-  } catch {
-    setRecords([]);
-  } finally {
-    setLoading(false);
-  }
-}, [getMyAttendance]);
+    setLoading(true);
+    try {
+      const data = getMyAttendance ? getMyAttendance() : [];
+      setRecords(Array.isArray(data) ? data : []);
+    } catch {
+      setRecords([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [getMyAttendance]);
 
   const total = records.length;
   const present = records.filter((r) => r.status === 'present').length;
@@ -41,19 +34,28 @@ export const StudentAttendance = () => {
     switch (s) {
       case 'present':
         return (
-          <Badge variant="outline" className="text-success inline-flex items-center gap-2">
+          <Badge
+            variant="outline"
+            className="text-success inline-flex items-center gap-2"
+          >
             <CheckCircle className="h-4 w-4" /> Present
           </Badge>
         );
       case 'absent':
         return (
-          <Badge variant="outline" className="text-destructive inline-flex items-center gap-2">
+          <Badge
+            variant="outline"
+            className="text-destructive inline-flex items-center gap-2"
+          >
             <XCircle className="h-4 w-4" /> Absent
           </Badge>
         );
       case 'leave':
         return (
-          <Badge variant="outline" className="text-warning inline-flex items-center gap-2">
+          <Badge
+            variant="outline"
+            className="text-warning inline-flex items-center gap-2"
+          >
             <AlertCircle className="h-4 w-4" /> Leave
           </Badge>
         );
@@ -119,7 +121,7 @@ export const StudentAttendance = () => {
                       </div>
                       <div className="text-xs text-muted-foreground">
                         {new Date(r.date).toLocaleString(undefined, {
-                          weekday: 'long',
+                          weekday: 'long'
                         })}
                         {r.note ? ` • ${r.note}` : ''}
                       </div>

@@ -13,7 +13,9 @@ if (!db)
 
 const examTimeTableCollection = db.collection('exam_timetables');
 
-export const addExamTimeTable = async (data: ExamTimeTable): Promise<string> => {
+export const addExamTimeTable = async (
+  data: ExamTimeTable
+): Promise<string> => {
   const docRef = await examTimeTableCollection.add(data);
   logger.info(`ExamTimeTable added with ID: ${docRef.id}`);
   return docRef.id;
@@ -29,13 +31,23 @@ export const getExamTimeTable = async (
     logger.info(`No exam time table found with ID: ${examTimeTableId}`);
     return [{ id: '', examTimeTable: null }];
   }
-  return mapDocsWithKey<ExamTimeTable, 'examTimeTable'>(examTimeTableDoc.docs, 'examTimeTable');
+  return mapDocsWithKey<ExamTimeTable, 'examTimeTable'>(
+    examTimeTableDoc.docs,
+    'examTimeTable'
+  );
 };
 
-export const deleteExamTimeTable = async (examTimeTableId: string): Promise<boolean> => {
+export const deleteExamTimeTable = async (
+  examTimeTableId: string
+): Promise<boolean> => {
   const examTimeTableData = await getExamTimeTable(examTimeTableId);
-  if (!examTimeTableData.length || examTimeTableData[0].examTimeTable === null) {
-    logger.info(`No exam time table found to delete with ID: ${examTimeTableId}`);
+  if (
+    !examTimeTableData.length ||
+    examTimeTableData[0].examTimeTable === null
+  ) {
+    logger.info(
+      `No exam time table found to delete with ID: ${examTimeTableId}`
+    );
     return false;
   }
   const deletePromises = examTimeTableData.map(({ id }) => {
@@ -44,7 +56,9 @@ export const deleteExamTimeTable = async (examTimeTableId: string): Promise<bool
   });
 
   await Promise.all(deletePromises);
-  logger.info(`Deleted ${examTimeTableData.length} exam time table(s) with ID: ${examTimeTableId}`);
+  logger.info(
+    `Deleted ${examTimeTableData.length} exam time table(s) with ID: ${examTimeTableId}`
+  );
   return true;
 };
 
@@ -59,7 +73,10 @@ export const searchExamTimeTable = async (
     return [];
   }
   logger.info(`Exam time table found with ID: ${examTimeTableId}`);
-  return mapDocsWithKey<ExamTimeTable, 'examTimeTable'>(snapshot.docs, 'examTimeTable');
+  return mapDocsWithKey<ExamTimeTable, 'examTimeTable'>(
+    snapshot.docs,
+    'examTimeTable'
+  );
 };
 
 export const getAllExamTimeTables = async (): Promise<
@@ -71,7 +88,10 @@ export const getAllExamTimeTables = async (): Promise<
     return [];
   }
   logger.info(`Fetched all exam time tables from the database`);
-  return mapDocsWithKey<ExamTimeTable, 'examTimeTable'>(snapshot.docs, 'examTimeTable');
+  return mapDocsWithKey<ExamTimeTable, 'examTimeTable'>(
+    snapshot.docs,
+    'examTimeTable'
+  );
 };
 
 export const updateExamTimeTable = async (
@@ -80,8 +100,13 @@ export const updateExamTimeTable = async (
 ): Promise<boolean> => {
   logger.info(`Updating exam time table with ID: ${examTimeTableId}`);
   const examTimeTableData = await getExamTimeTable(examTimeTableId);
-  if (!examTimeTableData.length || examTimeTableData[0].examTimeTable === null) {
-    logger.info(`No exam time table found to update with ID: ${examTimeTableId}`);
+  if (
+    !examTimeTableData.length ||
+    examTimeTableData[0].examTimeTable === null
+  ) {
+    logger.info(
+      `No exam time table found to update with ID: ${examTimeTableId}`
+    );
     return false;
   }
   const updatePromises = examTimeTableData.map(({ id }) => {
@@ -89,6 +114,8 @@ export const updateExamTimeTable = async (
     return examTimeTableRef.update(data);
   });
   await Promise.all(updatePromises);
-  logger.info(`Updated ${examTimeTableData.length} exam time table(s) with ID: ${examTimeTableId}`);
+  logger.info(
+    `Updated ${examTimeTableData.length} exam time table(s) with ID: ${examTimeTableId}`
+  );
   return true;
 };

@@ -1,6 +1,12 @@
 import { Router, Request, Response } from 'express';
 import type examTimeTable from '@setupati-school/setupati-types/models';
-import { createExamTimeTable, searchExamTimeTable, deleteExamTimeTableDetails, getAllExamTimeTablesDetails, updateExamTimeTableDetails } from '../service/examtimetable/examtimetable.js';
+import {
+  createExamTimeTable,
+  searchExamTimeTable,
+  deleteExamTimeTableDetails,
+  getAllExamTimeTablesDetails,
+  updateExamTimeTableDetails
+} from '../service/examtimetable/examtimetable.js';
 type ExamTimeTable = typeof examTimeTable;
 
 const examTimeTableRouter = Router();
@@ -33,7 +39,10 @@ examTimeTableRouter.get('/all', (req: Request, res: Response) => {
 examTimeTableRouter.put(
   '/update/:exam_time_table_id',
   (
-    req: Request<{ exam_time_table_id: string; ExamTimeTable: Partial<ExamTimeTable> }>,
+    req: Request<{
+      exam_time_table_id: string;
+      ExamTimeTable: Partial<ExamTimeTable>;
+    }>,
     res: Response
   ) => {
     updateExamTimeTableDetails(req, res);

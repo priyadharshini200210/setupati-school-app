@@ -1,6 +1,12 @@
 import { Router, Request, Response } from 'express';
 import type timeTable from '@setupati-school/setupati-types/models';
-import { createTimeTable, searchTimeTable, deleteTimeTableDetails, getAllTimeTablesDetails, updateTimeTableDetails } from  '../service/timetable/timetable.js';
+import {
+  createTimeTable,
+  searchTimeTable,
+  deleteTimeTableDetails,
+  getAllTimeTablesDetails,
+  updateTimeTableDetails
+} from '../service/timetable/timetable.js';
 type TimeTable = typeof timeTable;
 
 const timeTableRouter = Router();

@@ -1,7 +1,13 @@
 import { Request, Response } from 'express';
-import type  parent from '@setupati-school/setupati-types/models';
+import type parent from '@setupati-school/setupati-types/models';
 import logger from '../../utils/logger.js';
-import { addParent, deleteParent, getAllParentDetails, updateParent , searchParent as searchParentApi} from '../../api/parent/parent.js';
+import {
+  addParent,
+  deleteParent,
+  getAllParentDetails,
+  updateParent,
+  searchParent as searchParentApi
+} from '../../api/parent/parent.js';
 type Parent = typeof parent;
 
 export const createParent = async (

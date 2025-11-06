@@ -1,10 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar } from 'lucide-react';
 import { useSchoolStore } from '@/store/schoolStore';
 import { DayTimetable, Period } from '../../types/type';
@@ -31,12 +26,12 @@ export const StudentTimetable: React.FC = () => {
       timetable.length > 0
         ? timetable
         : [
-          { day: 'Monday', periods: [] },
-          { day: 'Tuesday', periods: [] },
-          { day: 'Wednesday', periods: [] },
-          { day: 'Thursday', periods: [] },
-          { day: 'Friday', periods: [] }
-        ],
+            { day: 'Monday', periods: [] },
+            { day: 'Tuesday', periods: [] },
+            { day: 'Wednesday', periods: [] },
+            { day: 'Thursday', periods: [] },
+            { day: 'Friday', periods: [] }
+          ],
     [timetable]
   );
 
@@ -98,30 +93,46 @@ export const StudentTimetable: React.FC = () => {
               {/* Mobile-first: stacked day cards */}
               <div className="space-y-3 md:hidden">
                 {days.map((day) => (
-                  <div key={day.day} className="border rounded-md p-3 bg-background">
+                  <div
+                    key={day.day}
+                    className="border rounded-md p-3 bg-background"
+                  >
                     <div className="flex items-center justify-between mb-2">
                       <div>
-                        <div className="text-sm font-semibold text-foreground">{day.day}</div>
+                        <div className="text-sm font-semibold text-foreground">
+                          {day.day}
+                        </div>
                         {day.date && (
                           <div className="text-xs text-muted-foreground">
                             {new Date(day.date).toLocaleDateString()}
                           </div>
                         )}
                       </div>
-                      <div className="text-xs text-muted-foreground">{day.periods.length} periods</div>
+                      <div className="text-xs text-muted-foreground">
+                        {day.periods.length} periods
+                      </div>
                     </div>
 
                     <div className="divide-y">
                       {times.map((time) => {
                         const p = findPeriod(day.day, time);
                         return (
-                          <div key={`${day.day}-${time}`} className="py-2 flex items-start justify-between">
+                          <div
+                            key={`${day.day}-${time}`}
+                            className="py-2 flex items-start justify-between"
+                          >
                             <div className="min-w-0">
-                              <div className="text-xs text-muted-foreground">{time}</div>
+                              <div className="text-xs text-muted-foreground">
+                                {time}
+                              </div>
                               {p ? (
-                                <div className="text-sm font-medium text-foreground">{p.subject}</div>
+                                <div className="text-sm font-medium text-foreground">
+                                  {p.subject}
+                                </div>
                               ) : (
-                                <div className="text-sm text-muted-foreground">—</div>
+                                <div className="text-sm text-muted-foreground">
+                                  —
+                                </div>
                               )}
                               {p && (
                                 <div className="text-xs text-muted-foreground">
@@ -181,14 +192,18 @@ export const StudentTimetable: React.FC = () => {
                           >
                             {p ? (
                               <div className="min-w-0">
-                                <div className="text-sm font-medium text-foreground">{p.subject}</div>
+                                <div className="text-sm font-medium text-foreground">
+                                  {p.subject}
+                                </div>
                                 <div className="text-xs text-muted-foreground">
                                   {p.teacher ?? 'Teacher TBA'}
                                   {p.room ? ` • ${p.room}` : ''}
                                 </div>
                               </div>
                             ) : (
-                              <div className="text-sm text-muted-foreground">—</div>
+                              <div className="text-sm text-muted-foreground">
+                                —
+                              </div>
                             )}
                           </div>
                         );

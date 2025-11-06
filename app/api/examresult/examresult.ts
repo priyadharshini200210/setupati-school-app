@@ -29,10 +29,15 @@ export const getExamResult = async (
     logger.info(`No exam result found with ID: ${examResultId}`);
     return [{ id: '', examResult: null }];
   }
-  return mapDocsWithKey<ExamResult, 'examResult'>(examResultDoc.docs, 'examResult');
+  return mapDocsWithKey<ExamResult, 'examResult'>(
+    examResultDoc.docs,
+    'examResult'
+  );
 };
 
-export const deleteExamResult = async (examResultId: string): Promise<boolean> => {
+export const deleteExamResult = async (
+  examResultId: string
+): Promise<boolean> => {
   const examResultData = await getExamResult(examResultId);
   if (!examResultData.length || examResultData[0].examResult === null) {
     logger.info(`No exam result found to delete with ID: ${examResultId}`);
@@ -44,7 +49,9 @@ export const deleteExamResult = async (examResultId: string): Promise<boolean> =
   });
 
   await Promise.all(deletePromises);
-  logger.info(`Deleted ${examResultData.length} exam result(s) with ID: ${examResultId}`);
+  logger.info(
+    `Deleted ${examResultData.length} exam result(s) with ID: ${examResultId}`
+  );
   return true;
 };
 
@@ -89,6 +96,8 @@ export const updateExamResult = async (
     return examResultRef.update(data);
   });
   await Promise.all(updatePromises);
-  logger.info(`Updated ${examResultData.length} exam result(s) with ID: ${examResultId}`);
+  logger.info(
+    `Updated ${examResultData.length} exam result(s) with ID: ${examResultId}`
+  );
   return true;
 };

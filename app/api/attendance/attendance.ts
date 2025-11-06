@@ -29,10 +29,15 @@ export const getAttendance = async (
     logger.info(`No attendance found for student ID: ${attendance_id}`);
     return [{ id: '', attendance: null }];
   }
-  return mapDocsWithKey<Attendance, 'attendance'>(attendanceDoc.docs, 'attendance');
+  return mapDocsWithKey<Attendance, 'attendance'>(
+    attendanceDoc.docs,
+    'attendance'
+  );
 };
 
-export const deleteAttendance = async (attendance_id: string): Promise<boolean> => {
+export const deleteAttendance = async (
+  attendance_id: string
+): Promise<boolean> => {
   const attendanceData = await getAttendance(attendance_id);
   if (!attendanceData.length || attendanceData[0].attendance === null) {
     logger.info(`No attendance found to delete with ID: ${attendance_id}`);
@@ -44,7 +49,9 @@ export const deleteAttendance = async (attendance_id: string): Promise<boolean> 
   });
 
   await Promise.all(deletePromises);
-  logger.info(`Deleted ${attendanceData.length} attendance(s) with ID: ${attendance_id}`);
+  logger.info(
+    `Deleted ${attendanceData.length} attendance(s) with ID: ${attendance_id}`
+  );
   return true;
 };
 
@@ -89,6 +96,8 @@ export const updateAttendance = async (
     return attendanceRef.update(data);
   });
   await Promise.all(updatePromises);
-  logger.info(`Updated ${attendanceData.length} attendance(s) with ID: ${attendance_id}`);
+  logger.info(
+    `Updated ${attendanceData.length} attendance(s) with ID: ${attendance_id}`
+  );
   return true;
 };

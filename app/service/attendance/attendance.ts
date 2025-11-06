@@ -1,7 +1,13 @@
 import { Request, Response } from 'express';
 import type attendance from '@setupati-school/setupati-types/models';
 import logger from '../../utils/logger.js';
-import { addAttendance, deleteAttendance, getAllAttendanceDetails, updateAttendance,searchAttendance as searchAttendanceApi } from '../../api/attendance/attendance.js';
+import {
+  addAttendance,
+  deleteAttendance,
+  getAllAttendanceDetails,
+  updateAttendance,
+  searchAttendance as searchAttendanceApi
+} from '../../api/attendance/attendance.js';
 type Attendance = typeof attendance;
 
 export const createAttendance = async (

@@ -33,7 +33,8 @@ export const useSchoolStore = create<SchoolStore>()(
         // basic setters
         setCurrentUser: (user) => set({ currentUser: user }),
         setActiveView: (view) => set({ activeView: view }),
-        setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
+        setSidebarCollapsed: (collapsed) =>
+          set({ sidebarCollapsed: collapsed }),
         setLoading: (loading) => set({ loading }),
 
         setTeachers: (teachers) => set({ teachers }),
@@ -55,14 +56,17 @@ export const useSchoolStore = create<SchoolStore>()(
         fetchExamsFromBackend: async (studentId?: string) => {
           set({ loading: true });
           try {
-            const path = studentId ? `/api/v1/students/${studentId}/exams` : '/api/v1/exams';
+            const path = studentId
+              ? `/api/v1/students/${studentId}/exams`
+              : '/api/v1/exams';
             const res = await api.get(path);
             // expecting res.data.exams (grouped shape)
             const exams = Array.isArray(res.data?.exams) ? res.data.exams : [];
             set({ exams });
             return exams;
           } catch (err: unknown) {
-            const msg = err instanceof Error ? err.message : 'Failed to load exams';
+            const msg =
+              err instanceof Error ? err.message : 'Failed to load exams';
             toast({ title: 'Error', description: msg, variant: 'destructive' });
             return [];
           } finally {
@@ -98,7 +102,9 @@ export const useSchoolStore = create<SchoolStore>()(
             onAuthStateChanged(auth, async (user) => {
               if (user) {
                 try {
-                  const response = await api.get(`/api/v1/auth/users/${user.uid}`);
+                  const response = await api.get(
+                    `/api/v1/auth/users/${user.uid}`
+                  );
                   const userData: User = response.data.user;
                   set({ currentUser: userData });
                 } catch {
@@ -109,8 +115,13 @@ export const useSchoolStore = create<SchoolStore>()(
               }
             });
           } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'User not found!.';
-            toast({ title: 'Error', description: errorMessage, variant: 'destructive' });
+            const errorMessage =
+              error instanceof Error ? error.message : 'User not found!.';
+            toast({
+              title: 'Error',
+              description: errorMessage,
+              variant: 'destructive'
+            });
           }
         },
 
@@ -136,11 +147,17 @@ export const useSchoolStore = create<SchoolStore>()(
         getTeacherCount: () => get().teachers.length,
         getPresentStudentsToday: () => {
           const today = new Date().toISOString().split('T')[0];
-          return get().attendance.filter((a) => a.date === today && a.status === 'present').length;
+          return get().attendance.filter(
+            (a) => a.date === today && a.status === 'present'
+          ).length;
         },
         getRecentCirculars: () =>
           get()
-            .circulars.sort((a, b) => new Date(b.issued_date).getTime() - new Date(a.issued_date).getTime())
+            .circulars.sort(
+              (a, b) =>
+                new Date(b.issued_date).getTime() -
+                new Date(a.issued_date).getTime()
+            )
             .slice(0, 5)
       }),
       {

@@ -1,7 +1,13 @@
 import { Request, Response } from 'express';
 import type circular from '@setupati-school/setupati-types/models';
 import logger from '../../utils/logger.js';
-import { addCircular, deleteCircular, getAllCircularDetails, updateCircular , searchCircular as searchCircularApi} from '../../api/circular/circular.js';
+import {
+  addCircular,
+  deleteCircular,
+  getAllCircularDetails,
+  updateCircular,
+  searchCircular as searchCircularApi
+} from '../../api/circular/circular.js';
 type Circular = typeof circular;
 
 export const createCircular = async (
