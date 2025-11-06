@@ -1,9 +1,10 @@
 import { db } from '../../firebase.js';
-import type subject from '@setupati-school/setupati-types/models';
+// import type subject from '@setupati-school/setupati-types/models';
+import { Subject } from '../../models/Subject.js';
 import { AppError, HttpCode } from '../../error.js';
 import logger from './../../utils/logger.js';
 import { mapDocsWithKey } from '../../../app/utils/helper.js';
-type Subject = typeof subject;
+// type Subject = typeof subject;
 
 if (!db)
   throw new AppError(
@@ -20,22 +21,24 @@ export const addSubject = async (data: Subject): Promise<string> => {
 };
 
 export const getSubject = async (
-  subjectId: string
+  subjectName: string,
+  gradeName?: string
 ): Promise<{ id: string; subject: Subject | null }[]> => {
   const subjectDoc = await subjectCollection
-    .where('subject_id', '==', subjectId)
+    .where('subject_name', '==', subjectName)
+    .where('grade_name', '==', gradeName)
     .get();
   if (subjectDoc.empty) {
-    logger.info(`No subjects found with ID: ${subjectId}`);
+    logger.info(`No subjects found with name: ${subjectName}`);
     return [{ id: '', subject: null }];
   }
   return mapDocsWithKey<Subject, 'subject'>(subjectDoc.docs, 'subject');
 };
 
-export const deleteSubject = async (subjectId: string): Promise<boolean> => {
-  const subjectData = await getSubject(subjectId);
+export const deleteSubject = async (subjectName: string, gradeName: string): Promise<boolean> => {
+  const subjectData = await getSubject(subjectName, gradeName);
   if (!subjectData.length || subjectData[0].subject === null) {
-    logger.info(`No subjects found with ID: ${subjectId}`);
+    logger.info(`No subjects found with name: ${subjectName} and grade: ${gradeName}`);
     return false;
   }
   const deletePromises = subjectData.map(({ id }) => {
@@ -43,7 +46,7 @@ export const deleteSubject = async (subjectId: string): Promise<boolean> => {
     return subjectCollection.doc(id).delete();
   });
   await Promise.all(deletePromises);
-  logger.info(`Deleted ${subjectData.length} subject(s) with ID: ${subjectId}`);
+  logger.info(`Deleted ${subjectData.length} subject(s) with name: ${subjectName} and grade: ${gradeName}`);
   return true;
 };
 
@@ -78,19 +81,34 @@ export const getAllSubjectDetails = async (): Promise<
 };
 
 export const updateSubject = async (
-  subjectId: string,
+  subjectName: string,
   data: Partial<Subject>
-): Promise<boolean> => {
-  const subjectData = await getSubject(subjectId);
+): Promise<any[]> => {
+  const subjectData = await getSubject(subjectName,data?.grade_name);
   if (!subjectData.length || subjectData[0].subject === null) {
-    logger.info(`No subjects found with subject ID: ${subjectId}`);
-    return false;
+    logger.info(`No subjects found with subject name: ${subjectName}`);
+    return [];
   }
   const updatePromises = subjectData.map(({ id }) => {
     const subjectRef = subjectCollection.doc(id);
     return subjectRef.update(data);
   });
-  await Promise.all(updatePromises);
-  logger.info(`Updated ${subjectData.length} subject(s) with ID: ${subjectId}`);
-  return true;
+  const updatedData = await Promise.all(updatePromises);
+  logger.info(`Updated ${subjectData.length} subject(s) with name: ${subjectName}`);
+  return updatedData;
+};
+export const searchSubjectForGrade = async (
+  gradeName: string
+): Promise<{ id: string; subject: Subject | null }[]> => {
+  const snapshot = await subjectCollection
+    .where('grade_name', '==', gradeName)
+    .get();
+  if (snapshot.empty) {
+    logger.info(`No subject found with grade name: ${gradeName}`);
+    return [];
+  }
+  logger.info(
+    `Subject data found:  ${JSON.stringify(snapshot.docs.map((doc) => doc.data()))}`
+  );
+  return mapDocsWithKey<Subject, 'subject'>(snapshot.docs, 'subject');
 };
