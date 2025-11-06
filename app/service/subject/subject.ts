@@ -3,12 +3,13 @@ import {
   addSubject,
   deleteSubject,
   getAllSubjectDetails,
-  searchSubject as searchSubjectApi,
+  searchSubjectForGrade as searchSubjectApi,
   updateSubject
 } from '../../api/subject/subject.js';
-import type subject from '@setupati-school/setupati-types/models';
+import { Subject } from '../../models/Subject.js';
+// import type subject from '@setupati-school/setupati-types/models';
 import logger from '../../utils/logger.js';
-type Subject = typeof subject;
+// type Subject = typeof subject;
 
 export const createSubject = async (
   req: Request<{ Subject: Subject }>,
@@ -25,15 +26,15 @@ export const createSubject = async (
 };
 
 export const searchSubject = async (
-  req: Request<{ subject_id: string }>,
+  req: Request<{ gradeName : string }>,
   res: Response
 ) => {
   try {
-    const { subject_id: subjectId } = req?.params || {};
-    if (!subjectId) {
-      res.status(400).json({ error: 'Subject ID is required' });
+    const { gradeName } = req?.params || {};
+    if (!gradeName) {
+      res.status(400).json({ error: 'Grade name is required' });
     }
-    const subjects = await searchSubjectApi(subjectId);
+    const subjects = await searchSubjectApi(gradeName);
     res.status(200).json(subjects);
   } catch (error) {
     logger.error('Error searching for subjects:', error);
@@ -42,15 +43,16 @@ export const searchSubject = async (
 };
 
 export const deleteSubjectDetails = async (
-  req: Request<{ subject_id: string }>,
+  req: Request<{ subject_name: string; grade_name: string }>,
   res: Response
 ): Promise<Response | void> => {
   try {
-    const { subject_id: subjectId } = req?.params || {};
-    if (!subjectId) {
-      res.status(400).json({ error: 'Subject ID is required' });
+    const { subject_name: subjectName, grade_name: gradeName } = req?.params || {};
+    if (!subjectName || !gradeName) {
+      res.status(400).json({ error: 'Subject name and grade name are required' });
+      return;
     }
-    const deleted = await deleteSubject(subjectId);
+    const deleted = await deleteSubject(subjectName, gradeName);
     if (!deleted) {
       res.status(404).json({ error: 'Subject not found' });
     }
@@ -72,20 +74,20 @@ export const getAllSubjects = async (req: Request, res: Response) => {
 };
 
 export const updateSubjectDetails = async (
-  req: Request<{ subject_id: string; Subject: Partial<Subject> }>,
+  req: Request<{ subject_name: string; Subject: Partial<Subject> }>,
   res: Response
 ) => {
   try {
-    const { subject_id: subjectId } = req?.params || {};
+    const { subject_name: subjectName } = req?.params || {};
     const data = req?.body;
-    if (!subjectId) {
-      res.status(400).json({ error: 'Subject ID is required' });
+    if (!subjectName) {
+      res.status(400).json({ error: 'Subject name is required' });
     }
-    const updated = await updateSubject(subjectId, data);
+    const updated = await updateSubject(subjectName, data);
     if (!updated) {
       res.status(404).json({ error: 'Subject not found' });
     }
-    res.status(204).json({});
+    res.status(204).json({updated});
   } catch (error) {
     logger.error('Error updating subject details:', error);
     res.status(500).json({ error: 'Internal Server Error' });

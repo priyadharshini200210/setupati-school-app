@@ -6,8 +6,9 @@ import {
   updateSubjectDetails
 } from '../service/subject/subject.js';
 import { Router, Request, Response } from 'express';
-import type subject from '@setupati-school/setupati-types/models';
-type Subject = typeof subject;
+import { Subject } from '../models/Subject.js';
+// import type subject from '@setupati-school/setupati-types/models';
+// type Subject = typeof subject;
 
 const subjectRouter = Router();
 
@@ -19,15 +20,15 @@ subjectRouter.post(
 );
 
 subjectRouter.get(
-  '/search/:subject_id',
-  (req: Request<{ subject_id: string }>, res: Response) => {
+  '/search/:gradeName',
+  (req: Request<{ gradeName: string }>, res: Response) => {
     searchSubject(req, res);
   }
 );
 
 subjectRouter.delete(
-  '/delete/:subject_id',
-  (req: Request<{ subject_id: string }>, res: Response) => {
+  '/delete/:subject_name/:grade_name',
+  (req: Request<{ subject_name: string; grade_name: string }>, res: Response) => {
     deleteSubjectDetails(req, res);
   }
 );
@@ -37,9 +38,9 @@ subjectRouter.get('/all', (req: Request, res: Response) => {
 });
 
 subjectRouter.put(
-  '/update/:subject_id',
+  '/update/:subject_name',
   (
-    req: Request<{ subject_id: string; Subject: Partial<Subject> }>,
+    req: Request<{ subject_name: string; Subject: Partial<Subject> }>,
     res: Response
   ) => {
     updateSubjectDetails(req, res);

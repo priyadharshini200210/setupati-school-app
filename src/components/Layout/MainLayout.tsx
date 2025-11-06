@@ -7,6 +7,7 @@ import { StudentDashboard } from '@/components/Students/StudentDashboard';
 import { TeacherDashboard } from '@/components/Teachers/TeacherDashboard';
 import { AdminDashboard } from '@/components/admin/AdminDashboard';
 import { RoleRoute } from '../Authentication/RoleRoute';
+import { SubjectsManagement } from '@/components/Subject/SubjectManagement';
 
 export const MainLayout = () => {
   const { role } = useAuthStore();
@@ -17,11 +18,12 @@ export const MainLayout = () => {
   }, []);
 
   const renderContent = () => {
+    // <StudentDashboard />
     switch (role) {
       case 'student':
         return (
           <RoleRoute allowedRoles={['student']}>
-            <StudentDashboard />
+            <SubjectsManagement />
           </RoleRoute>
         );
       case 'teacher':
