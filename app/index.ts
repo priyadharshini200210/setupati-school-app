@@ -54,12 +54,12 @@ app.listen(PORT, () => {
       const response = await axios.get(
         `${process.env.VITE_BACKEND_API_URL}/alive`
       );
-      console.log(
+      logger.info(
         `health check successful at ${new Date().toISOString()}:`,
         response.data
       );
     } catch (error) {
-      console.error('health check failed:', error);
+      logger.error('health check failed:', error);
     }
   }, 60 * 1000);
 });
