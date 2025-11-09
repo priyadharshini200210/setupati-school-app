@@ -11,6 +11,7 @@ jobs:
   sync-secrets:
     name: 🔐 Decrypt & Sync Secrets (SOPS)
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'pull_request' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
     permissions:
       contents: read
 
@@ -142,6 +143,7 @@ jobs:
           channelId: pr-${{ github.event.pull_request.number }}
 
       - name: 🚀 Deploy Live
+        if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
@@ -150,6 +152,7 @@ jobs:
           channelId: live
 
       - name: 🛠️ Deploy Backend to Render
+        if: env.deploy == 'true' && github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
         env:
           RENDER_DEPLOY_HOOK_URL: https://api.render.com/deploy/srv-d248knvdiees73agf5l0?key=i8w6k6oitTw
         run: |
