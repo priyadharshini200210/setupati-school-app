@@ -36,15 +36,14 @@ export const StudentExamResults: React.FC = () => {
       setLoading(true);
       try {
         const raw = getMyResults ? getMyResults() : [];
-        const data =
-          raw && typeof (raw as any).then === 'function' ? await raw : raw;
+        const data = raw instanceof Promise ? await raw : raw;
 
         if (!mounted) return;
 
         const normalized: ExamResult[] = (Array.isArray(data) ? data : []).map(
-          (e: any) => {
+          (e) => {
             const subjects: SubjectMark[] = Array.isArray(e.subjects)
-              ? e.subjects.map((s: any) => ({
+              ? e.subjects.map((s) => ({
                   subject:
                     typeof s === 'string'
                       ? s

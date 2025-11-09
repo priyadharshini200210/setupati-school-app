@@ -17,6 +17,7 @@ import parentRouter from './routes/parentRoute.js';
 import examResultRouter from './routes/examresultRoute.js';
 import examTimeTableRouter from './routes/examTimeTableRoute.js';
 import sectionRouter from './routes/sectionRoute.js';
+import axios from 'axios';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,5 +48,18 @@ app.get('/alive', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  logger.info(`Server running at http://localhost:${PORT}`);
+  logger.info(`Server running at ${process.env.VITE_BACKEND_API_URL}`);
+  setInterval(async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.VITE_BACKEND_API_URL}/alive`
+      );
+      console.log(
+        `health check successful at ${new Date().toISOString()}:`,
+        response.data
+      );
+    } catch (error) {
+      console.error('health check failed:', error);
+    }
+  }, 60 * 1000);
 });
