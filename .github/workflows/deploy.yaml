@@ -151,7 +151,7 @@ jobs:
 
       - name: 🛠️ Deploy Backend to Render
         env:
-          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+          RENDER_DEPLOY_HOOK_URL: https://api.render.com/deploy/srv-d248knvdiees73agf5l0?key=i8w6k6oitTw
         run: |
           echo "🚀 Deploying backend to Render..."
           curl -X POST "$RENDER_DEPLOY_HOOK_URL"
