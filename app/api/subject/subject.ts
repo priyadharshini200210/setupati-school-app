@@ -2,7 +2,7 @@ import { db } from '../../firebase.js';
 import type subject from '@setupati-school/setupati-types/models';
 import { AppError, HttpCode } from '../../error.js';
 import logger from './../../utils/logger.js';
-import { mapDocsWithKey } from '../../../app/utils/helper.js';
+import { mapDocsWithKey } from '../../utils/helper.js';
 type Subject = typeof subject;
 
 if (!db)

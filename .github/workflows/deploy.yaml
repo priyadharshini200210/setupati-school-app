@@ -119,7 +119,12 @@ jobs:
       - name: 🔍 Check for app folder changes
         id: changes
         run: |
-          CHANGED=$(git diff --name-only ${{ github.sha }}^ ${{ github.sha }} | grep '^app/' || true)
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            CHANGED=$(git diff --name-only origin/${{ github.base_ref }} HEAD | grep '^app/' || true)
+          else
+            CHANGED=$(git diff --name-only HEAD^1 HEAD | grep '^app/' || true)
+          fi
+
           if [ -n "$CHANGED" ]; then
             echo "deploy=true" >> $GITHUB_ENV
             echo "✅ Changes found in app/: $CHANGED"
@@ -149,7 +154,7 @@ jobs:
       - name: 🛠️ Deploy Backend to Render
         if: env.deploy == 'true' && github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
         env:
-          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+          RENDER_DEPLOY_HOOK_URL: https://api.render.com/deploy/srv-d248knvdiees73agf5l0?key=i8w6k6oitTw
         run: |
           echo "🚀 Deploying backend to Render..."
           curl -X POST "$RENDER_DEPLOY_HOOK_URL"

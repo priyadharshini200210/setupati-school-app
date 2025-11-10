@@ -20,13 +20,13 @@ export const addAttendance = async (data: Attendance): Promise<string> => {
 };
 
 export const getAttendance = async (
-  attendance_id: string
+  attendanceId: string
 ): Promise<{ id: string; attendance: Attendance | null }[]> => {
   const attendanceDoc = await attendanceCollection
-    .where('attendance_id', '==', attendance_id)
+    .where('attendanceId', '==', attendanceId)
     .get();
   if (attendanceDoc.empty) {
-    logger.info(`No attendance found for student ID: ${attendance_id}`);
+    logger.info(`No attendance found for student ID: ${attendanceId}`);
     return [{ id: '', attendance: null }];
   }
   return mapDocsWithKey<Attendance, 'attendance'>(
@@ -36,11 +36,11 @@ export const getAttendance = async (
 };
 
 export const deleteAttendance = async (
-  attendance_id: string
+  attendanceId: string
 ): Promise<boolean> => {
-  const attendanceData = await getAttendance(attendance_id);
+  const attendanceData = await getAttendance(attendanceId);
   if (!attendanceData.length || attendanceData[0].attendance === null) {
-    logger.info(`No attendance found to delete with ID: ${attendance_id}`);
+    logger.info(`No attendance found to delete with ID: ${attendanceId}`);
     return false;
   }
   const deletePromises = attendanceData.map(({ id }) => {
@@ -50,22 +50,22 @@ export const deleteAttendance = async (
 
   await Promise.all(deletePromises);
   logger.info(
-    `Deleted ${attendanceData.length} attendance(s) with ID: ${attendance_id}`
+    `Deleted ${attendanceData.length} attendance(s) with ID: ${attendanceId}`
   );
   return true;
 };
 
 export const searchAttendance = async (
-  attendance_id: string
+  attendanceId: string
 ): Promise<{ id: string; attendance: Attendance | null }[]> => {
   const snapshot = await attendanceCollection
-    .where('attendance_id', '==', attendance_id)
+    .where('attendanceId', '==', attendanceId)
     .get();
   if (snapshot.empty) {
-    logger.info(`No attendance found with ID: ${attendance_id}`);
+    logger.info(`No attendance found with ID: ${attendanceId}`);
     return [];
   }
-  logger.info(`Attendance found with ID: ${attendance_id}`);
+  logger.info(`Attendance found with ID: ${attendanceId}`);
   return mapDocsWithKey<Attendance, 'attendance'>(snapshot.docs, 'attendance');
 };
 
@@ -82,13 +82,13 @@ export const getAllAttendanceDetails = async (): Promise<
 };
 
 export const updateAttendance = async (
-  attendance_id: string,
+  attendanceId: string,
   data: Partial<Attendance>
 ): Promise<boolean> => {
-  logger.info(`Updating attendance with ID: ${attendance_id}`);
-  const attendanceData = await getAttendance(attendance_id);
+  logger.info(`Updating attendance with ID: ${attendanceId}`);
+  const attendanceData = await getAttendance(attendanceId);
   if (!attendanceData.length || attendanceData[0].attendance === null) {
-    logger.info(`No attendance found to update with ID: ${attendance_id}`);
+    logger.info(`No attendance found to update with ID: ${attendanceId}`);
     return false;
   }
   const updatePromises = attendanceData.map(({ id }) => {
@@ -97,7 +97,7 @@ export const updateAttendance = async (
   });
   await Promise.all(updatePromises);
   logger.info(
-    `Updated ${attendanceData.length} attendance(s) with ID: ${attendance_id}`
+    `Updated ${attendanceData.length} attendance(s) with ID: ${attendanceId}`
   );
   return true;
 };
