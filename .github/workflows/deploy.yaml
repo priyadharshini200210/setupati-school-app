@@ -153,10 +153,6 @@ jobs:
         env:
           RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
-          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
-            echo "❌ ERROR: RENDER_DEPLOY_HOOK_URL is not set"
-            exit 1
-          fi
           echo "✅ Secret length: ${#RENDER_DEPLOY_HOOK_URL} characters"
           echo "🚀 Deploying backend to Render..."
           RESPONSE=$(curl -X POST "$RENDER_DEPLOY_HOOK_URL" -s -w "\n%{http_code}")
