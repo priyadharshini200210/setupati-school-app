@@ -157,6 +157,7 @@ jobs:
             echo "❌ ERROR: RENDER_DEPLOY_HOOK_URL is not set"
             exit 1
           fi
+          echo "✅ Secret length: ${#RENDER_DEPLOY_HOOK_URL} characters"
           echo "🚀 Deploying backend to Render..."
           RESPONSE=$(curl -X POST "$RENDER_DEPLOY_HOOK_URL" -s -w "\n%{http_code}")
           HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
