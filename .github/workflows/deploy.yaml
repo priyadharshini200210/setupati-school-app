@@ -154,4 +154,6 @@ jobs:
           RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
           echo "🚀 Deploying backend to Render..."
+          RENDER_DEPLOY_HOOK_URL=$(echo "$RENDER_DEPLOY_HOOK_URL" | tr -d '[:space:]')
+          echo "Length: ${#RENDER_DEPLOY_HOOK_URL} chars"
           curl "$RENDER_DEPLOY_HOOK_URL"
