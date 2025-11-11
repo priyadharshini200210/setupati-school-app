@@ -119,6 +119,7 @@ jobs:
       - name: 🔍 Check for app folder changes
         id: changes
         run: |
+          git fetch --unshallow || true
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             CHANGED=$(git diff --name-only origin/${{ github.base_ref }} HEAD | grep '^app/' || true)
           else
@@ -152,9 +153,8 @@ jobs:
           channelId: live
 
       - name: 🛠️ Deploy Backend to Render
-        if: env.deploy == 'true' && github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
         env:
-          RENDER_DEPLOY_HOOK_URL: https://api.render.com/deploy/srv-d248knvdiees73agf5l0?key=i8w6k6oitTw
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
-          echo "🚀 Deploying backend to Render..."
+          echo "🚀 Deploying backend to Render... $RENDER_DEPLOY_HOOK_URL"
           curl -X POST "$RENDER_DEPLOY_HOOK_URL"
