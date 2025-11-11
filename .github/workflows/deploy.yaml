@@ -118,13 +118,8 @@ jobs:
       - name: 🔍 Check for app folder changes
         id: changes
         run: |
-          git fetch --unshallow || true
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            CHANGED=$(git diff --name-only origin/${{ github.base_ref }} HEAD | grep '^app/' || true)
-          else
-            CHANGED=$(git diff --name-only HEAD^1 HEAD | grep '^app/' || true)
-          fi
-
+          git fetch origin main
+          CHANGED=$(git diff --name-only HEAD origin/main -- app/)
           if [ -n "$CHANGED" ]; then
             echo "deploy=true" >> $GITHUB_ENV
             echo "✅ Changes found in app/: $CHANGED"
@@ -156,4 +151,4 @@ jobs:
           RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
           echo "🚀 Deploying backend to Render... $RENDER_DEPLOY_HOOK_URL"
-          curl -X POST "$RENDER_DEPLOY_HOOK_URL"
+          curl -X POST "$RENDER_DEPLOY_HOOK_URL" -v
