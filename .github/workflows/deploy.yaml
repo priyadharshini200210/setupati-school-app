@@ -142,7 +142,6 @@ jobs:
           channelId: pr-${{ github.event.pull_request.number }}
 
       - name: 🚀 Deploy Live
-        if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/releases/release'))
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
@@ -151,6 +150,7 @@ jobs:
           channelId: live
 
       - name: 🛠️ Deploy Backend to Render
+        if: env.deploy == 'true'
         shell: bash
         run: |
           echo "🚀 Deploying backend to Render..."
