@@ -152,5 +152,5 @@ jobs:
       - name: 🛠️ Deploy Backend to Render
         run: |
           echo "🚀 Deploying backend to Render..."
-          echo "Length: ${#secrets.RENDER_DEPLOY_HOOK_URL} chars"
-          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" -v
+          URL=$(echo "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" | tr -d '[:space:]')
+          curl -X POST "$URL"
