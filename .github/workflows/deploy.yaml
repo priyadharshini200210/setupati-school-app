@@ -137,7 +137,7 @@ jobs:
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SETUPATI_SCHOOL_APP }}
+          firebaseServiceAccount: $FIREBASE_SERVICE_ACCOUNT_HOSTING
           projectId: setupati-school-app
           channelId: pr-${{ github.event.pull_request.number }}
 
@@ -145,7 +145,7 @@ jobs:
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SETUPATI_SCHOOL_APP }}
+          firebaseServiceAccount: $FIREBASE_SERVICE_ACCOUNT_HOSTING
           projectId: setupati-school-app
           channelId: live
 
