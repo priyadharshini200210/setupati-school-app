@@ -154,5 +154,4 @@ jobs:
         run: |
           echo "🚀 Deploying backend to Render..."
           URL=$(echo "$RENDER_DEPLOY_HOOK_URL" | tr -d '[:space:]')
-          echo "Deploy Hook URL: '$URL'"
           curl "$URL"
