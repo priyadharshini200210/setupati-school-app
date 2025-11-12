@@ -150,6 +150,7 @@ jobs:
           channelId: live
 
       - name: 🛠️ Deploy Backend to Render
+        shell: bash
         run: |
           echo "🚀 Deploying backend to Render..."
           URL=$(echo "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" | tr -d '[:space:]')
