@@ -153,21 +153,6 @@ jobs:
         shell: bash
         run: |
           echo "🚀 Deploying backend to Render..."
-          URL="${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
-
-          # fail early if empty
-          if [ -z "$URL" ]; then
-            echo "❌ RENDER_DEPLOY_HOOK_URL is empty — check repo secrets"
-            exit 1
-          fi
-
-          # quick masked diagnostics (won't reveal secret in logs)
-          echo "URL length: ${#URL}"
-          echo "URL preview: ${URL:0:8}...${URL: -8}"
-
-          # trim whitespace/newlines
-          URL="$(echo "$URL" | tr -d '[:space:]')"
-          echo "Trimmed length: ${#URL}"
-
-          # Use POST (Render deploy hooks expect POST). show verbose output and HTTP code.
-          curl -v -X POST -H "Content-Type: application/json" -d '{}' "$URL" -w "\nHTTP_STATUS:%{http_code}\n"
+          URL=$(echo "$RENDER_DEPLOY_HOOK_URL" | tr -d '[:space:]')
+          echo "Deploy Hook URL: '$URL'"
+          curl "$URL"
