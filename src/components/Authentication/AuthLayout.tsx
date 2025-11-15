@@ -46,7 +46,7 @@ export const AuthLayout: React.FC = () => {
     if (isReset) return 'reset';
     if (isForgot) return 'forgot';
     return 'login';
-  }, [isLogin, isForgot, isReset]);
+  }, [isForgot, isReset]);
 
   const toggleView = useCallback(
     (view: AuthView) => {

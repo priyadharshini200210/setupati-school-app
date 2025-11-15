@@ -2,20 +2,12 @@ import './index.css';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { ProtectedRoute } from '@/components/Authentication/ProtectedRoute';
-import { RoleRoute } from '@/components/Authentication/RoleRoute';
-import Index from '@/pages/Index';
-import NotFound from '@/pages/NotFound';
+import { Main, Gallery, Forbidden, LandingPage, NotFound } from '@/pages';
 import { Toaster } from '@/components/ui/toaster';
 import { SonnerToaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { AuthLayout } from '@/components/Authentication/AuthLayout';
-import { Forbidden } from '@/pages/Forbidden';
-import { LandingPage } from '@/pages/LandingPage';
-import { Gallery } from '@/pages/Gallery';
-import { useAuthStore } from '@/store/authStore';
-import { useSchoolStore } from '@/store/schoolStore';
-import { SignUpForm } from '@/components/Admin/AccountCreation';
+import { AuthLayout, ProtectedRoute } from '@/components/Authentication';
+import { useAuthStore, useSchoolStore } from '@/store';
 
 const queryClient = new QueryClient();
 
@@ -44,7 +36,7 @@ export const router = createBrowserRouter([
     path: '/dashboard',
     element: (
       <ProtectedRoute>
-        <Index />
+        <Main />
       </ProtectedRoute>
     )
   },

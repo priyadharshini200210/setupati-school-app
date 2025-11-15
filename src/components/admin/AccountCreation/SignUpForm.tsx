@@ -2,13 +2,6 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import {
@@ -19,7 +12,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Upload, UserPlus, Users } from 'lucide-react';
+import { Upload, UserPlus, Users, Eye, EyeOff } from 'lucide-react';
 
 export const SignUpForm: React.FC = () => {
   const { toast } = useToast();
@@ -53,7 +46,9 @@ export const SignUpForm: React.FC = () => {
     parent_relation: '',
     parent_phone: '',
     password: '',
-    confirmPassword: ''
+    showPassword: false,
+    confirmPassword: '',
+    ShowConfirmPassword: false
   });
 
   const [teacherFormData, setTeacherFormData] = useState({
@@ -68,7 +63,9 @@ export const SignUpForm: React.FC = () => {
     qualification: '',
     phone_num: '',
     password: '',
-    confirmPassword: ''
+    showPassword: false,
+    confirmPassword: '',
+    ShowConfirmPassword: false
   });
 
   const handleStudentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -221,322 +218,373 @@ export const SignUpForm: React.FC = () => {
           </div>
 
           {/* Manual Form */}
-          <form onSubmit={handleStudentSubmit} className="space-y-6">
-            {/* Student Information */}
-            <div className="space-y-4">
-              <h3 className="text-base font-semibold text-foreground border-b border-border pb-2">
-                Student Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="max-w-3xl mx-auto w-full px-4">
+            <form onSubmit={handleStudentSubmit} className="space-y-6">
+              {/* Student Information */}
+              <div className="space-y-4">
+                <h3 className="text-base font-semibold text-foreground border-b border-border pb-2">
+                  Student Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="f_name">First Name *</Label>
+                    <Input
+                      id="f_name"
+                      name="f_name"
+                      required
+                      value={studentFormData.f_name}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="l_name">Last Name *</Label>
+                    <Input
+                      id="l_name"
+                      name="l_name"
+                      required
+                      value={studentFormData.l_name}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email *</Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      value={studentFormData.email}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="roll_no">Roll Number *</Label>
+                    <Input
+                      id="roll_no"
+                      name="roll_no"
+                      required
+                      value={studentFormData.roll_no}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="grade_name">Grade/Class *</Label>
+                    <Input
+                      id="grade_name"
+                      name="grade_name"
+                      required
+                      value={studentFormData.grade_name}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="dob">Date of Birth *</Label>
+                    <Input
+                      id="dob"
+                      name="dob"
+                      type="date"
+                      required
+                      value={studentFormData.dob}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="gender">Gender *</Label>
+                    <Select
+                      name="gender"
+                      value={studentFormData.gender}
+                      onValueChange={(value) =>
+                        setStudentFormData({
+                          ...studentFormData,
+                          gender: value
+                        })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Male">Male</SelectItem>
+                        <SelectItem value="Female">Female</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="blood_group">Blood Group</Label>
+                    <Input
+                      id="blood_group"
+                      name="blood_group"
+                      value={studentFormData.blood_group}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="aadhar_no">Aadhar Number</Label>
+                    <Input
+                      id="aadhar_no"
+                      name="aadhar_no"
+                      value={studentFormData.aadhar_no}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="phone_num">Phone Number *</Label>
+                    <Input
+                      id="phone_num"
+                      name="phone_num"
+                      type="tel"
+                      required
+                      value={studentFormData.phone_num}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="f_name">First Name *</Label>
+                  <Label htmlFor="address_line1">Address *</Label>
                   <Input
-                    id="f_name"
-                    name="f_name"
+                    id="address_line1"
+                    name="address_line1"
                     required
-                    value={studentFormData.f_name}
+                    value={studentFormData.address_line1}
                     onChange={handleStudentChange}
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="l_name">Last Name *</Label>
-                  <Input
-                    id="l_name"
-                    name="l_name"
-                    required
-                    value={studentFormData.l_name}
-                    onChange={handleStudentChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email *</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    value={studentFormData.email}
-                    onChange={handleStudentChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="roll_no">Roll Number *</Label>
-                  <Input
-                    id="roll_no"
-                    name="roll_no"
-                    required
-                    value={studentFormData.roll_no}
-                    onChange={handleStudentChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="grade_name">Grade/Class *</Label>
-                  <Input
-                    id="grade_name"
-                    name="grade_name"
-                    required
-                    value={studentFormData.grade_name}
-                    onChange={handleStudentChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="dob">Date of Birth *</Label>
-                  <Input
-                    id="dob"
-                    name="dob"
-                    type="date"
-                    required
-                    value={studentFormData.dob}
-                    onChange={handleStudentChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="gender">Gender *</Label>
-                  <Select
-                    name="gender"
-                    value={studentFormData.gender}
-                    onValueChange={(value) =>
-                      setStudentFormData({
-                        ...studentFormData,
-                        gender: value
-                      })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select gender" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Male">Male</SelectItem>
-                      <SelectItem value="Female">Female</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="blood_group">Blood Group</Label>
-                  <Input
-                    id="blood_group"
-                    name="blood_group"
-                    value={studentFormData.blood_group}
-                    onChange={handleStudentChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="aadhar_no">Aadhar Number</Label>
-                  <Input
-                    id="aadhar_no"
-                    name="aadhar_no"
-                    value={studentFormData.aadhar_no}
-                    onChange={handleStudentChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone_num">Phone Number *</Label>
-                  <Input
-                    id="phone_num"
-                    name="phone_num"
-                    type="tel"
-                    required
-                    value={studentFormData.phone_num}
-                    onChange={handleStudentChange}
-                  />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="city">City *</Label>
+                    <Input
+                      id="city"
+                      name="city"
+                      required
+                      value={studentFormData.city}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="state">State *</Label>
+                    <Input
+                      id="state"
+                      name="state"
+                      required
+                      value={studentFormData.state}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="country">Country *</Label>
+                    <Input
+                      id="country"
+                      name="country"
+                      required
+                      value={studentFormData.country}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="pincode">Pincode *</Label>
+                    <Input
+                      id="pincode"
+                      name="pincode"
+                      required
+                      value={studentFormData.pincode}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="address_line1">Address *</Label>
-                <Input
-                  id="address_line1"
-                  name="address_line1"
-                  required
-                  value={studentFormData.address_line1}
-                  onChange={handleStudentChange}
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="city">City *</Label>
-                  <Input
-                    id="city"
-                    name="city"
-                    required
-                    value={studentFormData.city}
-                    onChange={handleStudentChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="state">State *</Label>
-                  <Input
-                    id="state"
-                    name="state"
-                    required
-                    value={studentFormData.state}
-                    onChange={handleStudentChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="country">Country *</Label>
-                  <Input
-                    id="country"
-                    name="country"
-                    required
-                    value={studentFormData.country}
-                    onChange={handleStudentChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="pincode">Pincode *</Label>
-                  <Input
-                    id="pincode"
-                    name="pincode"
-                    required
-                    value={studentFormData.pincode}
-                    onChange={handleStudentChange}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Parent Information */}
-            <div className="space-y-4">
-              <h3 className="text-base font-semibold text-foreground border-b border-border pb-2">
-                Parent/Guardian Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="parent_f_name">First Name *</Label>
-                  <Input
-                    id="parent_f_name"
-                    name="parent_f_name"
-                    required
-                    value={studentFormData.parent_f_name}
-                    onChange={handleStudentChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="parent_l_name">Last Name *</Label>
-                  <Input
-                    id="parent_l_name"
-                    name="parent_l_name"
-                    required
-                    value={studentFormData.parent_l_name}
-                    onChange={handleStudentChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="parent_dob">Date of Birth *</Label>
-                  <Input
-                    id="parent_dob"
-                    name="parent_dob"
-                    type="date"
-                    required
-                    value={studentFormData.parent_dob}
-                    onChange={handleStudentChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="parent_gender">Gender *</Label>
-                  <Select
-                    name="parent_gender"
-                    value={studentFormData.parent_gender}
-                    onValueChange={(value) =>
-                      setStudentFormData({
-                        ...studentFormData,
-                        parent_gender: value
-                      })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select gender" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Male">Male</SelectItem>
-                      <SelectItem value="Female">Female</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="parent_relation">Relation *</Label>
-                  <Select
-                    name="parent_relation"
-                    value={studentFormData.parent_relation}
-                    onValueChange={(value) =>
-                      setStudentFormData({
-                        ...studentFormData,
-                        parent_relation: value
-                      })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select relation" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Father">Father</SelectItem>
-                      <SelectItem value="Mother">Mother</SelectItem>
-                      <SelectItem value="Guardian">Guardian</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="parent_occupation">Occupation</Label>
-                  <Input
-                    id="parent_occupation"
-                    name="parent_occupation"
-                    value={studentFormData.parent_occupation}
-                    onChange={handleStudentChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="parent_phone">Phone Number *</Label>
-                  <Input
-                    id="parent_phone"
-                    name="parent_phone"
-                    type="tel"
-                    required
-                    value={studentFormData.parent_phone}
-                    onChange={handleStudentChange}
-                  />
+              {/* Parent Information */}
+              <div className="space-y-4">
+                <h3 className="text-base font-semibold text-foreground border-b border-border pb-2">
+                  Parent/Guardian Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="parent_f_name">First Name *</Label>
+                    <Input
+                      id="parent_f_name"
+                      name="parent_f_name"
+                      required
+                      value={studentFormData.parent_f_name}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="parent_l_name">Last Name *</Label>
+                    <Input
+                      id="parent_l_name"
+                      name="parent_l_name"
+                      required
+                      value={studentFormData.parent_l_name}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="parent_dob">Date of Birth *</Label>
+                    <Input
+                      id="parent_dob"
+                      name="parent_dob"
+                      type="date"
+                      required
+                      value={studentFormData.parent_dob}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="parent_gender">Gender *</Label>
+                    <Select
+                      name="parent_gender"
+                      value={studentFormData.parent_gender}
+                      onValueChange={(value) =>
+                        setStudentFormData({
+                          ...studentFormData,
+                          parent_gender: value
+                        })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Male">Male</SelectItem>
+                        <SelectItem value="Female">Female</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="parent_relation">Relation *</Label>
+                    <Select
+                      name="parent_relation"
+                      value={studentFormData.parent_relation}
+                      onValueChange={(value) =>
+                        setStudentFormData({
+                          ...studentFormData,
+                          parent_relation: value
+                        })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select relation" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Father">Father</SelectItem>
+                        <SelectItem value="Mother">Mother</SelectItem>
+                        <SelectItem value="Guardian">Guardian</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="parent_occupation">Occupation</Label>
+                    <Input
+                      id="parent_occupation"
+                      name="parent_occupation"
+                      value={studentFormData.parent_occupation}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="parent_phone">Phone Number *</Label>
+                    <Input
+                      id="parent_phone"
+                      name="parent_phone"
+                      type="tel"
+                      required
+                      value={studentFormData.parent_phone}
+                      onChange={handleStudentChange}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Account Credentials */}
-            <div className="space-y-4">
-              <h3 className="text-base font-semibold text-foreground border-b border-border pb-2">
-                Account Credentials
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password *</Label>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    required
-                    value={studentFormData.password}
-                    onChange={handleStudentChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password *</Label>
-                  <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    required
-                    value={studentFormData.confirmPassword}
-                    onChange={handleStudentChange}
-                  />
+              {/* Account Credentials */}
+              <div className="space-y-4">
+                <h3 className="text-base font-semibold text-foreground border-b border-border pb-2">
+                  Account Credentials
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password *</Label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        name="password"
+                        type={
+                          studentFormData.showPassword ? 'text' : 'password'
+                        }
+                        required
+                        value={studentFormData.password}
+                        onChange={handleStudentChange}
+                        className="pr-10"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() =>
+                          setStudentFormData({
+                            ...studentFormData,
+                            showPassword: !studentFormData.showPassword
+                          })
+                        }
+                      >
+                        {studentFormData.showPassword ? (
+                          <EyeOff className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword">Confirm Password *</Label>
+                    <div className="relative">
+                      <Input
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        type={
+                          studentFormData.ShowConfirmPassword
+                            ? 'text'
+                            : 'password'
+                        }
+                        required
+                        value={studentFormData.confirmPassword}
+                        onChange={handleStudentChange}
+                        className="pr-10"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() =>
+                          setStudentFormData({
+                            ...studentFormData,
+                            ShowConfirmPassword:
+                              !studentFormData.ShowConfirmPassword
+                          })
+                        }
+                      >
+                        {studentFormData.ShowConfirmPassword ? (
+                          <EyeOff className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <Button type="submit" className="w-full">
-              Create Student & Parent Accounts
-            </Button>
-          </form>
+              <Button type="submit" className="w-full">
+                Create Student & Parent Accounts
+              </Button>
+            </form>
+          </div>
         </TabsContent>
 
         {/* Teacher Registration */}
@@ -585,172 +633,224 @@ export const SignUpForm: React.FC = () => {
           </div>
 
           {/* Manual Form */}
-          <form onSubmit={handleTeacherSubmit} className="space-y-6">
-            <div className="space-y-4">
-              <h3 className="text-base font-semibold text-foreground border-b border-border pb-2">
-                Teacher Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="teacher_f_name">First Name *</Label>
-                  <Input
-                    id="teacher_f_name"
-                    name="f_name"
-                    required
-                    value={teacherFormData.f_name}
-                    onChange={handleTeacherChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="teacher_l_name">Last Name *</Label>
-                  <Input
-                    id="teacher_l_name"
-                    name="l_name"
-                    required
-                    value={teacherFormData.l_name}
-                    onChange={handleTeacherChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="teacher_email">Email *</Label>
-                  <Input
-                    id="teacher_email"
-                    name="email"
-                    type="email"
-                    required
-                    value={teacherFormData.email}
-                    onChange={handleTeacherChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="teacher_phone">Phone Number *</Label>
-                  <Input
-                    id="teacher_phone"
-                    name="phone_num"
-                    type="tel"
-                    required
-                    value={teacherFormData.phone_num}
-                    onChange={handleTeacherChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="designation">Designation *</Label>
-                  <Input
-                    id="designation"
-                    name="designation"
-                    required
-                    value={teacherFormData.designation}
-                    onChange={handleTeacherChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="qualification">Qualification *</Label>
-                  <Input
-                    id="qualification"
-                    name="qualification"
-                    required
-                    value={teacherFormData.qualification}
-                    onChange={handleTeacherChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="teacher_dob">Date of Birth *</Label>
-                  <Input
-                    id="teacher_dob"
-                    name="dob"
-                    type="date"
-                    required
-                    value={teacherFormData.dob}
-                    onChange={handleTeacherChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="doj">Date of Joining *</Label>
-                  <Input
-                    id="doj"
-                    name="doj"
-                    type="date"
-                    required
-                    value={teacherFormData.doj}
-                    onChange={handleTeacherChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="experienced_years">
-                    Years of Experience *
-                  </Label>
-                  <Input
-                    id="experienced_years"
-                    name="experienced_years"
-                    type="number"
-                    min="0"
-                    required
-                    value={teacherFormData.experienced_years}
-                    onChange={handleTeacherChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="teacher_gender">Gender *</Label>
-                  <Select
-                    name="gender"
-                    value={teacherFormData.gender}
-                    onValueChange={(value) =>
-                      setTeacherFormData({
-                        ...teacherFormData,
-                        gender: value
-                      })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select gender" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Male">Male</SelectItem>
-                      <SelectItem value="Female">Female</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
-
-            {/* Account Credentials */}
-            <div className="space-y-4">
-              <h3 className="text-base font-semibold text-foreground border-b border-border pb-2">
-                Account Credentials
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="teacher_password">Password *</Label>
-                  <Input
-                    id="teacher_password"
-                    name="password"
-                    type="password"
-                    required
-                    value={teacherFormData.password}
-                    onChange={handleTeacherChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="teacher_confirmPassword">
-                    Confirm Password *
-                  </Label>
-                  <Input
-                    id="teacher_confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    required
-                    value={teacherFormData.confirmPassword}
-                    onChange={handleTeacherChange}
-                  />
+          <div className="max-w-3xl mx-auto w-full px-4">
+            <form onSubmit={handleTeacherSubmit} className="space-y-6">
+              <div className="space-y-4">
+                <h3 className="text-base font-semibold text-foreground border-b border-border pb-2">
+                  Teacher Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="teacher_f_name">First Name *</Label>
+                    <Input
+                      id="teacher_f_name"
+                      name="f_name"
+                      required
+                      value={teacherFormData.f_name}
+                      onChange={handleTeacherChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="teacher_l_name">Last Name *</Label>
+                    <Input
+                      id="teacher_l_name"
+                      name="l_name"
+                      required
+                      value={teacherFormData.l_name}
+                      onChange={handleTeacherChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="teacher_email">Email *</Label>
+                    <Input
+                      id="teacher_email"
+                      name="email"
+                      type="email"
+                      required
+                      value={teacherFormData.email}
+                      onChange={handleTeacherChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="teacher_phone">Phone Number *</Label>
+                    <Input
+                      id="teacher_phone"
+                      name="phone_num"
+                      type="tel"
+                      required
+                      value={teacherFormData.phone_num}
+                      onChange={handleTeacherChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="designation">Designation *</Label>
+                    <Input
+                      id="designation"
+                      name="designation"
+                      required
+                      value={teacherFormData.designation}
+                      onChange={handleTeacherChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="qualification">Qualification *</Label>
+                    <Input
+                      id="qualification"
+                      name="qualification"
+                      required
+                      value={teacherFormData.qualification}
+                      onChange={handleTeacherChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="teacher_dob">Date of Birth *</Label>
+                    <Input
+                      id="teacher_dob"
+                      name="dob"
+                      type="date"
+                      required
+                      value={teacherFormData.dob}
+                      onChange={handleTeacherChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="doj">Date of Joining *</Label>
+                    <Input
+                      id="doj"
+                      name="doj"
+                      type="date"
+                      required
+                      value={teacherFormData.doj}
+                      onChange={handleTeacherChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="experienced_years">
+                      Years of Experience *
+                    </Label>
+                    <Input
+                      id="experienced_years"
+                      name="experienced_years"
+                      type="number"
+                      min="0"
+                      required
+                      value={teacherFormData.experienced_years}
+                      onChange={handleTeacherChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="teacher_gender">Gender *</Label>
+                    <Select
+                      name="gender"
+                      value={teacherFormData.gender}
+                      onValueChange={(value) =>
+                        setTeacherFormData({
+                          ...teacherFormData,
+                          gender: value
+                        })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Male">Male</SelectItem>
+                        <SelectItem value="Female">Female</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <Button type="submit" className="w-full">
-              Create Teacher Account
-            </Button>
-          </form>
+              {/* Account Credentials */}
+              <div className="space-y-4">
+                <h3 className="text-base font-semibold text-foreground border-b border-border pb-2">
+                  Account Credentials
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="teacher_password">Password *</Label>
+                    <div className="relative">
+                      <Input
+                        id="teacher_password"
+                        name="password"
+                        type={
+                          teacherFormData.showPassword ? 'text' : 'password'
+                        }
+                        required
+                        value={teacherFormData.password}
+                        onChange={handleTeacherChange}
+                        className="pr-10"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() =>
+                          setTeacherFormData({
+                            ...teacherFormData,
+                            showPassword: !teacherFormData.showPassword
+                          })
+                        }
+                      >
+                        {teacherFormData.showPassword ? (
+                          <EyeOff className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="teacher_confirmPassword">
+                      Confirm Password *
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="teacher_confirmPassword"
+                        name="confirmPassword"
+                        type={
+                          teacherFormData.ShowConfirmPassword
+                            ? 'text'
+                            : 'password'
+                        }
+                        required
+                        value={teacherFormData.confirmPassword}
+                        onChange={handleTeacherChange}
+                        className="pr-10"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() =>
+                          setTeacherFormData({
+                            ...teacherFormData,
+                            ShowConfirmPassword:
+                              !teacherFormData.ShowConfirmPassword
+                          })
+                        }
+                      >
+                        {teacherFormData.ShowConfirmPassword ? (
+                          <EyeOff className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full md:col-span-2 flex justify-center">
+                <Button type="submit" className="w-full max-w-md">
+                  Create Student & Parent Accounts
+                </Button>
+              </div>
+            </form>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

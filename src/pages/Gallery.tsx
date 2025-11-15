@@ -2,6 +2,7 @@ import React from 'react';
 import { LandingPageNavigation } from '@/components/ui/LandingPageNavigation';
 import { Card, CardContent } from '@/components/ui/card';
 import { Calendar, Users, Award, BookOpen } from 'lucide-react';
+import { Footer } from '@/components/Layout';
 
 export const Gallery: React.FC = () => {
   const galleryItems = [
@@ -154,14 +155,7 @@ export const Gallery: React.FC = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-4 bg-primary text-primary-foreground">
-        <div className="container mx-auto text-center">
-          <p className="text-sm">
-            © 2024 Setupati School. All rights reserved. Empowering Education
-            Through Technology.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

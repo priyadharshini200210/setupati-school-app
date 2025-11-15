@@ -1,13 +1,10 @@
-import { useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
-import { useAuthStore } from '@/store/authStore';
 import { StudentDashboard } from '@/components/Students/StudentDashboard';
 import { TeacherDashboard } from '@/components/Teachers/TeacherDashboard';
-import { AdminDashboard } from '@/components/admin/AdminDashboard';
-import { RoleRoute } from '../Authentication/RoleRoute';
-import { useSchoolStore } from '@/store/schoolStore';
-import { SignUpForm } from '../Admin/AccountCreation/SignUpForm';
+import { AdminDashboard, SignUpForm } from '@/components/admin';
+import { RoleRoute } from '../Authentication';
+import { useSchoolStore, useAuthStore } from '@/store';
 
 export const MainLayout = () => {
   const { activeView } = useSchoolStore();

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import { Award, Users, BookOpen, Star, Calendar, Target } from 'lucide-react';
-import { Footer } from '@/components/Layout/Footer';
+import { Footer } from '@/components/Layout';
 
 export const LandingPage: React.FC = () => {
   return (
