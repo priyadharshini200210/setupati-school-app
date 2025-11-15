@@ -1,39 +1,46 @@
 import { useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
-import { initializeSampleData } from '@/store/schoolStore';
 import { useAuthStore } from '@/store/authStore';
 import { StudentDashboard } from '@/components/Students/StudentDashboard';
 import { TeacherDashboard } from '@/components/Teachers/TeacherDashboard';
 import { AdminDashboard } from '@/components/admin/AdminDashboard';
 import { RoleRoute } from '../Authentication/RoleRoute';
+import { useSchoolStore } from '@/store/schoolStore';
+import { SignUpForm } from '../Admin/AccountCreation/SignUpForm';
 
 export const MainLayout = () => {
+  const { activeView } = useSchoolStore();
   const { role } = useAuthStore();
 
-  useEffect(() => {
-    // Initialize sample data on mount
-    initializeSampleData();
-  }, []);
-
   const renderContent = () => {
-    switch (role) {
-      case 'student':
-        return (
-          <RoleRoute allowedRoles={['student']}>
-            <StudentDashboard />
-          </RoleRoute>
-        );
-      case 'teacher':
-        return (
-          <RoleRoute allowedRoles={['teacher']}>
-            <TeacherDashboard />
-          </RoleRoute>
-        );
-      case 'admin':
+    switch (activeView) {
+      case 'dashboard':
+        switch (role) {
+          case 'student':
+            return (
+              <RoleRoute allowedRoles={['student']}>
+                <StudentDashboard />
+              </RoleRoute>
+            );
+          case 'teacher':
+            return (
+              <RoleRoute allowedRoles={['teacher']}>
+                <TeacherDashboard />
+              </RoleRoute>
+            );
+          case 'admin':
+            return (
+              <RoleRoute allowedRoles={['admin']}>
+                <AdminDashboard />
+              </RoleRoute>
+            );
+        }
+        break;
+      case 'account-creation':
         return (
           <RoleRoute allowedRoles={['admin']}>
-            <AdminDashboard />
+            <SignUpForm />
           </RoleRoute>
         );
       case 'subjects':
@@ -95,7 +102,7 @@ export const MainLayout = () => {
   };
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />

@@ -1,68 +1,31 @@
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { useSchoolStore } from '@/store/schoolStore';
+import { useSchoolStore, useAuthStore } from '@/store';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { ChevronLeft, ChevronRight, School } from 'lucide-react';
 import {
-  LayoutDashboard,
-  Users,
-  GraduationCap,
-  BookOpen,
-  Calendar,
-  FileText,
-  ClipboardCheck,
-  Settings,
-  ChevronLeft,
-  ChevronRight,
-  School
-} from 'lucide-react';
-
-const navigationItems = [
-  {
-    id: 'dashboard',
-    label: 'Dashboard',
-    icon: LayoutDashboard
-  },
-  {
-    id: 'students',
-    label: 'Students',
-    icon: GraduationCap
-  },
-  {
-    id: 'teachers',
-    label: 'Teachers',
-    icon: Users
-  },
-  {
-    id: 'subjects',
-    label: 'Subjects',
-    icon: BookOpen
-  },
-  {
-    id: 'attendance',
-    label: 'Attendance',
-    icon: ClipboardCheck
-  },
-  {
-    id: 'timetable',
-    label: 'Timetable',
-    icon: Calendar
-  },
-  {
-    id: 'circulars',
-    label: 'Circulars',
-    icon: FileText
-  },
-  {
-    id: 'settings',
-    label: 'Settings',
-    icon: Settings
-  }
-];
+  StudentNavigationItems,
+  TeacherNavigationItems,
+  AdminNavigationItems
+} from './constants';
 
 export const Sidebar = () => {
   const { activeView, setActiveView, sidebarCollapsed, setSidebarCollapsed } =
     useSchoolStore();
+  const { role } = useAuthStore();
   const isMobile = useIsMobile();
+  let navigationItems = StudentNavigationItems;
+
+  switch (role) {
+    case 'teacher':
+      navigationItems = TeacherNavigationItems;
+      break;
+    case 'admin':
+      navigationItems = AdminNavigationItems;
+      break;
+    default:
+      navigationItems = StudentNavigationItems;
+  }
 
   // On mobile, always keep sidebar collapsed
   const isCollapsed = isMobile ? true : sidebarCollapsed;
@@ -70,7 +33,7 @@ export const Sidebar = () => {
   return (
     <div
       className={cn(
-        'relative bg-card border-r border-border h-screen transition-all duration-300 ease-in-out',
+        'relative bg-card border-r sticky top-0 border-border h-screen transition-all duration-300 ease-in-out',
         isCollapsed ? 'w-16' : 'w-64'
       )}
     >
