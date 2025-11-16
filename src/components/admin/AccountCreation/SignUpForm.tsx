@@ -13,6 +13,24 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { Upload, UserPlus, Users, Eye, EyeOff } from 'lucide-react';
+import { Student, Parent, Teacher } from '@setupati-school/setupati-types';
+
+export interface StudentFormData {
+  student: Student;
+  parent: Parent;
+  password: string;
+  showPassword: boolean;
+  confirmPassword: string;
+  ShowConfirmPassword: boolean;
+}
+
+export interface TeacherFormData {
+  teacher: Teacher;
+  password: string;
+  showPassword: boolean;
+  confirmPassword: string;
+  ShowConfirmPassword: boolean;
+}
 
 export const SignUpForm: React.FC = () => {
   const { toast } = useToast();
@@ -20,66 +38,82 @@ export const SignUpForm: React.FC = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
 
-  const [studentFormData, setStudentFormData] = useState({
+  const [studentFormData, setStudentFormData] = useState<StudentFormData>({
     // Student fields
-    f_name: '',
-    l_name: '',
-    email: '',
-    roll_no: '',
-    grade_name: '',
-    dob: '',
-    gender: '',
-    blood_group: '',
-    aadhar_no: '',
-    phone_num: '',
-    address_line1: '',
-    city: '',
-    state: '',
-    country: '',
-    pincode: '',
+    student: {
+      f_name: '',
+      l_name: '',
+      email: '',
+      roll_no: '',
+      grade_name: '',
+      dob: '',
+      gender: '',
+      blood_group: '',
+      aadhar_no: '',
+      phone_num: '',
+      address_line1: '',
+      city: '',
+      state: '',
+      country: '',
+      pincode: ''
+    },
     // Parent fields
-    parent_f_name: '',
-    parent_l_name: '',
-    parent_dob: '',
-    parent_gender: '',
-    parent_occupation: '',
-    parent_relation: '',
-    parent_phone: '',
+    parent: {
+      f_name: '',
+      l_name: '',
+      dob: '',
+      gender: '',
+      occupation: '',
+      relation: '',
+      phone_num: ''
+    },
     password: '',
     showPassword: false,
     confirmPassword: '',
     ShowConfirmPassword: false
   });
 
-  const [teacherFormData, setTeacherFormData] = useState({
-    f_name: '',
-    l_name: '',
-    email: '',
-    designation: '',
-    dob: '',
-    doj: '',
-    experienced_years: '',
-    gender: '',
-    qualification: '',
-    phone_num: '',
+  const [teacherFormData, setTeacherFormData] = useState<TeacherFormData>({
+    teacher: {
+      f_name: '',
+      l_name: '',
+      email: '',
+      designation: '',
+      dob: '',
+      doj: '',
+      experienced_years: '',
+      gender: '',
+      qualification: '',
+      phone_num: ''
+    },
     password: '',
     showPassword: false,
     confirmPassword: '',
     ShowConfirmPassword: false
   });
 
-  const handleStudentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setStudentFormData({
-      ...studentFormData,
-      [e.target.name]: e.target.value
-    });
-  };
-
-  const handleTeacherChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTeacherFormData({
-      ...teacherFormData,
-      [e.target.name]: e.target.value
-    });
+  const handleChange = (
+    dataFor: 'student' | 'parent' | 'teacher',
+    field: string,
+    value: string
+  ) => {
+    if (dataFor === 'student' || dataFor === 'parent') {
+      setStudentFormData((prev) => ({
+        ...prev,
+        [dataFor]: {
+          ...prev[dataFor],
+          [field]: value
+        }
+      }));
+    } else {
+      setTeacherFormData((prev) => ({
+        ...prev,
+        [dataFor]: {
+          ...prev[dataFor],
+          [field]: value
+        }
+      }));
+    }
   };
 
   const handleStudentSubmit = (e: React.FormEvent) => {
@@ -232,8 +266,10 @@ export const SignUpForm: React.FC = () => {
                       id="f_name"
                       name="f_name"
                       required
-                      value={studentFormData.f_name}
-                      onChange={handleStudentChange}
+                      value={studentFormData.student.f_name}
+                      onChange={(e) =>
+                        handleChange('student', 'f_name', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -242,8 +278,10 @@ export const SignUpForm: React.FC = () => {
                       id="l_name"
                       name="l_name"
                       required
-                      value={studentFormData.l_name}
-                      onChange={handleStudentChange}
+                      value={studentFormData.student.l_name}
+                      onChange={(e) =>
+                        handleChange('student', 'l_name', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -253,8 +291,10 @@ export const SignUpForm: React.FC = () => {
                       name="email"
                       type="email"
                       required
-                      value={studentFormData.email}
-                      onChange={handleStudentChange}
+                      value={studentFormData.student.email}
+                      onChange={(e) =>
+                        handleChange('student', 'email', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -263,8 +303,10 @@ export const SignUpForm: React.FC = () => {
                       id="roll_no"
                       name="roll_no"
                       required
-                      value={studentFormData.roll_no}
-                      onChange={handleStudentChange}
+                      value={studentFormData.student.roll_no}
+                      onChange={(e) =>
+                        handleChange('student', 'roll_no', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -273,8 +315,10 @@ export const SignUpForm: React.FC = () => {
                       id="grade_name"
                       name="grade_name"
                       required
-                      value={studentFormData.grade_name}
-                      onChange={handleStudentChange}
+                      value={studentFormData.student.grade_name}
+                      onChange={(e) =>
+                        handleChange('student', 'grade_name', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -284,20 +328,19 @@ export const SignUpForm: React.FC = () => {
                       name="dob"
                       type="date"
                       required
-                      value={studentFormData.dob}
-                      onChange={handleStudentChange}
+                      value={studentFormData.student.dob}
+                      onChange={(e) =>
+                        handleChange('student', 'dob', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="gender">Gender *</Label>
                     <Select
                       name="gender"
-                      value={studentFormData.gender}
+                      value={studentFormData.student.gender}
                       onValueChange={(value) =>
-                        setStudentFormData({
-                          ...studentFormData,
-                          gender: value
-                        })
+                        handleChange('student', 'gender', value)
                       }
                     >
                       <SelectTrigger>
@@ -315,8 +358,10 @@ export const SignUpForm: React.FC = () => {
                     <Input
                       id="blood_group"
                       name="blood_group"
-                      value={studentFormData.blood_group}
-                      onChange={handleStudentChange}
+                      value={studentFormData.student.blood_group}
+                      onChange={(e) =>
+                        handleChange('student', 'blood_group', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -324,8 +369,10 @@ export const SignUpForm: React.FC = () => {
                     <Input
                       id="aadhar_no"
                       name="aadhar_no"
-                      value={studentFormData.aadhar_no}
-                      onChange={handleStudentChange}
+                      value={studentFormData.student.aadhar_no}
+                      onChange={(e) =>
+                        handleChange('student', 'aadhar_no', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -335,8 +382,10 @@ export const SignUpForm: React.FC = () => {
                       name="phone_num"
                       type="tel"
                       required
-                      value={studentFormData.phone_num}
-                      onChange={handleStudentChange}
+                      value={studentFormData.student.phone_num}
+                      onChange={(e) =>
+                        handleChange('student', 'phone_num', e.target.value)
+                      }
                     />
                   </div>
                 </div>
@@ -347,8 +396,10 @@ export const SignUpForm: React.FC = () => {
                     id="address_line1"
                     name="address_line1"
                     required
-                    value={studentFormData.address_line1}
-                    onChange={handleStudentChange}
+                    value={studentFormData.student.address_line1}
+                    onChange={(e) =>
+                      handleChange('student', 'address_line1', e.target.value)
+                    }
                   />
                 </div>
 
@@ -359,8 +410,10 @@ export const SignUpForm: React.FC = () => {
                       id="city"
                       name="city"
                       required
-                      value={studentFormData.city}
-                      onChange={handleStudentChange}
+                      value={studentFormData.student.city}
+                      onChange={(e) =>
+                        handleChange('student', 'city', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -369,8 +422,10 @@ export const SignUpForm: React.FC = () => {
                       id="state"
                       name="state"
                       required
-                      value={studentFormData.state}
-                      onChange={handleStudentChange}
+                      value={studentFormData.student.state}
+                      onChange={(e) =>
+                        handleChange('student', 'state', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -379,8 +434,10 @@ export const SignUpForm: React.FC = () => {
                       id="country"
                       name="country"
                       required
-                      value={studentFormData.country}
-                      onChange={handleStudentChange}
+                      value={studentFormData.student.country}
+                      onChange={(e) =>
+                        handleChange('student', 'country', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -389,8 +446,10 @@ export const SignUpForm: React.FC = () => {
                       id="pincode"
                       name="pincode"
                       required
-                      value={studentFormData.pincode}
-                      onChange={handleStudentChange}
+                      value={studentFormData.student.pincode}
+                      onChange={(e) =>
+                        handleChange('student', 'pincode', e.target.value)
+                      }
                     />
                   </div>
                 </div>
@@ -408,8 +467,10 @@ export const SignUpForm: React.FC = () => {
                       id="parent_f_name"
                       name="parent_f_name"
                       required
-                      value={studentFormData.parent_f_name}
-                      onChange={handleStudentChange}
+                      value={studentFormData.parent.f_name}
+                      onChange={(e) =>
+                        handleChange('parent', 'f_name', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -418,8 +479,10 @@ export const SignUpForm: React.FC = () => {
                       id="parent_l_name"
                       name="parent_l_name"
                       required
-                      value={studentFormData.parent_l_name}
-                      onChange={handleStudentChange}
+                      value={studentFormData.parent.l_name}
+                      onChange={(e) =>
+                        handleChange('parent', 'l_name', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -429,20 +492,19 @@ export const SignUpForm: React.FC = () => {
                       name="parent_dob"
                       type="date"
                       required
-                      value={studentFormData.parent_dob}
-                      onChange={handleStudentChange}
+                      value={studentFormData.parent.dob}
+                      onChange={(e) =>
+                        handleChange('parent', 'dob', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="parent_gender">Gender *</Label>
                     <Select
                       name="parent_gender"
-                      value={studentFormData.parent_gender}
+                      value={studentFormData.parent.gender}
                       onValueChange={(value) =>
-                        setStudentFormData({
-                          ...studentFormData,
-                          parent_gender: value
-                        })
+                        handleChange('parent', 'gender', value)
                       }
                     >
                       <SelectTrigger>
@@ -459,12 +521,9 @@ export const SignUpForm: React.FC = () => {
                     <Label htmlFor="parent_relation">Relation *</Label>
                     <Select
                       name="parent_relation"
-                      value={studentFormData.parent_relation}
+                      value={studentFormData.parent.relation}
                       onValueChange={(value) =>
-                        setStudentFormData({
-                          ...studentFormData,
-                          parent_relation: value
-                        })
+                        handleChange('parent', 'relation', value)
                       }
                     >
                       <SelectTrigger>
@@ -482,8 +541,10 @@ export const SignUpForm: React.FC = () => {
                     <Input
                       id="parent_occupation"
                       name="parent_occupation"
-                      value={studentFormData.parent_occupation}
-                      onChange={handleStudentChange}
+                      value={studentFormData.parent.occupation}
+                      onChange={(e) =>
+                        handleChange('parent', 'occupation', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -493,8 +554,10 @@ export const SignUpForm: React.FC = () => {
                       name="parent_phone"
                       type="tel"
                       required
-                      value={studentFormData.parent_phone}
-                      onChange={handleStudentChange}
+                      value={studentFormData.parent.phone_num}
+                      onChange={(e) =>
+                        handleChange('parent', 'phone_num', e.target.value)
+                      }
                     />
                   </div>
                 </div>
@@ -517,7 +580,12 @@ export const SignUpForm: React.FC = () => {
                         }
                         required
                         value={studentFormData.password}
-                        onChange={handleStudentChange}
+                        onChange={(e) =>
+                          setStudentFormData({
+                            ...studentFormData,
+                            password: e.target.value
+                          })
+                        }
                         className="pr-10"
                       />
                       <Button
@@ -553,7 +621,12 @@ export const SignUpForm: React.FC = () => {
                         }
                         required
                         value={studentFormData.confirmPassword}
-                        onChange={handleStudentChange}
+                        onChange={(e) =>
+                          setStudentFormData({
+                            ...studentFormData,
+                            confirmPassword: e.target.value
+                          })
+                        }
                         className="pr-10"
                       />
                       <Button
@@ -646,8 +719,10 @@ export const SignUpForm: React.FC = () => {
                       id="teacher_f_name"
                       name="f_name"
                       required
-                      value={teacherFormData.f_name}
-                      onChange={handleTeacherChange}
+                      value={teacherFormData.teacher.f_name}
+                      onChange={(e) =>
+                        handleChange('teacher', 'f_name', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -656,8 +731,10 @@ export const SignUpForm: React.FC = () => {
                       id="teacher_l_name"
                       name="l_name"
                       required
-                      value={teacherFormData.l_name}
-                      onChange={handleTeacherChange}
+                      value={teacherFormData.teacher.l_name}
+                      onChange={(e) =>
+                        handleChange('teacher', 'l_name', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -667,8 +744,10 @@ export const SignUpForm: React.FC = () => {
                       name="email"
                       type="email"
                       required
-                      value={teacherFormData.email}
-                      onChange={handleTeacherChange}
+                      value={teacherFormData.teacher.email}
+                      onChange={(e) =>
+                        handleChange('teacher', 'email', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -678,8 +757,10 @@ export const SignUpForm: React.FC = () => {
                       name="phone_num"
                       type="tel"
                       required
-                      value={teacherFormData.phone_num}
-                      onChange={handleTeacherChange}
+                      value={teacherFormData.teacher.phone_num}
+                      onChange={(e) =>
+                        handleChange('teacher', 'phone_num', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -688,8 +769,10 @@ export const SignUpForm: React.FC = () => {
                       id="designation"
                       name="designation"
                       required
-                      value={teacherFormData.designation}
-                      onChange={handleTeacherChange}
+                      value={teacherFormData.teacher.designation}
+                      onChange={(e) =>
+                        handleChange('teacher', 'designation', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -698,8 +781,10 @@ export const SignUpForm: React.FC = () => {
                       id="qualification"
                       name="qualification"
                       required
-                      value={teacherFormData.qualification}
-                      onChange={handleTeacherChange}
+                      value={teacherFormData.teacher.qualification}
+                      onChange={(e) =>
+                        handleChange('teacher', 'qualification', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -709,8 +794,10 @@ export const SignUpForm: React.FC = () => {
                       name="dob"
                       type="date"
                       required
-                      value={teacherFormData.dob}
-                      onChange={handleTeacherChange}
+                      value={teacherFormData.teacher.dob}
+                      onChange={(e) =>
+                        handleChange('teacher', 'dob', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -720,8 +807,10 @@ export const SignUpForm: React.FC = () => {
                       name="doj"
                       type="date"
                       required
-                      value={teacherFormData.doj}
-                      onChange={handleTeacherChange}
+                      value={teacherFormData.teacher.doj}
+                      onChange={(e) =>
+                        handleChange('teacher', 'doj', e.target.value)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
@@ -734,20 +823,23 @@ export const SignUpForm: React.FC = () => {
                       type="number"
                       min="0"
                       required
-                      value={teacherFormData.experienced_years}
-                      onChange={handleTeacherChange}
+                      value={teacherFormData.teacher.experienced_years}
+                      onChange={(e) =>
+                        handleChange(
+                          'teacher',
+                          'experienced_years',
+                          e.target.value
+                        )
+                      }
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="teacher_gender">Gender *</Label>
                     <Select
                       name="gender"
-                      value={teacherFormData.gender}
+                      value={teacherFormData.teacher.gender}
                       onValueChange={(value) =>
-                        setTeacherFormData({
-                          ...teacherFormData,
-                          gender: value
-                        })
+                        handleChange('teacher', 'gender', value)
                       }
                     >
                       <SelectTrigger>
@@ -780,7 +872,12 @@ export const SignUpForm: React.FC = () => {
                         }
                         required
                         value={teacherFormData.password}
-                        onChange={handleTeacherChange}
+                        onChange={(e) =>
+                          setTeacherFormData({
+                            ...teacherFormData,
+                            password: e.target.value
+                          })
+                        }
                         className="pr-10"
                       />
                       <Button
@@ -818,7 +915,12 @@ export const SignUpForm: React.FC = () => {
                         }
                         required
                         value={teacherFormData.confirmPassword}
-                        onChange={handleTeacherChange}
+                        onChange={(e) =>
+                          setTeacherFormData({
+                            ...teacherFormData,
+                            confirmPassword: e.target.value
+                          })
+                        }
                         className="pr-10"
                       />
                       <Button

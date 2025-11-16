@@ -1,6 +1,7 @@
 import { db, auth } from '../../firebase.js';
 import { User } from '../../models/User.js';
 import { AppError, HttpCode } from '../../error.js';
+import { Student, Parent, Teacher } from '@setupati-school/setupati-types';
 
 if (!db || !auth)
   throw new AppError(
@@ -8,6 +9,10 @@ if (!db || !auth)
     HttpCode.INTERNAL_SERVER_ERROR
   );
 const userCollection = db.collection('users');
+
+export interface StudentUser extends User, Student, Parent {
+
+}
 
 export const addUser = async (data: User): Promise<string> => {
   const { name, email, password, role } = data;
@@ -32,6 +37,8 @@ export const addUser = async (data: User): Promise<string> => {
   await userCollection.doc(userRecord.uid).set(userDoc);
   return userRecord.uid;
 };
+
+export const addStudentUser = async (data: User): Promise<string> => {};
 
 export const getUserById = async (uid: string): Promise<User> => {
   const userRecord = await auth!.getUser(uid);

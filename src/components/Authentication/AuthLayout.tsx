@@ -38,7 +38,6 @@ export const AuthLayout: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
 
-  const isLogin = useMatch('/auth/login');
   const isForgot = useMatch('/auth/forgot-password');
   const isReset = useMatch('/auth/reset-password');
 
