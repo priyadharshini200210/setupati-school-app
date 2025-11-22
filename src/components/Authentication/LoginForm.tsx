@@ -21,7 +21,7 @@ import {
 } from 'firebase/auth';
 import { useSchoolStore } from '@/store/schoolStore';
 import api from '@/lib/axiosConfig';
-import { User as UserData } from '@/types/schoolStore';
+import { User as UserData } from '@/types';
 import { FormDataType } from './AuthLayout';
 
 interface LoginFormProps {

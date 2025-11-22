@@ -14,42 +14,50 @@ export const TeacherNavigationItems = [
   {
     id: 'dashboard',
     label: 'Dashboard',
-    icon: LayoutDashboard
+    icon: LayoutDashboard,
+    to: '/dashboard'
   },
   {
     id: 'students',
     label: 'Students',
-    icon: GraduationCap
+    icon: GraduationCap,
+    to: '/students'
   },
   {
     id: 'teachers',
     label: 'Teachers',
-    icon: Users
+    icon: Users,
+    to: '/teachers'
   },
   {
     id: 'subjects',
     label: 'Subjects',
-    icon: BookOpen
+    icon: BookOpen,
+    to: '/subjects'
   },
   {
     id: 'attendance',
     label: 'Attendance',
-    icon: ClipboardCheck
+    icon: ClipboardCheck,
+    to: '/attendance'
   },
   {
     id: 'timetable',
     label: 'Timetable',
-    icon: Calendar
+    icon: Calendar,
+    to: 'timetable'
   },
   {
     id: 'circulars',
     label: 'Circulars',
-    icon: FileText
+    icon: FileText,
+    to: '/circulars'
   },
   {
     id: 'settings',
     label: 'Settings',
-    icon: Settings
+    icon: Settings,
+    to: '/settings'
   }
 ];
 
@@ -57,42 +65,50 @@ export const StudentNavigationItems = [
   {
     id: 'dashboard',
     label: 'Dashboard',
-    icon: LayoutDashboard
+    icon: LayoutDashboard,
+    to: '/dashboard'
   },
   {
     id: 'students',
     label: 'Students',
-    icon: GraduationCap
+    icon: GraduationCap,
+    to: '/students'
   },
   {
     id: 'teachers',
     label: 'Teachers',
-    icon: Users
+    icon: Users,
+    to: '/teachers'
   },
   {
     id: 'subjects',
     label: 'Subjects',
-    icon: BookOpen
+    icon: BookOpen,
+    to: '/subjects'
   },
   {
     id: 'attendance',
     label: 'Attendance',
-    icon: ClipboardCheck
+    icon: ClipboardCheck,
+    to: '/attendance'
   },
   {
     id: 'timetable',
     label: 'Timetable',
-    icon: Calendar
+    icon: Calendar,
+    to: 'timetable'
   },
   {
     id: 'circulars',
     label: 'Circulars',
-    icon: FileText
+    icon: FileText,
+    to: '/circulars'
   },
   {
     id: 'settings',
     label: 'Settings',
-    icon: Settings
+    icon: Settings,
+    to: '/settings'
   }
 ];
 
@@ -100,46 +116,55 @@ export const AdminNavigationItems = [
   {
     id: 'dashboard',
     label: 'Dashboard',
-    icon: LayoutDashboard
+    icon: LayoutDashboard,
+    to: '/dashboard'
   },
   {
     id: 'students',
     label: 'Students',
-    icon: GraduationCap
+    icon: GraduationCap,
+    to: '/students'
   },
   {
     id: 'teachers',
     label: 'Teachers',
-    icon: Users
+    icon: Users,
+    to: '/teachers'
   },
   {
     id: 'subjects',
     label: 'Subjects',
-    icon: BookOpen
+    icon: BookOpen,
+    to: '/subjects'
   },
   {
     id: 'attendance',
     label: 'Attendance',
-    icon: ClipboardCheck
+    icon: ClipboardCheck,
+    to: '/attendance'
   },
   {
     id: 'timetable',
     label: 'Timetable',
-    icon: Calendar
+    icon: Calendar,
+    to: 'timetable'
   },
   {
     id: 'circulars',
     label: 'Circulars',
-    icon: FileText
+    icon: FileText,
+    to: '/circulars'
   },
   {
     id: 'account-creation',
     label: 'Account Creation',
-    icon: UserRoundPlus
+    icon: UserRoundPlus,
+    to: '/create'
   },
   {
     id: 'settings',
     label: 'Settings',
-    icon: Settings
+    icon: Settings,
+    to: '/settings'
   }
 ];

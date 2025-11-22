@@ -1,3 +1,5 @@
+import React, { useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useSchoolStore, useAuthStore } from '@/store';
@@ -9,11 +11,13 @@ import {
   AdminNavigationItems
 } from './constants';
 
-export const Sidebar = () => {
-  const { activeView, setActiveView, sidebarCollapsed, setSidebarCollapsed } =
-    useSchoolStore();
+const SidebarComponent: React.FC = () => {
+  const { sidebarCollapsed, setSidebarCollapsed } = useSchoolStore();
   const { role } = useAuthStore();
   const isMobile = useIsMobile();
+  const location = useLocation();
+  const navigate = useNavigate();
+
   let navigationItems = StudentNavigationItems;
 
   switch (role) {
@@ -29,6 +33,22 @@ export const Sidebar = () => {
 
   // On mobile, always keep sidebar collapsed
   const isCollapsed = isMobile ? true : sidebarCollapsed;
+
+  const handleNavigate = useCallback(
+    (to: string) => {
+      navigate(to);
+    },
+    [navigate]
+  );
+
+  const isPathActive = useCallback(
+    (path: string) => {
+      if (location.pathname === path) return true;
+      // also treat nested URLs as active (e.g. /subjects/123)
+      return location.pathname.startsWith(path + '/');
+    },
+    [location.pathname]
+  );
 
   return (
     <div
@@ -74,7 +94,7 @@ export const Sidebar = () => {
       <nav className="p-2 space-y-1">
         {navigationItems.map((item) => {
           const Icon = item.icon;
-          const isActive = activeView === item.id;
+          const isActive = isPathActive(item.to);
 
           return (
             <Button
@@ -86,7 +106,7 @@ export const Sidebar = () => {
                 isActive &&
                   'bg-gradient-primary text-primary-foreground shadow-soft'
               )}
-              onClick={() => setActiveView(item.id)}
+              onClick={() => handleNavigate(item.to)}
             >
               <Icon className={cn('h-4 w-4', !isCollapsed && 'mr-3')} />
               {!isCollapsed && (
@@ -99,3 +119,5 @@ export const Sidebar = () => {
     </div>
   );
 };
+
+export const Sidebar = React.memo(SidebarComponent);

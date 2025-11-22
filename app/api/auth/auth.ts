@@ -1,18 +1,113 @@
 import { db, auth } from '../../firebase.js';
 import { User } from '../../models/User.js';
 import { AppError, HttpCode } from '../../error.js';
-import { Student, Parent, Teacher } from '@setupati-school/setupati-types';
+import type { Student, Parent, Teacher } from '@setupati-school/setupati-types';
 
 if (!db || !auth)
   throw new AppError(
     'Database or Auth connection not established successfully',
     HttpCode.INTERNAL_SERVER_ERROR
   );
+
 const userCollection = db.collection('users');
+const studentCollection = db.collection('students');
+const parentCollection = db.collection('parents');
+const teacherCollection = db.collection('teachers');
 
-export interface StudentUser extends User, Student, Parent {
+const nowIso = () => new Date().toISOString();
 
-}
+export const createStudentAndParent = async (
+  student: Student,
+  parent: Parent,
+  password: string
+) => {
+  const userRecord = await auth!.createUser({
+    email: student.email,
+    password: password,
+    displayName: `${student.f_name} ${student.l_name}`
+  });
+
+  const uid = userRecord.uid;
+
+  await auth!.setCustomUserClaims(uid, { role: 'student' });
+
+  const userDoc = {
+    email: student.email,
+    name: `${student.f_name} ${student.l_name}`,
+    role: 'student',
+    is_active: false,
+    created_at: nowIso(),
+    updated_at: nowIso()
+  };
+
+  const studentDoc = {
+    id: uid,
+    ...student,
+    created_at: nowIso(),
+    updated_at: nowIso()
+  };
+
+  const parentDoc = {
+    id: uid,
+    first_name: parent.first_name,
+    last_name: parent.last_name,
+    ...parent,
+    created_at: nowIso(),
+    updated_at: nowIso()
+  };
+
+  const batch = db!.batch();
+  const userRef = userCollection.doc(uid);
+  const studentRef = studentCollection.doc(uid);
+  const parentRef = parentCollection.doc(uid);
+
+  batch.set(userRef, userDoc);
+  batch.set(studentRef, studentDoc);
+  batch.set(parentRef, parentDoc);
+
+  await batch.commit();
+
+  return { uid, userDoc, studentDoc, parentDoc };
+};
+
+export const createTeacher = async (teacher: Teacher, password: string) => {
+  const userRecord = await auth!.createUser({
+    email: teacher.email,
+    password: password,
+    displayName: `${teacher.f_name} ${teacher.l_name}`
+  });
+
+  const uid = userRecord.uid;
+
+  await auth!.setCustomUserClaims(uid, { role: 'teacher' });
+
+  const userDoc = {
+    email: teacher.email,
+    name: `${teacher.f_name} ${teacher.l_name}`,
+    role: 'teacher',
+    is_active: false,
+    created_at: nowIso(),
+    updated_at: nowIso()
+  };
+
+  const teacherDoc = {
+    id: uid,
+    ...teacher,
+    created_at: nowIso(),
+    updated_at: nowIso()
+  };
+
+  const batch = db!.batch();
+  const userRef = userCollection.doc(uid);
+  const teacherRef = teacherCollection.doc(uid);
+
+  batch.set(userRef, userDoc);
+  batch.set(teacherRef, teacherDoc);
+
+  await batch.commit();
+
+  return { uid, userDoc, teacherDoc };
+};
 
 export const addUser = async (data: User): Promise<string> => {
   const { name, email, password, role } = data;
@@ -30,15 +125,13 @@ export const addUser = async (data: User): Promise<string> => {
     name: data.name,
     is_active: true,
     role: data.role,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
+    created_at: nowIso,
+    updated_at: nowIso
   };
 
   await userCollection.doc(userRecord.uid).set(userDoc);
   return userRecord.uid;
 };
-
-export const addStudentUser = async (data: User): Promise<string> => {};
 
 export const getUserById = async (uid: string): Promise<User> => {
   const userRecord = await auth!.getUser(uid);

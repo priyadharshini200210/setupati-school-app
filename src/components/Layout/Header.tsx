@@ -18,7 +18,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useAuthStore } from '@/store/authStore';
 
-export const Header = () => {
+const HeaderComponent: React.FC = () => {
   const { currentUser, resetStore } = useSchoolStore();
   const { resetAuthStore } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
@@ -132,3 +132,5 @@ export const Header = () => {
     </header>
   );
 };
+
+export const Header = React.memo(HeaderComponent);

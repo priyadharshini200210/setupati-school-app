@@ -3,12 +3,36 @@ import {
   createUser,
   deleteUser,
   getUserById,
-  validateEmail
+  validateEmail,
+  createStudentAndParent,
+  createTeacher
 } from '../service/auth/auth.js';
+import { studentSchema, teacherSchema } from '../zod/authSchema.js';
 import { isAuthenticated } from '../middlewares/isAuthenticated.js';
 import { isAuthorized } from '../middlewares/isAuthorized.js';
+import { validateBody } from '../middlewares/validateRequest.js';
 
 const authRouter = Router();
+
+authRouter.post(
+  '/signup/create-student',
+  isAuthenticated,
+  isAuthorized({ hasRole: ['admin'] }),
+  validateBody(studentSchema),
+  (req, res) => {
+    createStudentAndParent(req, res);
+  }
+);
+
+authRouter.post(
+  '/signup/create-teacher',
+  isAuthenticated,
+  isAuthorized({ hasRole: ['admin'] }),
+  validateBody(teacherSchema),
+  (req, res) => {
+    createTeacher(req, res);
+  }
+);
 
 authRouter.post(
   '/signup',

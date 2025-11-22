@@ -3,10 +3,62 @@ import {
   addUser,
   deleteUser as deleteUserApi,
   getUserById as getUserByIdApi,
-  validateEmail as validateEmailApi
+  validateEmail as validateEmailApi,
+  createStudentAndParent as createStudentAndParentApi,
+  createTeacher as createTeacherApi
 } from '../../api/auth/auth.js';
 import { User } from '../../models/User.js';
+import { firebaseErrorPraser } from '../../Error/firebaseErrorPraser.js';
+import {
+  StudentSchemaPayload,
+  TeacherSchemaPayload
+} from '../../zod/authSchema.js';
 import logger from '../../utils/logger.js';
+
+export const createStudentAndParent = async (req: Request, res: Response) => {
+  try {
+    const { student, parent, password } = req.body as StudentSchemaPayload;
+
+    const result = await createStudentAndParentApi(student, parent, password);
+
+    res.status(201).json({
+      message: 'Student account created',
+      uid: result.uid,
+      user: result.userDoc,
+      student: result.studentDoc,
+      parent: result.parentDoc
+    });
+  } catch (err) {
+    const { httpCode, message } = firebaseErrorPraser(err);
+    logger.error(
+      'Error in creating the user account for the Student and Parent: ',
+      message || (err as Error)
+    );
+    res.status(httpCode).json({ error: message });
+  }
+};
+
+export const createTeacher = async (req: Request, res: Response) => {
+  try {
+    const { teacher, password } = req.body as TeacherSchemaPayload;
+
+    const result = await createTeacherApi(teacher, password);
+
+    res.status(201).json({
+      message: 'Teacher account created',
+      uid: result.uid,
+      user: result.userDoc,
+      teacher: result.teacherDoc
+    });
+  } catch (err) {
+    const { httpCode, message } = firebaseErrorPraser(err);
+    logger.error(
+      'Error in creating the user account for the Student and Parent: ',
+      message || (err as Error)
+    );
+    res.status(httpCode).json({ error: message });
+  }
+};
 
 export const createUser = async (req: Request, res: Response) => {
   try {
